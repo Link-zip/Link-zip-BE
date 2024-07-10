@@ -1,0 +1,42 @@
+{
+  "name": "link-zip-be",
+  "version": "1.0.0",
+  "description": "UMC link zip project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Link-zip/Link-zip-BE.git"
+  },
+  "author": "s",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Link-zip/Link-zip-BE/issues"
+  },
+  "homepage": "https://github.com/Link-zip/Link-zip-BE#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "http-status-codes": "^2.3.0",
+    "swagger-cli": "^4.0.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/node": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "nodemon": "^3.1.4"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
