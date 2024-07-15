@@ -5,6 +5,8 @@ import SwaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.config.js';
 import { status } from './config/response.status.js';
 import { response } from './config/response.js';
+import { pool } from './config/db.config.js';
+
 
 dotenv.config();
 
@@ -19,17 +21,19 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
-
-app.get('/', function (req, res) {
-    res.send('express 테스트')
-})
+/** DB 연결 테스트용 라우팅 */
+app.get('/', async (req, res)=>{
+    const [results, fields] = await pool.query('select * from user');
+    console.log('Query result: ', results);
+    res.send(results);
+});
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정
     res.locals.message = err.message;   
     // 개발환경이면 에러를 출력하고 아니면 출력하지 않기
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {}; 
-    res.status(err.data.status || status.INTERNAL_SERVER_ERROR).send(response(err.data));
+    res.status(err || status.INTERNAL_SERVER_ERROR).send(response(err));
 });
 
 app.listen(app.get('port'), () => {
