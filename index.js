@@ -2,12 +2,13 @@ import dotenv from 'dotenv';
 import express from 'express'
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
-import { specs } from './config/swagger.config.js';
-import { status } from './config/response.status.js';
-import { response } from './config/response.js';
-import { pool } from './config/db.config.js';
-import {listRouter} from './src/routes/list.route.js';
 
+import { specs } from '@config/swagger.config.js';
+import { status } from '@config/response.status.js';
+import { response } from '@config/response.js';
+import { pool } from '@config/db.config.js';
+
+import { userRouter } from '@routes/user.route.js';
 
 dotenv.config();
 
@@ -39,6 +40,8 @@ app.use((err, req, res, next) => {
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {}; 
     res.status(err || status.INTERNAL_SERVER_ERROR).send(response(err));
 });
+
+app.use('/user', userRouter);
 
 app.listen(app.get('port'), () => {
     console.log(`✅ 서버를 ${app.get('port')}번 포트에서 열었습니다.`);
