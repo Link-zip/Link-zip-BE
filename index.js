@@ -6,6 +6,7 @@ import { specs } from './config/swagger.config.js';
 import { status } from './config/response.status.js';
 import { response } from './config/response.js';
 import { pool } from './config/db.config.js';
+import {listRouter} from './src/routes/list.route.js';
 
 
 dotenv.config();
@@ -20,6 +21,9 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
+
+// router setting
+app.use('/list',listRouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
