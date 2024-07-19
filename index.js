@@ -9,6 +9,7 @@ import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
 
 import { userRouter } from '@routes/user.route.js';
+import { listRouter } from '@routes/list.route.js';
 
 dotenv.config();
 
@@ -24,7 +25,8 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // router setting
-app.use('/list',listRouter);
+app.use('/list', listRouter);
+app.use('/user', userRouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
@@ -40,8 +42,6 @@ app.use((err, req, res, next) => {
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {}; 
     res.status(err || status.INTERNAL_SERVER_ERROR).send(response(err));
 });
-
-app.use('/user', userRouter);
 
 app.listen(app.get('port'), () => {
     console.log(`✅ 서버를 ${app.get('port')}번 포트에서 열었습니다.`);
