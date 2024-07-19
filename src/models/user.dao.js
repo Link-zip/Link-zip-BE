@@ -8,13 +8,14 @@ export const addUserDao = async (data) => {
     try {
         const conn = await pool.getConnection();
         const [[result]] = await pool.query(insertUserSql, [
-            data.nickname,
             data.kakaoId,
+            data.nickname,
         ])
+        console.log("result", result)
         conn.release();
-        return result;
+        return result.insertId;
     } catch (error) {
-        throw new BaseError(status.INTERNAL_SERVER_ERROR, error);
+        throw new BaseError(status.INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -25,6 +26,6 @@ export const getUserDao = async (userId) => {
         conn.release();
         return result;
     } catch (error) {
-        throw new BaseError(status.INTERNAL_SERVER_ERROR, error);
+        throw new BaseError(status.INTERNAL_SERVER_ERROR);
     }   
 }
