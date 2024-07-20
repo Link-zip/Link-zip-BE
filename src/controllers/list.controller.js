@@ -1,6 +1,6 @@
 // src/routes/list.controller.js
-import { response } from "../../config/response.js";
-import { status } from "../../config/response.status.js";
+import { response } from "@config/response.js";
+import { status } from "@config/response.status.js";
 
 import { getUnviewList } from "../providers/list.provider.js";
 

@@ -1,6 +1,6 @@
 
-import { unviewListResponseDTO } from "../dtos/list.dto.js";
-import {getPreviewUnviewList } from "../models/list.dao.js";
+import { unviewListResponseDTO } from "@dtos/list.dto.js";
+import { getPreviewUnviewList } from "@models/list.dao.js";
 
 export const getUnviewList = async (req, query) => {
     const userId = req.userId;
