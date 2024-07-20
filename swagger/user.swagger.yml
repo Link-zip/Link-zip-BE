@@ -11,12 +11,9 @@ paths:
           schema:
             type: object
             properties:
-              kakaoId:
-                type: integer
-                example: 1234567890
               nickname:
                 type: string
-                example: "nickname"
+                example: 'nickname'
       responses:
         "200":
           description: 사용자 회원가입 성공

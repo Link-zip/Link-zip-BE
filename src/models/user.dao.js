@@ -4,28 +4,30 @@ import { pool } from '@config/db.config.js';
 
 import { insertUserSql, selectUserSql } from './user.sql.js';
 
+/** 회원가입 DAO, id 리턴 */
 export const addUserDao = async (data) => {
     try {
         const conn = await pool.getConnection();
-        const [[result]] = await pool.query(insertUserSql, [
+        const [result] = await conn.query(insertUserSql, [
             data.kakaoId,
-            data.nickname,
+            data.nickname
         ])
-        console.log("result", result)
         conn.release();
         return result.insertId;
     } catch (error) {
-        throw new BaseError(status.INTERNAL_SERVER_ERROR);
+        console.error(error);
+        throw new BaseError(status.BAD_REQUEST);
     }
 }
 
+/** 사용자 정보 조회 DAO */
 export const getUserDao = async (userId) => {
     try {
         const conn = await pool.getConnection();
-        const [[result]] = await pool.query(selectUserSql, userId);
+        const [[result]] = await conn.query(selectUserSql, userId);
         conn.release();
         return result;
     } catch (error) {
-        throw new BaseError(status.INTERNAL_SERVER_ERROR);
+        throw new BaseError(status.BAD_REQUEST);
     }   
 }
