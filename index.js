@@ -35,6 +35,9 @@ app.get('/', async (req, res)=>{
     res.send(results);
 });
 
+app.use('/link', linkRouter);
+
+
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정
     res.locals.message = err.message;   

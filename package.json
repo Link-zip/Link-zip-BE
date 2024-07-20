@@ -18,12 +18,15 @@
   },
   "homepage": "https://github.com/Link-zip/Link-zip-BE#readme",
   "dependencies": {
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "http-status-codes": "^2.3.0",
     "mysql2": "^3.10.2",
+    "openai": "^4.52.7",
     "swagger-cli": "^4.0.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
