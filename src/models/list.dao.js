@@ -1,9 +1,9 @@
 // models/list.dao.js
 
-import { pool } from "../../config/db.config.js";
-import { BaseError } from "../../config/error.js";
-import { status } from "../../config/response.status.js";
-import {getUnviewListByUserId, getZipById } from "./list.sql.js";
+import { pool } from "@config/db.config.js";
+import { BaseError } from "@config/error.js";
+import { status } from "@config/response.status.js";
+import { getUnviewListByUserId, getZipById } from "./list.sql.js";
 
 //Zip의 정보를 가져오는 함수
 export const getZip = async (zipId) => {
