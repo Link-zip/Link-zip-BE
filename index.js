@@ -10,6 +10,7 @@ import { pool } from '@config/db.config.js';
 
 import { userRouter } from '@routes/user.route.js';
 import { listRouter } from '@routes/list.route.js';
+import { linkRouter } from '@routes/link.route.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 // router setting
 app.use('/list', listRouter);
 app.use('/user', userRouter);
+app.use('/link', linkRouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
@@ -34,9 +36,6 @@ app.get('/', async (req, res)=>{
     console.log('Query result: ', results);
     res.send(results);
 });
-
-app.use('/link', linkRouter);
-
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정
