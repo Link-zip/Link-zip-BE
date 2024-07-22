@@ -8,7 +8,9 @@ import { response } from './config/response.js';
 import { pool } from './config/db.config.js';
 import {listRouter} from './src/routes/list.route.js';
 import {alertRouter} from './src/routes/alert.route.js';
-
+import { userRouter } from '@routes/user.route.js';
+import { listRouter } from '@routes/list.route.js';
+import { linkRouter } from '@routes/link.route.js';
 
 dotenv.config();
 
@@ -24,7 +26,9 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // router setting
-app.use('/list',listRouter);
+app.use('/list', listRouter);
+app.use('/user', userRouter);
+app.use('/link', linkRouter);
 
 
 app.use('/alert',alertRouter);
