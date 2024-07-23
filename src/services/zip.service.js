@@ -1,7 +1,7 @@
-import { BaseError } from "../../config/error.js";
-import { status } from "../../config/response.status.js";
-import { createZipDao, deleteZipDao, testZipDeletableDao } from "../models/zip.dao.js";
-import { createZipResDto, deleteZipResDto } from "../dtos/zip.dto.js";
+import { BaseError } from '@config/error.js';
+import { status } from '@config/response.status.js';
+import { createZipDao, deleteZipDao, testZipDeletableDao } from '@models/zip.dao.js';
+import { createZipResDto, deleteZipResDto } from '@dtos/zip.dto.js';
 
 // POST API
 /** Zip 생성 service */

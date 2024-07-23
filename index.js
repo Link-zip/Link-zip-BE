@@ -2,11 +2,16 @@ import dotenv from 'dotenv';
 import express from 'express'
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
-import { specs } from './config/swagger.config.js';
-import { status } from './config/response.status.js';
-import { response } from './config/response.js';
-import { pool } from './config/db.config.js';
-import { zipRouter} from './src/routes/zip.route.js'
+import { specs } from '@config/swagger.config.js';
+import { status } from '@config/response.status.js';
+import { response } from '@config/response.js';
+import { pool } from '@config/db.config.js';
+import {listRouter} from '@routes/list.route.js';
+import {alertRouter} from '@routes/alert.route.js';
+import { userRouter } from '@routes/user.route.js';
+import { listRouter } from '@routes/list.route.js';
+import { linkRouter } from '@routes/link.route.js';
+import { zipRouter } from '@routes/zip.route.js'
 
 
 dotenv.config();
@@ -22,6 +27,14 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
+// router setting
+app.use('/list', listRouter);
+app.use('/user', userRouter);
+app.use('/link', linkRouter);
+app.use('/zips', zipRouter)
+app.use('/alert',alertRouter);
+
+
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
     const [results, fields] = await pool.query('select * from user');
@@ -29,8 +42,6 @@ app.get('/', async (req, res)=>{
     res.send(results);
 });
 
-/** Zip router */
-app.use('/zips', zipRouter)
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정

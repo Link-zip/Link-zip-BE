@@ -1,7 +1,7 @@
-import { pool } from "../../config/db.config.js";
-import { BaseError } from "../../config/error.js";
-import { status } from "../../config/response.status.js";
-import { createZipSql, deleteZipSql, testZipDeletableSql } from "../models/zip.sql.js";
+import { pool } from '@config/db.config.js';
+import { BaseError } from '@config/error.js';
+import { status } from '@config/response.status.js';
+import { createZipSql, deleteZipSql, testZipDeletableSql } from '@models/zip.sql.js';
 
 // POST API
 /** Zip 생성 Dao */

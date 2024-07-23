@@ -1,9 +1,9 @@
-import express from "express";
-import asyncHandler from "express-async-handler";
+import express from 'express';
+import asyncHandler from 'express-async-handler';
 import {
     createZipController,
     deleteZipController
-} from "../controllers/zip.controller.js";
+} from '@controllers/zip.controller.js';
 
 
 export const zipRouter = express.Router();

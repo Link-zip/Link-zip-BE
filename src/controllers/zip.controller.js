@@ -1,7 +1,7 @@
-import { response } from "../../config/response.js";
-import { status } from "../../config/response.status.js";
-import { createZipReqDto, deleteZipReqDto } from "../dtos/zip.dto.js";
-import { createZipService, deleteZipService } from "../services/zip.service.js";
+import { response } from '@config/response.js';
+import { status } from '@config/response.status.js';
+import { createZipReqDto, deleteZipReqDto } from '@dtos/zip.dto.js';
+import { createZipService, deleteZipService } from '@services/zip.service.js';
 
 // POST Controller
 /** Zip 생성 controller */
