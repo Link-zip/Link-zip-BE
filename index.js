@@ -13,7 +13,6 @@ import { listRouter } from '@routes/list.route.js';
 import { linkRouter } from '@routes/link.route.js';
 import { zipRouter } from '@routes/zip.route.js'
 
-
 dotenv.config();
 
 const app = express();
@@ -34,7 +33,6 @@ app.use('/link', linkRouter);
 app.use('/zips', zipRouter)
 app.use('/alert',alertRouter);
 
-
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
     const [results, fields] = await pool.query('select * from user');
@@ -48,7 +46,7 @@ app.use((err, req, res, next) => {
     res.locals.message = err.message;   
     // 개발환경이면 에러를 출력하고 아니면 출력하지 않기
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {}; 
-    res.status(err.data.status || status.INTERNAL_SERVER_ERROR).send(response(err));
+    res.status(err.data.status || status.INTERNAL_SERVER_ERROR).send(response(err.data));
 });
 
 app.listen(app.get('port'), () => {
