@@ -6,7 +6,6 @@ import { specs } from '@config/swagger.config.js';
 import { status } from '@config/response.status.js';
 import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
-import {listRouter} from '@routes/list.route.js';
 import {alertRouter} from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
 import { listRouter } from '@routes/list.route.js';
