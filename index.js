@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 import express from 'express'
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
-import { specs } from './config/swagger.config.js';
-import { status } from './config/response.status.js';
-import { response } from './config/response.js';
-import { pool } from './config/db.config.js';
-import {listRouter} from './src/routes/list.route.js';
-import {alertRouter} from './src/routes/alert.route.js';
+import { specs } from '@config/swagger.config.js';
+import { status } from '@config/response.status.js';
+import { response } from '@config/response.js';
+import { pool } from '@config/db.config.js';
+import {alertRouter} from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
 import { listRouter } from '@routes/list.route.js';
 import { linkRouter } from '@routes/link.route.js';
+import { zipRouter } from '@routes/zip.route.js'
 
 dotenv.config();
 
@@ -29,8 +29,7 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 app.use('/list', listRouter);
 app.use('/user', userRouter);
 app.use('/link', linkRouter);
-
-
+app.use('/zips', zipRouter)
 app.use('/alert',alertRouter);
 
 /** DB 연결 테스트용 라우팅 */
@@ -39,6 +38,7 @@ app.get('/', async (req, res)=>{
     console.log('Query result: ', results);
     res.send(results);
 });
+
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정
