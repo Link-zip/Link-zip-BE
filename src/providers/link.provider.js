@@ -1,3 +1,5 @@
+import { BaseError } from "@config/error";
+import { status } from "@config/response.status";
 import axios from "axios";
 import cheerio from "cheerio";
 import OpenAI from "openai";
@@ -38,4 +40,22 @@ export const getGptResponse = async (summary) => {
     });
 
     return completion.choices[0].message.content;
+}
+
+export const getUrlThumb = async (url) => {
+    if(!url){
+        return null;
+    }
+
+    try {
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+        const ogImage = $('meta[property="og:image"]').attr('content');
+
+        console.log('thumb 추출 내용:', ogImage);
+        return ogImage || null; //og:image가 없는 경우 null반환
+    } catch (err) {
+        console.log(err);
+        return null; //url이 실제로 접속 불가능한 url이어도 에러 처리하지 않도록
+    }
 }
