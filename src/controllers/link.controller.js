@@ -26,7 +26,6 @@ export const getSummaryCnt = async (req,res) => {
     try {
         const AIResponse = await generateUrlSummary(url);
         res.send(response(status.SUCCESS, AIResponse ));
-        console.log(`AI 응답: ${AIResponse}`);
     } catch (err) {
         return BaseError(status.BAD_REQUEST);
     }

@@ -1,10 +1,11 @@
-import { fetchUrlContent, getUrlThumb } from "@providers/link.provider";
-import { getGptResponse } from "@providers/link.provider";
+import { fetchUrlContent, getUrlThumb, getYoutubeSummary } from "@providers/link.provider";
+import { getGptResponse, getGptYoutubeSummary } from "@providers/link.provider";
 import { BaseError} from "@config/error";
 import { status } from "@config/response.status";
 import { addLinkDao, deleteZipIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
 import { createLinkResDto, deleteZipIdResDto, getLinksResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
 
+/** 사이트 정보 요약 */
 export const summarizeContent = async (content, maxLength = 1000) => {
     if(!content || content.trim().length === 0) {
         return "페이지에서 유효한 정보를 찾을 수 없습니다."
@@ -15,16 +16,29 @@ export const summarizeContent = async (content, maxLength = 1000) => {
     }
     return content;
 }
+
+export const checkYoutube = (url) => {
+    if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/'))
+        return true;
+}
+
 /** url 요약 정보 생성 */
 export const generateUrlSummary = async (url) =>  {
-    const content = await fetchUrlContent(url);
-    if (!content) {
-        throw new BaseError(status.NOT_FOUND);    
+    const isYoutube = checkYoutube(url);
+    if(!isYoutube){
+        const content = await fetchUrlContent(url);
+        if (!content) {
+            throw new BaseError(status.NOT_FOUND);    
+        }
+        const summary = await summarizeContent(content.content, 300);
+        const response = await getGptResponse(summary);
+        return response;
+    } else { // 유튜브 URL인 경우
+        const youtubeSummary = await getYoutubeSummary(url);
+        const gptResponse = await getGptYoutubeSummary(youtubeSummary);
+        const formattedText = `요약을 요청하신 URL이 유튜브 플랫폼 동영상으로 확인되어 영상 내용을 AI로 요약한 결과입니다 : ${gptResponse}`
+        return formattedText;
     }
-
-    const summary = await summarizeContent(content.content, 300);
-    const response = await getGptResponse(summary);
-    return response;
 }
 
 export const getLinkSer = async (zipId, userId, tag) => {
