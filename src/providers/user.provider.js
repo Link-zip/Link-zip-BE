@@ -6,3 +6,9 @@ export const getUserSer = async (req) => {
     const userId = req.userId;
     return userResponseDTO(await getUserDao(userId));
 }
+
+export const checkNicknameSer = async (body) => {
+    return {
+        isExist: false,
+    }
+}

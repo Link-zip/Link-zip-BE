@@ -2,7 +2,7 @@ import { BaseError } from '@config/error.js';
 import { status } from '@config/response.status.js';
 import { pool } from '@config/db.config.js';
 
-import { insertUserSql, selectUserSql } from './user.sql.js';
+import { checkNicknameSql, insertUserSql, selectUserSql } from './user.sql.js';
 
 /** 회원가입 DAO, id 리턴 */
 export const addUserDao = async (data) => {
@@ -30,4 +30,15 @@ export const getUserDao = async (userId) => {
     } catch (error) {
         throw new BaseError(status.BAD_REQUEST);
     }   
+}
+
+export const checkNicknameDao = async (nickname) => {
+    try {
+        const conn = await pool.getConnection();
+        const [[result]] = await conn.query(checkNicknameSql, nickname);
+        conn.release();
+        return result;
+    } catch (error) {
+        throw new BaseError(status.BAD_REQUEST);
+    }
 }

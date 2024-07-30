@@ -1,22 +1,89 @@
 paths:
-  /user:
+  /user/login:
     post:
       tags:
         - User
-      summary: 사용자 회원가입
+      summary: 소셜 로그인
+      description: | 
+        카카오 authCode를 받아 소셜 로그인을 진행합니다. 
+        기존 유저라면 200과 함께 토큰을 반환하며, 신규 유저라면 400 에러와 함께 회원가입을 위한 key를 반환합니다.
       parameters:
         - in: body
           name: body
+          description: 카카오 authCode
           required: true
           schema:
             type: object
             properties:
-              nickname:
+              authCode: 
                 type: string
-                example: 'nickname'
       responses:
         "200":
-          description: 사용자 회원가입 성공
+          description: 소셜 로그인 성공
+          schema:
+            type: object
+            properties:
+              accessToken: 
+                type: string
+              refreshToken: 
+                type: string
+        "400":
+          description: 소셜 로그인 실패
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "회원가입을 위한 key를 반환합니다."
+              data:
+                type: object
+                example: 
+                  {
+                    "key": string
+                  }
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+  /user/nickname:
+    get:
+      tags:
+        - User
+      summary: 닉네임 중복 확인
+      description: |
+        사용자 회원가입 또는 정보 수정 시 입력한 닉네임이 중복되는지 확인합니다.
+        body 없이 status와 message만 내려가며, 닉네임이 중복된다면 400 에러를 반환합니다.
+      parameters:
+        - in: query
+          name: nickname
+          required: true
+          type: string
+          description: 사용자 닉네임
+      responses:
+        "200":
+          description: 닉네임 중복 없음
           schema:
             type: object
             properties:
@@ -31,18 +98,70 @@ paths:
                 example: 2000
               message:
                 type: string
-                example: "success!"
-            data:
-              type: object
-              example:
-                {
-                  "user":
-                    {
-                      "id": "1",
-                      "email": "example@example.com",
-                      "createdAt": "2024-07-15"
-                    }
-                }
+                example: "환상적인 닉네임이에요!"
+        "400":
+          description: 중복된 닉네임
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: NICKNAME_DUPLICATED
+              message:
+                type: string
+                example: "이미 사용중인 유저가 있어요!"
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+  /user:
+    post:
+      tags:
+        - User
+      summary: 사용자 회원가입
+      description: |
+        사용자 회원가입을 진행합니다. 로그인 실패 시 내려간 key값과 닉네임을 받아 토큰을 반환합니다.
+      parameters:
+        - in: body
+          name: body
+          description: 회원가입 key 및 사용자 닉네임
+          required: true
+          schema:
+            type: object
+            properties:
+              nickname:
+                type: string
+              key:
+                type: string
+      responses:
+        "200":
+          description: 사용자 회원가입 성공
+          schema:
+            type: object
+            properties:
+              accessToken: 
+                type: string
+              refreshToken: 
+                type: string
         "400":
           description: 잘못된 요청
           schema:
@@ -82,6 +201,7 @@ paths:
       tags:
         - User
       summary: 사용자 정보 조회
+      description: 사용자 정보 조회를 위한 임시 API 입니다.
       parameters:
         - in: path
           name: userId
@@ -94,29 +214,12 @@ paths:
           schema:
             type: object
             properties:
-              status:
+              userId:
                 type: integer
-                example: 200
-              isSuccess:
-                type: boolean
-                example: true
-              code:
-                type: integer
-                example: 2000
-              message:
+              nickname:
                 type: string
-                example: "success!"
-              data:
-                type: object
-                example:
-                  {
-                    "user":
-                    {
-                      "userId": "1",
-                      "nickname": "example",
-                      "createdAt": "2024-07-15"
-                    }
-                  }
+              createdAt:
+                type: string
         "400":
           description: 잘못된 요청
           schema:
