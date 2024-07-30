@@ -1,3 +1,5 @@
+import { BaseError } from "@config/error";
+import { status } from "@config/response.status";
 import axios from "axios";
 import cheerio from "cheerio";
 import OpenAI from "openai";
@@ -26,8 +28,6 @@ export const fetchUrlContent = async (url) => {
 }
 /** 요약 정보를 통해 gpt로 사이트 추측 */
 export const getGptResponse = async (summary) => {
-    console.log('summary:', summary);
-
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -38,4 +38,59 @@ export const getGptResponse = async (summary) => {
     });
 
     return completion.choices[0].message.content;
+}
+//응답 형태, summary, videoTitle, videoAuthor
+export const getYoutubeSummary = async (url) => {
+    const options = {
+        method: 'GET',
+        url: 'https://youtube-video-summarizer1.p.rapidapi.com/v1/youtube/summarizeVideoFromCache',
+        params: {
+            videoURL: url
+        },
+        headers: {
+            'x-rapidapi-key': process.env.RAPIDAPI_KEY,
+            'x-rapidapi-host': process.env.RAPIDAPI_HOST,
+        }
+    };
+    try{
+        const response = await axios.request(options);
+        
+        return response.data;
+    } catch (err){
+        console.log('getYoutubeSummary error: ',err);
+        throw err;
+    }
+}
+
+export const getGptYoutubeSummary = async (youtubeSummary) => {
+    const {summary, videoTitle, videoAuthor } = youtubeSummary;
+    const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+            { role: "system", content: "Your role is to summarize youtube video content" },
+            { role: "user", content: `다음은 사용자가 입력한 유튜브 url의 요약 내용입니다. 제목, 채널명, 비디오 내용 요약 등을 읽고 어떤 내용을 다루는 동영상인지 간략하게 정리해주세요.
+                제목: ${videoTitle}, 채널명: ${videoAuthor}, 동영상 내용:${summary}` }
+        ],
+        max_tokens: 1000
+    });
+
+    return completion.choices[0].message.content;
+}
+
+export const getUrlThumb = async (url) => {
+    if(!url){
+        return null;
+    }
+
+    try {
+        const { data } = await axios.get(url);
+        const $ = cheerio.load(data);
+        const ogImage = $('meta[property="og:image"]').attr('content');
+
+        console.log('thumb 추출 내용:', ogImage);
+        return ogImage || null; //og:image가 없는 경우 null반환
+    } catch (err) {
+        console.log(err);
+        return null; //url이 실제로 접속 불가능한 url이어도 에러 처리하지 않도록
+    }
 }
