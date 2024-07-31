@@ -1,4 +1,10 @@
 // GET SQL
+export const getZipsSql = 
+    "SELECT zip.*, COUNT(link.id) AS link_count "+
+    "FROM zip LEFT JOIN link ON zip.id = link.zip_id "+
+    "WHERE zip.user_id = ? "+
+    "GROUP BY zip.id";
+    
 
 
 // POST SQL
