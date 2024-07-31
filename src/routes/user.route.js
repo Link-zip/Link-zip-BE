@@ -4,8 +4,7 @@ import { addUserCnt, getUserCnt, checkNicknameCnt } from '@controllers/user.cont
 
 export const userRouter = express.Router();
 
-userRouter.post('/', asyncHandler(addUserCnt));
+userRouter.get("/:userId", asyncHandler(getUserCnt)); // 정보 조회
+userRouter.get("/", asyncHandler(checkNicknameCnt)); // 닉네임 중복 체크
 
-userRouter.get('/:userId', asyncHandler(getUserCnt));
-
-userRouter.get('/nickname', asyncHandler(checkNicknameCnt));
+userRouter.post("/", asyncHandler(addUserCnt)); // 회원가입

@@ -2,4 +2,4 @@ export const insertUserSql = "INSERT INTO user (kakao_id, nickname, created_at, 
 
 export const selectUserSql = "SELECT * FROM user WHERE id = ?";
 
-export const checkNicknameSql = "SELECT * FROM user WHERE nickname = ?";
+export const checkNicknameSql = "SELECT count(*) as count FROM user WHERE nickname = ?";
