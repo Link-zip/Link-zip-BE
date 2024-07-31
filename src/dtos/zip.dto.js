@@ -1,3 +1,5 @@
+
+// POST API DTO
 export const createZipReqDto = (body) => {
     return {
         user_id : body.user_id,
@@ -12,7 +14,7 @@ export const createZipResDto = (zip_id) => {
     };
 };
 
-
+// DELETE API DTO
 export const deleteZipReqDto = (body) => {
     return {
         user_id : body.user_id,
@@ -26,3 +28,14 @@ export const deleteZipResDto = (reqDto) => {
         message : `${reqDto.user_id}의 ${reqDto.zip_id} zip이 삭제되었습니다.`
     };
 };
+
+// GET API DTO
+export const getZipResDto = (zip) => {
+    return {
+        user_id : zip.user_id,
+        zip_id : zip.id,
+        title : zip.title,
+        color : zip.color,
+        link_count : zip.link_count
+    };
+}

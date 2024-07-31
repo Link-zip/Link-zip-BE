@@ -2,7 +2,8 @@ import express from 'express';
 import asyncHandler from 'express-async-handler';
 import {
     createZipController,
-    deleteZipController
+    deleteZipController,
+    getZipsController
 } from '@controllers/zip.controller.js';
 
 
@@ -13,5 +14,8 @@ zipRouter.post("/", asyncHandler(createZipController));
 
 /** DELETE API */
 zipRouter.delete("/", asyncHandler(deleteZipController));
+
+/** GET API */
+zipRouter.get("/", asyncHandler(getZipsController));
 
 
