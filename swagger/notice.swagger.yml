@@ -1,0 +1,106 @@
+paths:
+  /notice:
+    get:
+      summary: 모든 공지사항 정보 호출
+      operationId: getAllNotices
+      tags:
+        - Notice
+      responses:
+        200:
+          description: A list of notices
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Notice'
+        400:
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /notice/{notice_id}:
+    get:
+      summary: 공지사항 하나를 지정하여 호출
+      operationId: getNoticeById
+      tags:
+        - Notice
+      parameters:
+        - name: notice_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the notice to retrieve
+      responses:
+        200:
+          description: A notice object
+          schema:
+            $ref: '#/definitions/Notice'
+        400:
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /notice/add:
+    post:
+      summary: 새 공지사항 생성
+      operationId: createNewNotice
+      tags:
+        - Notice
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/NewNotice'
+      responses:
+        201:
+          description: The created notice ID
+          schema:
+            $ref: '#/definitions/CreateNoticeResponse'
+        400:
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /notice/delete/{notice_id}:
+    delete:
+      summary: 공지사항 지정하여 삭제
+      operationId: deleteNoticeById
+      tags:
+        - Notice
+      parameters:
+        - name: notice_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the notice to delete
+      responses:
+        200:
+          description: Deletion successful
+          schema:
+            type: string
+            example: "1개의 공지사항 데이터를 성공적으로 삭제하였습니다."
+        400:
+          description: 잘못된 요청
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        500:
+          description: 서버 에러
+          schema:
+            $ref: '#/definitions/ErrorResponse'

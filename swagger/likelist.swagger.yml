@@ -1,9 +1,9 @@
 paths:
-  /list/unview/{userId}:
+  /list/like/{userId}:
     get:
       tags:
         - List
-      summary: 사용자의 미열람 링크 조회
+      summary: 사용자의 좋아요 링크 조회
       parameters:
         - in: path
           name: userId
@@ -22,7 +22,7 @@ paths:
           description: 필터 옵션
       responses:
         "200":
-          description: 미열람 링크 조회 성공
+          description: 좋아요 링크 조회 성공
           schema:
             type: object
             properties:
