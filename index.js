@@ -6,11 +6,12 @@ import { specs } from '@config/swagger.config.js';
 import { status } from '@config/response.status.js';
 import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
-import {alertRouter} from '@routes/alert.route.js';
+import { alertRouter } from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
 import { listRouter } from '@routes/list.route.js';
 import { linkRouter } from '@routes/link.route.js';
 import { zipRouter } from '@routes/zip.route.js'
+import { noticeRouter } from '@routes/notice.route';
 
 dotenv.config();
 
@@ -29,8 +30,9 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 app.use('/list', listRouter);
 app.use('/user', userRouter);
 app.use('/link', linkRouter);
-app.use('/zips', zipRouter)
-app.use('/alert',alertRouter);
+app.use('/zips', zipRouter);
+app.use('/alert', alertRouter);
+app.use('/notice', noticeRouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{

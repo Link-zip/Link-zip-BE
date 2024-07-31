@@ -18,13 +18,10 @@ export const getUserCnt = async (req, res, next) => {
 export const checkNicknameCnt = async (req, res, next) => {
     const nickname = req.query.nickname;
 
+    // 요청값(닉네임)이 없는 경우
     if (nickname === undefined || nickname === "") {
         throw new BaseError(status.BAD_REQUEST);
     }
 
-    try {
-        res.send(response(status.SUCCESS, await checkNicknameSer(nickname)));
-    } catch (error) {
-        throw new BaseError(status.INTERNAL_SERVER_ERROR);
-    }
+    return res.send(response(status.NICKNAME_VALID, await checkNicknameSer(nickname)));
 }

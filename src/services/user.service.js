@@ -1,6 +1,6 @@
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userResponseDTO, nicknameResponseDTO } from '@dtos/user.dto.js';
+import { userResponseDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao } from '@models/user.dao.js';
 
 /** 사용자 회원가입 서비스 */
@@ -16,9 +16,14 @@ export const addUserSer = async (body) => {
     return userResponseDTO(await getUserDao(joinUserId));
 };
 
-/** 닉네임 중복 체크 */
+/** 닉네임 중복 여부: 서비스 단에서 분기 처리 */
 export const checkNicknameSer = async (nickname) => {
-    return nicknameResponseDTO(await checkNicknameDao(nickname));
+    const result = await checkNicknameDao(nickname);
+    // 닉네임 중복 시 throw
+    if (result.count > 0) {
+        throw new BaseError(status.NICKNAME_DUPLICATED);
+    }
+    return true;
 }
 
 /** 사용자 정보 조회 서비스 */

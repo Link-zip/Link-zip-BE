@@ -46,7 +46,7 @@ export const checkNicknameDao = async (nickname) => {
         const conn = await pool.getConnection();
         const [[result]] = await conn.query(checkNicknameSql, nickname);
         conn.release();
-        return result;
+        return result; // count 반환
     } catch (error) {
         console.error(error);
         throw new BaseError(status.BAD_REQUEST);
