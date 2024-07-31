@@ -4,6 +4,7 @@ export const status = {
     // success
     SUCCESS: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "success!"},
     CREATED: {status: StatusCodes.CREATED, "isSuccess": true, "code": 2000, "message": "create success!"},
+    NICKNAME_VALID: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "환상적인 닉네임이에요!"},
 
     // error
     // common err
@@ -22,6 +23,9 @@ export const status = {
 
     // alert error
     ALERT_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "ALERT001", "message": "해당 알림을 찾을 수 없습니다." },
-    ALERT_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "ALERT002", "message": "이미 존재하는 알림입니다."} 
+    ALERT_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "ALERT002", "message": "이미 존재하는 알림입니다."},
 
+    // user error
+    USER_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "USER001", "message": "해당 유저를 찾을 수 없습니다." },
+    NICKNAME_DUPLICATED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER002", "message": "이미 사용중인 유저가 있어요!" },
 };
