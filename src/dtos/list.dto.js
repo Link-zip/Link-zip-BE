@@ -1,29 +1,5 @@
 // dtos/list.dto.js
 
-export const unviewListResponseDTO = (links) => {
-    // 링크가 없을 경우 빈 배열 반환
-    if (!links || links.length === 0) {
-        return { "unviewlink_data": [] };
-    }
-
-    const unviewlists = links.map((link) => ({
-        "id": link.id,
-        "title": link.title,
-        "url": link.url,
-        "text": link.text,
-        "thumbnail": link.thumbnail,
-        "likes": link.like,
-        "createdAt": formatDate(link.created_at),
-        "zip": {
-          "id": link.zip.id,
-          "title": link.zip.title,
-          "color": link.zip.color,
-          "image": link.zip.image,
-        },
-      }));
-    
-      return { "links": unviewlists };
-}
 
 export const ListResponseDTO = (links) => {
   // 링크가 없을 경우 빈 배열 반환

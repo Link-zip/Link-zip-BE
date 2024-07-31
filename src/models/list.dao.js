@@ -26,10 +26,10 @@ export const getPreviewUnviewList = async (userId, sort, filter) => {
         
         // 필터 조건 추가
         if (filter) {
-            if (filter === "onlylink") {//text 작성하지 않은 링크만 
-                query += " AND text IS NULL ";
-            } else if (filter === "onlytext") {//text를 작성한 링크만 
-                query += " AND text IS NOT NULL ";
+            if (filter === "onlylink") {//link만
+                query += " AND tag = 'link' ";
+            } else if (filter === "onlytext") {//text만
+                query += " AND tag = 'text' ";
             }
         }
         

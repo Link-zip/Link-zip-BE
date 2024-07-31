@@ -42,38 +42,36 @@ paths:
             type: object
             example:
               {
-                "unviewlists":
+                "links":
                   [
                     {
                       "id": "1",
                       "title": "Link 1",
                       "url": "https://www.exaple.com/link1",
-                      "text": "This is first link",
+                      "tag": "text",
                       "thumbnail": "https://www.example.com/link1-thumbnail.jpg",
-                      "likes": 1,
+                      "like": 1,
                       "createdAt": "2024-07-15",
                       "zip":
                         {
                           "id": "1",
                           "title": "Zip 1",
-                          "color": "blue",
-                          "image": null,
+                          "color": "blue"
                         },
                     },
                     {
                       "id": "2",
                       "title": "Link 2",
                       "url": "https://www.example.com/link2",
-                      "text": "This is second link.",
+                      "tag": "link",
                       "thumbnail": "https://www.example.com/link2-thumbnail.jpg",
-                      "likes": 0,
+                      "like": 0,
                       "createdAt": "2024-07-15",
                       "zip":
                         {
-                          "id": "1",
+                          "id": "2",
                           "title": "Zip 2",
-                          "color": "blue",
-                          "image": null,
+                          "color": "blue"
                         },
                     },
                   ],
