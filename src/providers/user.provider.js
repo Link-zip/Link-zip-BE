@@ -31,6 +31,7 @@ export const getKakaoUserInfo = async (authCode) => {
             }
         );
         console.log(userInfoResponse.data);
+        return userInfoResponse.data;
     } catch (error) {
         throw new BaseError(status.KAKAO_TOKEN_ERROR);
     }
