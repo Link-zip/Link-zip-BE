@@ -39,3 +39,19 @@ export const getZipResDto = (zip) => {
         link_count : zip.link_count
     };
 }
+
+// PATCH API DTO
+export const editZipReqDto = (body) => {
+    return {
+        user_id : body.user_id,
+        zip_id : body.id,
+        title : body.title,
+        color : body.color
+    };
+}
+
+export const editZipResDto = (zip_id) => {
+    return {
+        message : `${zip_id} zip이 수정 되었습니다.`
+    };
+}

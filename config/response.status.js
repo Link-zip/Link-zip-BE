@@ -5,6 +5,7 @@ export const status = {
     SUCCESS: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "success!"},
     CREATED: {status: StatusCodes.CREATED, "isSuccess": true, "code": 2000, "message": "create success!"},
     NICKNAME_VALID: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "환상적인 닉네임이에요!"},
+    UPDATED: {status: StatusCodes.UPDATED, "isSuccess": true, "code": 2000, "message": "update success!"},
 
     // error
     // common err
@@ -28,4 +29,5 @@ export const status = {
     // user error
     USER_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "USER001", "message": "해당 유저를 찾을 수 없습니다." },
     NICKNAME_DUPLICATED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER002", "message": "이미 사용중인 유저가 있어요!" },
+    
 };

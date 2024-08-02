@@ -1,7 +1,7 @@
 import { pool } from '@config/db.config.js';
 import { BaseError } from '@config/error.js';
 import { status } from '@config/response.status.js';
-import { createZipSql, deleteZipSql, testZipDeletableSql, getZipsSql } from '@models/zip.sql.js';
+import { createZipSql, deleteZipSql, testZipDeletableSql, getZipsSql, editZipSql } from '@models/zip.sql.js';
 
 // POST API
 /** Zip 생성 Dao */
@@ -98,5 +98,23 @@ export const getZipsDao = async(sort, user_id) => {
         else{
             throw err;
         }
+    }
+}
+
+//PATCH API
+/** Zip 수정 Dao */
+export const editZipDao = async(reqDto) => {
+    try{
+        const conn = await pool.getConnection();
+        await conn.query(editZipSql, [
+            reqDto.title,
+            reqDto.color,
+            reqDto.user_id,
+            reqDto.zip_id
+        ])
+        conn.release();
+        return reqDto.zip_id;
+    } catch(err) {
+        throw new BaseError(status.INTERNAL_SERVER_ERROR);
     }
 }
