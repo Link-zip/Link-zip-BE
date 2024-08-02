@@ -44,7 +44,6 @@ export const getUserByKakaoIdDao = async (kakaoId) => {
     try {
         const conn = await pool.getConnection();
         const [[result]] = await conn.query(selectUserByKakaoIdSql, kakaoId);
-        console.log(result)
         conn.release();
         return result;
     } catch (error) {

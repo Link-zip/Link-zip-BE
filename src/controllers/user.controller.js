@@ -2,28 +2,30 @@ import jwt from 'jsonwebtoken';
 import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
-import { addUserSer, checkNicknameSer } from '@services/user.service.js';
-import { getUserSer, getKakaoUserInfo, getUserByKakaoId } from "@providers/user.provider.js";
+import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId } from '@services/user.service.js';
+import { getKakaoUserInfo } from "@providers/user.provider.js";
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
     const { authCode } = req.body;
+    const kakaoUserInfo = await getKakaoUserInfo(authCode); // authCode로 카카오 토큰 발급
+    const result = await getUserByKakaoId(kakaoUserInfo.id); // 신규 유저일 시 여기서 throw
+
+    const payload = {
+        userId: result.id,
+        nickname: result.nickname,
+        kakaoId: kakaoUserInfo.id,
+        connectedAt: kakaoUserInfo.connected_at,
+    };
 
     try {
-        const kakaoUserInfo = await getKakaoUserInfo(authCode);
-        const result = await getUserByKakaoId(kakaoUserInfo.id);
-
-        const payload = {
-            kakaoId: kakaoUserInfo.id,
-            connectedAt: kakaoUserInfo.connected_at,
-        };
-        console.log(payload)
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log(token)
-        res.send(response(status.SUCCESS, { token }));
     } catch (error) {
-        throw new BaseError(status.BAD_REQUEST);
+        throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
+
+    res.send(response(status.SUCCESS, { token }));
     
 }
 

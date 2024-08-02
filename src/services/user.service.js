@@ -30,10 +30,10 @@ export const checkNicknameSer = async (nickname) => {
 /** 기존 유저 여부 검증: 서비스 단에서 분기 처리 */
 export const getUserByKakaoId = async (kakaoId) => {
     const result = await getUserByKakaoIdDao(kakaoId);
-    
+
     if (result === undefined) {
         const key = generateKeyFromKakaoId(kakaoId);
-        throw new BaseError(status.USER_NOT_FOUND); // 404 에러
+        throw new BaseError(status.USER_NOT_FOUND, key); // 404 에러
     }
 
     return userResponseDTO(result);
