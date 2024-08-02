@@ -1,8 +1,6 @@
 import axios from "axios";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userResponseDTO } from "@dtos/user.dto";
-import { getUserByKakaoIdDao } from "@models/user.dao";
 
 /** 카카오 토큰 발급 */
 export const getKakaoUserInfo = async (authCode) => {

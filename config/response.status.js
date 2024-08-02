@@ -31,4 +31,5 @@ export const status = {
     NICKNAME_DUPLICATED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER002", "message": "이미 사용중인 유저가 있어요!" },
     KAKAO_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER003", "message": "카카오 토큰 발급에 실패했습니다." },
     SERVER_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER004", "message": "서버 토큰 발급에 실패했습니다." },
+    INVALID_KEY: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER005", "message": "유효하지 않은 키입니다." },
 };
