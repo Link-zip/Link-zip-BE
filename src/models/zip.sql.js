@@ -21,3 +21,7 @@ export const testZipDeletableSql =
 export const deleteZipSql = 
     "DELETE FROM zip WHERE id = ? AND user_id = ? AND status != 'default'";
 
+// PATCH SQL
+export const editZipSql =
+    "UPDATE zip SET title = ?, color = ? WHERE user_id = ? AND id = ?";
+
