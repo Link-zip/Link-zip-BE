@@ -1,7 +1,8 @@
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
 import { userResponseDTO } from '@dtos/user.dto.js';
-import { addUserDao, getUserDao, checkNicknameDao } from '@models/user.dao.js';
+import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao } from '@models/user.dao.js';
+import { generateKeyFromKakaoId } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
 export const addUserSer = async (body) => {
@@ -26,6 +27,18 @@ export const checkNicknameSer = async (nickname) => {
     return true;
 }
 
+/** 기존 유저 여부 검증: 서비스 단에서 분기 처리 */
+export const getUserByKakaoId = async (kakaoId) => {
+    const result = await getUserByKakaoIdDao(kakaoId);
+    
+    if (result === undefined) {
+        const key = generateKeyFromKakaoId(kakaoId);
+        throw new BaseError(status.USER_NOT_FOUND); // 404 에러
+    }
+
+    return userResponseDTO(result);
+}
+
 /** 사용자 정보 조회 서비스 */
 export const getUserSer = async (req) => {
     const userId = req.userId;
@@ -35,5 +48,5 @@ export const getUserSer = async (req) => {
         throw new BaseError(status.USER_NOT_FOUND);
     }
 
-    return userResponseDTO(await getUserDao(userId));
+    return userResponseDTO(result);
 }

@@ -1,8 +1,8 @@
+import axios from "axios";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
 import { userResponseDTO } from "@dtos/user.dto";
-import { getUserDao } from "@models/user.dao";
-import axios from "axios";
+import { getUserByKakaoIdDao } from "@models/user.dao";
 
 /** 카카오 토큰 발급 */
 export const getKakaoUserInfo = async (authCode) => {
@@ -21,7 +21,6 @@ export const getKakaoUserInfo = async (authCode) => {
 
         const accessToken = tokenResponse.data.access_token; // 카카오 accessToken
 
-        console.log("kakao access token:", accessToken);
         const userInfoResponse = await axios.get(
             `https://kapi.kakao.com/v2/user/me`,
             {
@@ -30,21 +29,13 @@ export const getKakaoUserInfo = async (authCode) => {
                 },
             }
         );
-        console.log(userInfoResponse.data);
+    
         return userInfoResponse.data;
     } catch (error) {
         throw new BaseError(status.KAKAO_TOKEN_ERROR);
     }
 }
 
-/** 사용자 정보 조회 서비스 */
-export const getUserSer = async (req) => {
-    const userId = req.userId;
-    const result = await getUserDao(userId);
-
-    if (result === undefined) {
-        throw new BaseError(status.USER_NOT_FOUND);
-    }
-
-    return userResponseDTO(await getUserDao(userId));
+export const generateKeyFromKakaoId = (kakaoId) => {
+    return `kakao_${kakaoId}`;
 }

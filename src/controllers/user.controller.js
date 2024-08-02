@@ -3,7 +3,7 @@ import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
 import { addUserSer, checkNicknameSer } from '@services/user.service.js';
-import { getUserSer, getKakaoUserInfo } from "@providers/user.provider.js";
+import { getUserSer, getKakaoUserInfo, getUserByKakaoId } from "@providers/user.provider.js";
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
@@ -11,6 +11,8 @@ export const kakaoLoginCnt = async (req, res, next) => {
 
     try {
         const kakaoUserInfo = await getKakaoUserInfo(authCode);
+        const result = await getUserByKakaoId(kakaoUserInfo.id);
+
         const payload = {
             kakaoId: kakaoUserInfo.id,
             connectedAt: kakaoUserInfo.connected_at,
