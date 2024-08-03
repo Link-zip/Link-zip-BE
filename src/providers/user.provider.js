@@ -1,4 +1,5 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
 
@@ -35,5 +36,6 @@ export const getKakaoUserInfo = async (authCode) => {
 }
 
 export const generateKeyFromKakaoId = (kakaoId) => {
-    return `kakao_${kakaoId}`;
+    const hash = CryptoJS.SHA256(kakaoId).toString();
+    return hash;
 }

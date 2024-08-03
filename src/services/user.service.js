@@ -4,12 +4,10 @@ import { userResponseDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao } from '@models/user.dao.js';
 import { generateKeyFromKakaoId } from "@providers/user.provider";
 
-// key - kakaoId 캐싱용 객체
-const userKeyCache = new Map();
-
 /** 사용자 회원가입 서비스 */
 export const addUserSer = async (body) => {
     let kakaoId;
+
     if (userKeyCache.has(body.key)) {
         kakaoId = userKeyCache.get(body.key);
         userKeyCache.delete(body.key); // 캐싱된 key 삭제
@@ -43,7 +41,8 @@ export const getUserByKakaoId = async (kakaoId) => {
 
     if (result === undefined) {
         const key = generateKeyFromKakaoId(kakaoId);
-        userKeyCache.set(kakaoId, key); // 카카오 id - key값 캐싱
+        userKeyCache.set(key, kakaoId); // 카카오 id - key값 캐싱
+        console.log(userKeyCache);
         throw new BaseError(status.USER_NOT_FOUND, key); // 404 에러
     }
 
