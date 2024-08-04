@@ -20,18 +20,31 @@ export const kakaoLoginCnt = async (req, res, next) => {
 
     try {
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        console.log(token)
+        res.send(response(status.SUCCESS, {accessToken: token}));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
-
-    res.send(response(status.SUCCESS, { token }));
-    
 }
 
 /** 회원가입 */
 export const addUserCnt = async (req, res, next) => {
-    res.send(response(status.SUCCESS, await addUserSer(req.body)));
+    const result = await addUserSer(req.body); // 회원가입 리턴값
+
+    const payload = {
+        userId: result.id,
+        nickname: result.nickname,
+        kakaoId: result.kakaoId,
+        connectedAt: result.createdAt,
+    };
+
+    try {
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.send(response(status.SUCCESS, {accessToken: token}));
+    } catch (error) {
+        throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
+    }
+
+    
 }
 
 /** 사용자 조회 컨트롤러 (userId) */
