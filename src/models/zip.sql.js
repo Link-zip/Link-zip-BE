@@ -3,7 +3,8 @@ export const getZipsSql =
     "SELECT zip.*, COUNT(link.id) AS link_count "+
     "FROM zip LEFT JOIN link ON zip.id = link.zip_id "+
     "WHERE zip.user_id = ? "+
-    "GROUP BY zip.id";
+    "GROUP BY zip.id " +
+    "ORDER BY (CASE WHEN zip.status = 'default' THEN 1 ELSE 2 END), ";
     
 
 
