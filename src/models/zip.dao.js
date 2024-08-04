@@ -66,24 +66,18 @@ export const getZipsDao = async(sort, user_id) => {
         let sql = getZipsSql;
         switch(sort) {
           case 'latest':
-              console.log("최신순");
-              sql += ", zip.created_at ORDER BY zip.created_at DESC";
-              console.log(sql);
+              sql += "zip.created_at DESC";
               break;
           case 'earliest':
-              console.log("과거순");
-              sql += ", zip.created_at ORDER BY zip.created_at";
+              sql += "zip.created_at";
               break;
           case 'alphabet':
-              console.log("가나다순");
-              sql += ", zip.title ORDER BY zip.title";
+              sql += "zip.title";
               break;
           case 'visit':
-              console.log("방문빈도순");
-              sql += ", zip.title ORDER BY IFNULL(SUM(link.visit),0) DESC, zip.title";
+              sql += "IFNULL(SUM(link.visit),0) DESC, zip.title";
               break;
           default:
-              console.log("잘못된 요청입니다.")
               throw new BaseError(status.BAD_REQUEST);
         }
 
