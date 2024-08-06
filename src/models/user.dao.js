@@ -33,6 +33,7 @@ export const getUserDao = async (userId) => {
         const conn = await pool.getConnection();
         const [[result]] = await conn.query(selectUserSql, userId);
         conn.release();
+        console.log(result);
         return result;
     } catch (error) {
         console.error(error);
@@ -45,6 +46,7 @@ export const getUserByKakaoIdDao = async (kakaoId) => {
         const conn = await pool.getConnection();
         const [[result]] = await conn.query(selectUserByKakaoIdSql, kakaoId);
         conn.release();
+        console.log(result);
         return result;
     } catch (error) {
         console.error(error);
