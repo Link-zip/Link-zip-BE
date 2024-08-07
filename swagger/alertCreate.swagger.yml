@@ -17,7 +17,7 @@ paths:
               linkId:
                 type: integer
                 description: 링크 Id
-                example: 105
+                example: 103
               alert_date:
                 type: string
                 format: date-time
