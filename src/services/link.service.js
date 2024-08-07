@@ -2,8 +2,8 @@ import { fetchUrlContent, getUrlThumb, getYoutubeSummary } from "@providers/link
 import { getGptResponse, getGptYoutubeSummary } from "@providers/link.provider";
 import { BaseError} from "@config/error";
 import { status } from "@config/response.status";
-import { addLinkDao, deleteZipIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
-import { createLinkResDto, deleteZipIdResDto, getLinksResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
+import { addLinkDao, deleteZipIdDao, getLinkByIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
+import { createLinkResDto, deleteZipIdResDto, getLinkByIdResDto, getLinksResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
 
 /** 사이트 정보 요약 */
 export const summarizeContent = async (content, maxLength = 1000) => {
@@ -28,35 +28,47 @@ export const generateUrlSummary = async (url) =>  {
     if(!isYoutube){
         const content = await fetchUrlContent(url);
         if (!content) {
-            throw new BaseError(status.NOT_FOUND);    
+            throw new BaseError(status.FETCH_FAIL);    
         }
         const summary = await summarizeContent(content.content, 300);
         const response = await getGptResponse(summary);
         return response;
     } else { // 유튜브 URL인 경우
         const youtubeSummary = await getYoutubeSummary(url);
+        if(!youtubeSummary) {
+            throw new BaseError(status.FETCH_FAIL);
+        }
         const gptResponse = await getGptYoutubeSummary(youtubeSummary);
         const formattedText = `요약을 요청하신 URL이 유튜브 플랫폼 동영상으로 확인되어 영상 내용을 AI로 요약한 결과입니다 : ${gptResponse}`
         return formattedText;
     }
 }
 
-export const getLinkSer = async (zipId, userId, tag) => {
+export const getLinksSer = async (zipId, userId, tag) => {
     const getResult = await getLinksDao(zipId, userId, tag);
     
     if(getResult == null) {
-        return '해당되는 문자열이 없습니다.';
+        throw BaseError(status.LINK_NOT_FOUND);
     } else {
         return getLinksResDto(getResult);
     }
 }
 
+export const getLinkByIdSer = async (linkId) => {
+    const getResult = await getLinkByIdDao(linkId);
+
+    if(getResult == null) {
+        throw BaseError(status.LINK_NOT_FOUND);
+    } else {
+        return getLinkByIdResDto(getResult);
+    }
+}
+
 export const createNewLinkSer = async (body) => {
     const createdLinkId = await addLinkDao(body); 
-
-    // provider를 통해 body.url의 thumb 주소값 가져옴
-    const thumb = await getUrlThumb(body.url);
     
+    // provider를 통해 body.url의 thumb 주소값 가져옴
+    const thumb = await getUrlThumb(body.url);   
     
     if(thumb != null) {
         const affectedRows = await updateThumbDao(createdLinkId, thumb);
@@ -102,7 +114,7 @@ export const updateZipIdSer = async (linkId, newZipId) => {
 }
 
 export const deleteLinkByIdSer = async (linkId) => {
-    const affectedRows = await deleteZipIdDao(linkId);
+    const affectedRows = await deleteLinkByIdDao(linkId);
     
     if(affectedRows == null){
         throw new BaseError(status.FAILED_TO_DELETE);

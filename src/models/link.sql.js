@@ -17,6 +17,8 @@ export const selectLinksByZipIdSql = "SELECT * FROM link WHERE zip_id = ? AND us
 
 export const selectLinksByTagSql = "SELECT * FROM link WHERE zip_id = ? AND user_id = ? AND tag = ?";
 
+export const selectLinkByIdSql = "SELECT * FROM link WHERE id = ?"
+
 /** UPDATE VISIT */
 export const updateVisitSql = "UPDATE link SET visit = visit + 1, visit_date = NOW() WHERE id = ?";
 
@@ -29,6 +31,7 @@ export const selectUpdatedLikeSql = "SELECT id, `like` FROM link WHERE id = ?";
 
 /** UPDATE ZIP ID */
 export const updateZipIdSql = "UPDATE link SET zip_id = ? WHERE id = ?";
+
 export const selectUpdatedZipIdSql = "SELECT id, zip_id FROM link WHERE id = ?"
 
 /** DELETE LINK BY ID */
