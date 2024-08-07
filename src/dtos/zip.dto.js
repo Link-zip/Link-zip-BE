@@ -1,8 +1,8 @@
 
 // POST API DTO
-export const createZipReqDto = (body) => {
+export const createZipReqDto = (userId, body) => {
     return {
-        user_id : body.user_id,
+        user_id : userId,
         title : body.title,
         color : body.color,
     };
@@ -15,9 +15,9 @@ export const createZipResDto = (zip_id) => {
 };
 
 // DELETE API DTO
-export const deleteZipReqDto = (body) => {
+export const deleteZipReqDto = (userId, body) => {
     return {
-        user_id : body.user_id,
+        user_id : userId,
         zip_id : body.id,
         status : body.status
     };
@@ -41,9 +41,9 @@ export const getZipResDto = (zip) => {
 }
 
 // PATCH API DTO
-export const editZipReqDto = (body) => {
+export const editZipReqDto = (userId, body) => {
     return {
-        user_id : body.user_id,
+        user_id : userId,
         zip_id : body.id,
         title : body.title,
         color : body.color
