@@ -6,12 +6,12 @@ import { prepareAlertData, alertPreview, checkAlert, eraseAlert } from "../servi
 
 export const createAlert = async (req,res,next) => {
     console.log("새 알림을 생성합니다.");
-    res.send(response(status.SUCCESS, await prepareAlertData(req.body)));
+    res.send(response(status.SUCCESS, await prepareAlertData(req)));
 }
 
 export const userAlert = async (req,res,next) => {
     console.log("알람을 조회합니다.");
-    res.send(response(status.SUCCESS, await alertPreview(req.query)));
+    res.send(response(status.SUCCESS, await alertPreview(req)));
 }
 
 export const confirmAlert = async (req,res,next) => {

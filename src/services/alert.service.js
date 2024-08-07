@@ -6,9 +6,10 @@ import {alertAddResponseDTO, alertPreviewResponseDTO, alertConfirmResponseDTO, a
 import {addAlert, getAlert, getLink,  getUserAlert, AlertConfirm, AlertDelete} from "../models/alert.dao.js";
 
 //알림 생성
-export const prepareAlertData = async (body) => {
+export const prepareAlertData = async (req) => {
+    const body = req.body;
     const AlertData = await addAlert({
-        'user_id': body.userId,
+        'user_id': req.userId,
         'link_id': body.linkId,
         'alert_date': body.alert_date,
         'alert_type': body.alert_type
@@ -21,8 +22,8 @@ export const prepareAlertData = async (body) => {
 }
 
 //알림 조회
-export const alertPreview= async (data) => {
-    const alerts = await getUserAlert(data.userId);
+export const alertPreview= async (req) => {
+    const alerts = await getUserAlert(req.userId);
     
     if (alerts==-1) {
         throw new BaseError(status.ALERT_NOT_FOUND); 
