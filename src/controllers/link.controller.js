@@ -4,9 +4,9 @@ import { BaseError } from "@config/error";
 import { createNewLinkSer, deleteLinkByIdSer, generateUrlSummary, getLinkByIdSer, getLinksSer, updateLikeSer, updateVisitSer, updateZipIdSer } from "@services/link.service";
 
 
-export const getLinksCnt = async  (req, res) => {
+export const getLinksCnt = async (req, res) => {
     const zip_id = req.params.zip_id;
-    const user_id = req.params.user_id; // 추후 토큰에서 가져오는 방법으로 변경
+    const user_id = req.userId;
     const tag = req.query.tag;
     
     try {
@@ -44,7 +44,7 @@ export const getSummaryCnt = async (req,res) => {
 export const createNewLinkCnt = async (req, res) => {
     // text 정보를 받아온 경우 tag: text 로 아니면 link로 저장
     try {
-        res.send(response(status.CREATED, await createNewLinkSer(req.body)));
+        res.send(response(status.CREATED, await createNewLinkSer(req.userId, req.body)));
     } catch (err) {
         return BaseError(status.FAILED_TO_CREATE);
     }

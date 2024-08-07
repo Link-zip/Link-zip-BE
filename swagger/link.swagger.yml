@@ -1,5 +1,5 @@
 paths:
-  /link/get_links/{zip_id}/{user_id}:
+  /link/get_links/{zip_id}:
     get:
       tags:
         - Link
@@ -15,13 +15,6 @@ paths:
           type: integer
           format: int32
           example: 1
-        - name: user_id
-          in: path
-          description: '사용자의 id값을 파라미터로 넘겨야 합니다.'
-          required: true
-          type: integer
-          format: int32
-          example: 123
         - name: tag
           in: query
           description: 'tag값이 link인 경우 link인 값들만 호출, text인 경우 text인 값들만 호출, 설정하지 않은 경우 모든 링크 데이터를 호출'
@@ -302,9 +295,6 @@ paths:
             type: object
             properties:
               zip_id:
-                type: integer
-                example: 99
-              user_id:
                 type: integer
                 example: 99
               title:
