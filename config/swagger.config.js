@@ -1,5 +1,16 @@
 import SwaggerJsdoc from "swagger-jsdoc";
 
+const env = process.env.NODE_ENV || 'development';
+let host;
+
+console.log(`현재 서버가 ${env} 모드로 호스팅 중입니다.`);
+
+if (env === 'development'){
+    host = 'localhost:3000';    
+} else if (env === 'production') {
+    host = process.env.SERVER_HOST;
+}
+
 const options = {
     definition: {
         swagger: '2.0',
@@ -8,7 +19,7 @@ const options = {
             version: '1.0.0',
             description: 'Link Zip API with express, API 설명'
         },
-        host: 'localhost:3000',
+        host: host,
         basepath: '../',
         securityDefinitions: {
             bearerAuth: {
