@@ -6,8 +6,8 @@ import { viewUnviewList, viewLikeList, viewRecentList } from "../controllers/lis
 export const listRouter = express.Router();
 
 // 미열람 링크 조회
-listRouter.get('/unview/:userId', asyncHandler(viewUnviewList));
+listRouter.get('/unview', asyncHandler(viewUnviewList));
 // 좋아요 링크 조회
-listRouter.get('/like/:userId', asyncHandler(viewLikeList));
+listRouter.get('/like', asyncHandler(viewLikeList));
 // 최신저장 링크 조회
-listRouter.get('/recent/:userId', asyncHandler(viewRecentList));
+listRouter.get('/recent', asyncHandler(viewRecentList));

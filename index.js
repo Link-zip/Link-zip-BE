@@ -2,16 +2,23 @@ import dotenv from 'dotenv';
 import express from 'express'
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
+import asyncHandler from 'express-async-handler';
+
+import '@config/global.js';
 import { specs } from '@config/swagger.config.js';
 import { status } from '@config/response.status.js';
 import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
+import { tokenAuthMiddleware } from '@config/authMiddleware';
+
 import { alertRouter } from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
 import { listRouter } from '@routes/list.route.js';
 import { linkRouter } from '@routes/link.route.js';
 import { zipRouter } from '@routes/zip.route.js'
 import { noticeRouter } from '@routes/notice.route';
+
+import { addUserCnt, checkNicknameCnt, kakaoLoginCnt } from '@controllers/user.controller';
 
 dotenv.config();
 
@@ -24,7 +31,14 @@ app.use(express.json());                    // request의 본문을 json으로 �
 app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태로 본문 데이터 해석
 
 
+// 토큰 검증 예외 라우트
+app.post('/user/login', asyncHandler(kakaoLoginCnt)); // 로그인
+app.get('/user', asyncHandler(checkNicknameCnt)); // 닉네임 중복 체크
+app.post('/user', asyncHandler(addUserCnt)); // 회원가입
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
+
+// 모든 route에 대해 검증 미들웨어 적용
+app.use(tokenAuthMiddleware);
 
 // router setting
 app.use('/list', listRouter);

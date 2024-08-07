@@ -2,7 +2,7 @@ import { BaseError } from '@config/error.js';
 import { status } from '@config/response.status.js';
 import { pool } from '@config/db.config.js';
 
-import { checkNicknameSql, insertUserSql, selectUserSql } from './user.sql.js';
+import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql } from './user.sql.js';
 
 /** 회원가입 DAO, id 리턴 */
 export const addUserDao = async (data) => {
@@ -38,6 +38,18 @@ export const getUserDao = async (userId) => {
         console.error(error);
         throw new BaseError(status.BAD_REQUEST);
     }   
+}
+
+export const getUserByKakaoIdDao = async (kakaoId) => {
+    try {
+        const conn = await pool.getConnection();
+        const [[result]] = await conn.query(selectUserByKakaoIdSql, kakaoId);
+        conn.release();
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.BAD_REQUEST);
+    }
 }
 
 /** 닉네임 중복 체크 DAO */
