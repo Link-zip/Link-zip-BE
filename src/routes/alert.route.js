@@ -1,7 +1,7 @@
 // src/routes/alert.route.js
 import express from "express";
 import asyncHandler from 'express-async-handler';
-import { createAlert, userAlert, confirmAlert, deleteAlert } from "../controllers/alert.controller.js";
+import { createAlert, userAlert, confirmAlert } from "../controllers/alert.controller.js";
 
 export const alertRouter = express.Router();
 
@@ -11,5 +11,3 @@ alertRouter.post('/add', asyncHandler(createAlert));
 alertRouter.get('',asyncHandler(userAlert));
 //알림 확인 
 alertRouter.put('/confirm/:alertId', asyncHandler(confirmAlert));
-// 알림 삭제
-alertRouter.delete('/:alertId', asyncHandler(deleteAlert));

@@ -11,32 +11,23 @@ export const alertAddResponseDTO = (alert, link) => {
 export const alertPreviewResponseDTO = (alerts) => {
 
   const newAlerts = alerts.map(alert => ({
-      "id": alert.id,
+      "alert_id": alert.id,
       "alert_status": alert.alert_status,
-      "created_at": formatDate(alert.created_at),
       "alert_date": formatDate(alert.alert_date),
       "alert_type": alert.alert_type,
-      "updated_at": formatDate(alert.updated_at),
       "link": {
           "id": alert.link[0].id,
-          "title": alert.link[0].title,
-          "thumb": alert.link[0].thumb,
+          "title": alert.link[0].title
       },
   }));
   
-  return { "alerts": newAlerts };
+  return { newAlerts };
 }
 
 //알람 확인 dto
 export const alertConfirmResponseDTO = () => {
   return {
     message: "알림이 확인되었습니다."
-  };
-}
-
-export const alertDeleteResponseDTO = () => {
-  return{
-    message: "알림이 삭제되었습니다."
   };
 }
 

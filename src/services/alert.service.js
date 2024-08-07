@@ -43,10 +43,3 @@ export const checkAlert = async (data) => {
     if(AlertData==-1) throw new BaseError(status.ALERT_NOT_FOUND); 
     return alertConfirmResponseDTO();
 }
-
-//알림 삭제
-export const eraseAlert = async(data) => {
-    const AlertData = await AlertDelete(data.alertId);
-    if(AlertData==-1) throw new BaseError(status.ALERT_NOT_FOUND); 
-    return alertDeleteResponseDTO();
-}
