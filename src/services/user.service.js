@@ -50,8 +50,7 @@ export const getUserByKakaoId = async (kakaoId) => {
 }
 
 /** 사용자 정보 조회 서비스 */
-export const getUserSer = async (req) => {
-    const userId = req.userId;
+export const getUserSer = async (userId) => {
     const result = await getUserDao(userId);
 
     if (result === undefined) {

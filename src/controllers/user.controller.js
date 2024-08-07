@@ -49,7 +49,7 @@ export const addUserCnt = async (req, res, next) => {
 
 /** 사용자 조회 컨트롤러 (userId) */
 export const getUserCnt = async (req, res, next) => {
-    res.send(response(status.SUCCESS, await getUserSer(req.params)));
+    res.send(response(status.SUCCESS, await getUserSer(req.userId)));
 }
 
 /** 닉네임 중복 체크 컨트롤러 (query: nickname) */
