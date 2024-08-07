@@ -1,49 +1,72 @@
-export const createLinkResDto = (link_id) => {
-    return `생성된 링크 id: ${link_id}`;
+export const createLinkResDto = (linkId) => {
+    return {
+        created_link_id: linkId,
+        message: `링크가 성공적으로 생성되었습니다. 생성된 링크 id는 ${linkId} 입니다.`
+    };
 }
 
 export const getLinksResDto = (getResult) => {
-    return getResult.map(link=> ({
-        id: link.id,
-        zip_id: link.zip_id,
-        user_id: link.user_id,
-        title: link.title,
-        url: link.url,
-        text: link.text,
-        memo: link.memo,
-        tag: link.tag,
-        alert_date: link.alert_date,
-        thumb: link.thumb,
-        like: link.like,
-        visit: link.visit,
-        visit_date: link.visit_date,
-        created_at: link.created_at,
-        updated_at: link.updated_at,
+    return getResult.map(({ id, zip_id, user_id, title, url, text, memo, tag, alert_date, thumb, like, visit, visit_date, created_at, updated_at }) => ({
+        id,
+        zip_id,
+        user_id,
+        title,
+        url,
+        text,
+        memo,
+        tag,
+        alert_date,
+        thumb,
+        like,
+        visit,
+        visit_date,
+        created_at,
+        updated_at,
     }));
+}
+
+
+export const getLinkByIdResDto = ({id, title, memo, text, alert_date, like, visit}) => {
+    return {
+        id,
+        title,
+        memo,
+        text,
+        alert_date,
+        like,
+        visit,
+        message: `${id} id를 가진 링크를 불러오는데 성공하였습니다.`
+    }
 }
 
 export const updateVisitResDto = (updateResult) => {
     return {
         link_id: updateResult.id ,
         visit: updateResult.visit,
-        visit_date: updateResult.visit_date
+        visit_date: updateResult.visit_date,
+        message: `방문수 및 최근방문날짜가 업데이트 되었습니다.`
     }
 }
 
 export const updateLikeResDto = (updateResult) => {
     return {
         link_id: updateResult.id ,
-        like: updateResult.like
+        like: updateResult.like,
+        message: `좋아요가 업데이트 되었습니다.`
     }
 }
 
 export const updateZipIdResDto = (updateResult) => {
     return {
         link_id: updateResult.id ,
-        new_zip_id: updateResult.zip_id
+        new_zip_id: updateResult.zip_id,
+        message: `zip이동을 완료하였습니다. 새로 이동한 zip id는 ${updateResult.zip_id}입니다.`
     }
 }
 
 export const deleteZipIdResDto = (affectedRows) => {
-    return `${affectedRows}개의 링크 데이터를 성공적으로 삭제하였습니다.`
+    return {
+        affectedRows,
+        message: `${affectedRows}개의 링크 데이터를 성공적으로 삭제하였습니다.`
+    }
 }

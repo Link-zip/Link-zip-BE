@@ -3,6 +3,7 @@ export const userResponseDTO = (data) => {
     return {
         userId: data.id,
         nickname: data.nickname,
-        createdAt: data.createdAt,
+        kakaoId: data.kakao_id,
+        createdAt: data.created_at,
     }
 }

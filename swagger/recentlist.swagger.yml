@@ -1,15 +1,10 @@
 paths:
-  /list/recent/{userId}:
+  /list/recent:
     get:
       tags:
         - List
       summary: 사용자의 최근 저장한 링크 조회
       parameters:
-        - in: path
-          name: userId
-          required: true
-          type: integer
-          description: 사용자 Id
         - in: query
           name: sort
           type: string

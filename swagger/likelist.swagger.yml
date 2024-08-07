@@ -1,15 +1,10 @@
 paths:
-  /list/like/{userId}:
+  /list/like:
     get:
       tags:
         - List
       summary: 사용자의 좋아요 링크 조회
       parameters:
-        - in: path
-          name: userId
-          required: true
-          type: integer
-          description: 사용자 Id
         - in: query
           name: sort
           type: string

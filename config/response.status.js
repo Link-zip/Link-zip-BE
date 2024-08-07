@@ -20,7 +20,12 @@ export const status = {
     PARAMETER_IS_WRONG: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "DB001", "message": "잘못된 요청 파라미터입니다." },
     FAILED_TO_UPDATE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB002", "message": "DB 데이터 업데이트에 실패했습니다." },
     FAILED_TO_DELETE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB003", "message": "DB 데이터 삭제에 실패했습니다." },
+    FAILED_TO_CREATE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB004", "message": "DB 데이터 삭제에 실패했습니다." },
 
+    //link error
+    FETCH_FAIL: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "LINK001", "message": "URL을 통한 content fetch에 실패하였습니다." },
+    LINK_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "LINK002", "message": "해당 링크를 찾을 수 없습니다." },
+    
 
     // alert error
     ALERT_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "ALERT001", "message": "해당 알림을 찾을 수 없습니다." },
@@ -29,5 +34,11 @@ export const status = {
     // user error
     USER_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "USER001", "message": "해당 유저를 찾을 수 없습니다." },
     NICKNAME_DUPLICATED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER002", "message": "이미 사용중인 유저가 있어요!" },
-    
+    INVALID_KEY: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER003", "message": "유효하지 않은 키입니다." },
+
+    // token error
+    KAKAO_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN001", "message": "카카오 토큰 발급에 실패했습니다." },
+    SERVER_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN002", "message": "서버 토큰 발급에 실패했습니다." },
+    TOKEN_INVALID: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN003", "message": "유효하지 않은 토큰입니다." },
+    TOKEN_EXPIRED: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN004", "message": "토큰이 만료되었습니다." },
 };

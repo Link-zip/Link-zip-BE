@@ -1,18 +1,28 @@
 import { response } from "@config/response";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { createNewLinkSer, deleteLinkByIdSer, generateUrlSummary, getLinkSer, updateLikeSer, updateVisitSer, updateZipIdSer } from "@services/link.service";
+import { createNewLinkSer, deleteLinkByIdSer, generateUrlSummary, getLinkByIdSer, getLinksSer, updateLikeSer, updateVisitSer, updateZipIdSer } from "@services/link.service";
 
 
-export const getLinksCnt = async  (req, res) => {
+export const getLinksCnt = async (req, res) => {
     const zip_id = req.params.zip_id;
-    const user_id = req.params.user_id; // 추후 토큰에서 가져오는 방법으로 변경
+    const user_id = req.userId;
     const tag = req.query.tag;
     
     try {
-        res.send(response(status.SUCCESS, await getLinkSer(zip_id, user_id, tag)));
+        res.send(response(status.SUCCESS, await getLinksSer(zip_id, user_id, tag)));
     } catch (err) {
-        return BaseError(status.BAD_REQUEST)
+        return BaseError(status.INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const getLinkByIdCnt = async (req, res) => {
+    const link_id = req.params.link_id;
+
+    try{
+        res.send(response(status.SUCCESS, await getLinkByIdSer(link_id)))
+    } catch (err) {
+        return BaseError(status.INTERNAL_SERVER_ERROR);
     }
 }
 
@@ -20,23 +30,23 @@ export const getSummaryCnt = async (req,res) => {
     const url = req.body.url;
 
     if (!url) { // 에러 메시지 추후 수정
-        return BaseError(status.NOT_FOUND);
+        return BaseError(status.BAD_REQUEST);
     }
 
     try {
         const AIResponse = await generateUrlSummary(url);
         res.send(response(status.SUCCESS, AIResponse ));
     } catch (err) {
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FETCH_FAIL);
     }
 }
 
 export const createNewLinkCnt = async (req, res) => {
     // text 정보를 받아온 경우 tag: text 로 아니면 link로 저장
     try {
-        res.send(response(status.CREATED, await createNewLinkSer(req.body)));
+        res.send(response(status.CREATED, await createNewLinkSer(req.userId, req.body)));
     } catch (err) {
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FAILED_TO_CREATE);
     }
 }
 
@@ -45,7 +55,7 @@ export const updateVisitCnt = async (req, res) => {
     try {
         res.send(response(status.SUCCESS, await updateVisitSer(req.params.link_id)))
     } catch (err){
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FAILED_TO_UPDATE);
     }
 }
 
@@ -53,7 +63,7 @@ export const updateLikeCnt = async (req, res) => {
     try {
         res.send(response(status.SUCCESS, await updateLikeSer(req.params.link_id)))
     } catch (err){
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FAILED_TO_UPDATE);
     }
 }
 /** 링크의 Zip 이동 */
@@ -62,7 +72,7 @@ export const updateZipIdCnt = async (req, res) => {
         const {link_id, new_zip_id} = req.params;
         res.send(response(status.SUCCESS, await updateZipIdSer(link_id, new_zip_id)));
     } catch (err){
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FAILED_TO_UPDATE);
     }
 }
 
@@ -71,6 +81,6 @@ export const deleteLinkByIdCnt = async (req, res) => {
     try {
         res.send(response(status.SUCCESS, await deleteLinkByIdSer(req.params.link_id)))
     } catch (err){
-        return BaseError(status.BAD_REQUEST);
+        return BaseError(status.FAILED_TO_DELETE);
     }
 }

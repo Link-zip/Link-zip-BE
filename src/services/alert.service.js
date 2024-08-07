@@ -1,14 +1,14 @@
 // alert.service.js
 
-import { BaseError } from "../../config/error.js";
-import { status } from "../../config/response.status.js";
-import {alertAddResponseDTO, alertPreviewResponseDTO, alertConfirmResponseDTO, alertDeleteResponseDTO } from "../dtos/alert.dto.js";
-import {addAlert, getAlert, getLink,  getUserAlert, AlertConfirm, AlertDelete} from "../models/alert.dao.js";
+import { BaseError } from "@config/error.js";
+import { status } from "@config/response.status.js";
+import { alertAddResponseDTO, alertPreviewResponseDTO, alertConfirmResponseDTO, alertDeleteResponseDTO } from "@dtos/alert.dto.js";
+import { addAlert, getAlert, getLink,  getUserAlert, AlertConfirm, AlertDelete } from "@models/alert.dao.js";
 
 //알림 생성
-export const prepareAlertData = async (body) => {
+export const prepareAlertData = async (userId, body) => {
     const AlertData = await addAlert({
-        'user_id': body.userId,
+        'user_id': userId,
         'link_id': body.linkId,
         'alert_date': body.alert_date,
         'alert_type': body.alert_type
@@ -21,8 +21,8 @@ export const prepareAlertData = async (body) => {
 }
 
 //알림 조회
-export const alertPreview= async (data) => {
-    const alerts = await getUserAlert(data.userId);
+export const alertPreview= async (userId) => {
+    const alerts = await getUserAlert(userId);
     
     if (alerts==-1) {
         throw new BaseError(status.ALERT_NOT_FOUND); 
@@ -42,11 +42,4 @@ export const checkAlert = async (data) => {
     const AlertData = await AlertConfirm(data.alertId);
     if(AlertData==-1) throw new BaseError(status.ALERT_NOT_FOUND); 
     return alertConfirmResponseDTO();
-}
-
-//알림 삭제
-export const eraseAlert = async(data) => {
-    const AlertData = await AlertDelete(data.alertId);
-    if(AlertData==-1) throw new BaseError(status.ALERT_NOT_FOUND); 
-    return alertDeleteResponseDTO();
 }

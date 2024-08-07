@@ -10,14 +10,10 @@ paths:
           required: true
           schema:
             properties:
-              userId:
-                type: integer
-                description: 유저 Id
-                example: 99
               linkId:
                 type: integer
                 description: 링크 Id
-                example: 105
+                example: 103
               alert_date:
                 type: string
                 format: date-time

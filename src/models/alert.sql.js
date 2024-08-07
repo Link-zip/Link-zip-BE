@@ -7,4 +7,3 @@ export const getLinkById = "SELECT * FROM link l WHERE l.id = ?";
 export const getAlertByuserId = "SELECT * FROM alert a where a.user_id = ?";
 
 export const checkAlertByAlertId = "UPDATE alert SET alert_status = 1 WHERE id = ?";
-export const deleteAlertByAlertId = "DELETE FROM alert where id = ?";

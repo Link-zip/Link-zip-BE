@@ -2,8 +2,7 @@
 import { ListResponseDTO } from "@dtos/list.dto.js";
 import { getPreviewUnviewList, getPreviewLikeList, getPreviewRecentList } from "@models/list.dao.js";
 
-export const getUnviewList = async (req, query) => {
-    const userId = req.userId;
+export const getUnviewList = async (userId, query) => {
     let filter, sort;
     if( query === "undefined" || query === undefined || query === null){
         filter = null;
@@ -16,8 +15,7 @@ export const getUnviewList = async (req, query) => {
     return ListResponseDTO(await getPreviewUnviewList(userId , sort, filter));
 }
 
-export const getLikeList = async (req, query) => {
-    const userId = req.userId;
+export const getLikeList = async (userId, query) => {
     let filter, sort;
     if( query === "undefined" || query === undefined || query === null){
         filter = null;
@@ -30,8 +28,7 @@ export const getLikeList = async (req, query) => {
     return ListResponseDTO(await getPreviewLikeList(userId , sort, filter));
 }
 
-export const getRecentList = async (req, query) => {
-    const userId = req.userId;
+export const getRecentList = async (userId, query) => {
     let filter, sort;
     if( query === "undefined" || query === undefined || query === null){
         filter = null;

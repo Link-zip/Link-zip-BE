@@ -1,15 +1,15 @@
 // src/routes/list.route.js
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getLinksCnt, createNewLinkCnt, getSummaryCnt, updateVisitCnt, updateLikeCnt, updateZipIdCnt, deleteLinkByIdCnt } from '@controllers/link.controller';
+import { getLinksCnt, createNewLinkCnt, getSummaryCnt, updateVisitCnt, updateLikeCnt, updateZipIdCnt, deleteLinkByIdCnt, getLinkByIdCnt } from '@controllers/link.controller';
 //controller
 
 export const linkRouter = express.Router();
 
 
 /** GET API */
-// user_id는 token에서 받아오는걸로 수정할 예정
-linkRouter.get("/get_links/:zip_id/:user_id", asyncHandler(getLinksCnt));
+linkRouter.get("/get_links/:zip_id", asyncHandler(getLinksCnt));
+linkRouter.get("/get_link/:link_id", asyncHandler(getLinkByIdCnt));
 
 
 

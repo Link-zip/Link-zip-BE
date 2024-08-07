@@ -3,7 +3,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { confirmAlert, insertAlert, getAlertById, getLinkById, getAlertByuserId, checkAlertByAlertId, deleteAlertByAlertId } from "./alert.sql.js";
+import { confirmAlert, insertAlert, getAlertById, getLinkById, getAlertByuserId, checkAlertByAlertId} from "./alert.sql.js";
 
 
 // 알림 생성하는 함수
@@ -98,22 +98,5 @@ export const AlertConfirm = async(alertId) => {
             throw err; 
         }
         throw new BaseError(status.BAD_REQUEST);
-    }
-}
-
-//알림 삭제하기
-export const AlertDelete = async(alertId) => {
-    try{
-        const conn = await pool.getConnection();
-        const [result] = await pool.query(deleteAlertByAlertId, parseInt(alertId));
-        if (result.affectedRows === 0) {
-            return -1; 
-        }
-
-        conn.release();
-        return 0;
-    }
-    catch (err){
-            throw new BaseError(status.BAD_REQUEST);
     }
 }
