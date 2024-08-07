@@ -7,11 +7,11 @@ import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql,
 /** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
 
 /** 링크 생성 DAO, 링크 id리턴 */
-export const addLinkDao = async (data) => {
+export const addLinkDao = async (userId, data) => {
     try {
-        const {zip_id, user_id, title, text, url, memo, alert_date} = data;
+        const {zip_id, title, text, url, memo, alert_date} = data;
         let sql;
-        let values = [zip_id, user_id, title, url, alert_date];
+        let values = [zip_id, userId, title, url, alert_date];
 
         if(memo != null && text != null){
             sql = insertMemoTextSql;

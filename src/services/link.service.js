@@ -2,7 +2,7 @@ import { fetchUrlContent, getUrlThumb, getYoutubeSummary } from "@providers/link
 import { getGptResponse, getGptYoutubeSummary } from "@providers/link.provider";
 import { BaseError} from "@config/error";
 import { status } from "@config/response.status";
-import { addLinkDao, deleteZipIdDao, getLinkByIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
+import { addLinkDao, deleteLinkByIdDao, getLinkByIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
 import { createLinkResDto, deleteZipIdResDto, getLinkByIdResDto, getLinksResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
 
 /** 사이트 정보 요약 */
@@ -64,8 +64,8 @@ export const getLinkByIdSer = async (linkId) => {
     }
 }
 
-export const createNewLinkSer = async (body) => {
-    const createdLinkId = await addLinkDao(body); 
+export const createNewLinkSer = async (userId, body) => {
+    const createdLinkId = await addLinkDao(userId, body); 
     
     // provider를 통해 body.url의 thumb 주소값 가져옴
     const thumb = await getUrlThumb(body.url);   

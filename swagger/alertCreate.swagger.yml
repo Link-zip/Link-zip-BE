@@ -10,10 +10,6 @@ paths:
           required: true
           schema:
             properties:
-              userId:
-                type: integer
-                description: 유저 Id
-                example: 99
               linkId:
                 type: integer
                 description: 링크 Id

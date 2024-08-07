@@ -12,7 +12,7 @@ export const kakaoLoginCnt = async (req, res, next) => {
     const result = await getUserByKakaoId(kakaoUserInfo.id); // 신규 유저일 시 여기서 throw
 
     const payload = {
-        userId: result.id,
+        userId: result.userId,
         nickname: result.nickname,
         kakaoId: kakaoUserInfo.id,
         connectedAt: kakaoUserInfo.connected_at,
@@ -31,7 +31,7 @@ export const addUserCnt = async (req, res, next) => {
     const result = await addUserSer(req.body); // 회원가입 리턴값
 
     const payload = {
-        userId: result.id,
+        userId: result.userId,
         nickname: result.nickname,
         kakaoId: result.kakaoId,
         connectedAt: result.createdAt,
@@ -49,7 +49,7 @@ export const addUserCnt = async (req, res, next) => {
 
 /** 사용자 조회 컨트롤러 (userId) */
 export const getUserCnt = async (req, res, next) => {
-    res.send(response(status.SUCCESS, await getUserSer(req.params)));
+    res.send(response(status.SUCCESS, await getUserSer(req.userId)));
 }
 
 /** 닉네임 중복 체크 컨트롤러 (query: nickname) */
