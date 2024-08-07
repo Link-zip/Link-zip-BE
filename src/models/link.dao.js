@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
 /** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
@@ -73,6 +73,19 @@ export const getLinksDao = async (zipId, userId, tag) => {
     }
 }
 
+export const getLinkByIdDao= async (linkId)=>{
+    try{
+        const conn = await pool.getConnection();
+        const [result] = await conn.query(selectLinkByIdSql, linkId);
+
+        conn.release();
+
+        return result[0];
+    } catch (err) {
+        throw new BaseError(status.BAD_REQUEST); 
+    }
+}
+
 export const updateVisitDao = async (linkId) => {
     try{
         const conn = await pool.getConnection();
@@ -126,7 +139,7 @@ export const updateZipIdDao = async (linkId, newZipId) => {
     }
 }
 
-export const deleteZipIdDao = async (linkId) => {
+export const deleteLinkByIdDao = async (linkId) => {
     try{
         const conn = await pool.getConnection();
         const [result] = await conn.query(deleteLinkByIdSql, [linkId]);

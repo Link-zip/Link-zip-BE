@@ -20,7 +20,12 @@ export const status = {
     PARAMETER_IS_WRONG: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "DB001", "message": "잘못된 요청 파라미터입니다." },
     FAILED_TO_UPDATE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB002", "message": "DB 데이터 업데이트에 실패했습니다." },
     FAILED_TO_DELETE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB003", "message": "DB 데이터 삭제에 실패했습니다." },
+    FAILED_TO_CREATE: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "DB004", "message": "DB 데이터 삭제에 실패했습니다." },
 
+    //link error
+    FETCH_FAIL: {status: StatusCodes.INTERNAL_SERVER_ERROR, "isSuccess": false, "code": "LINK001", "message": "URL을 통한 content fetch에 실패하였습니다." },
+    LINK_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "LINK002", "message": "해당 링크를 찾을 수 없습니다." },
+    
 
     // alert error
     ALERT_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "ALERT001", "message": "해당 알림을 찾을 수 없습니다." },
