@@ -17,6 +17,7 @@ import { listRouter } from '@routes/list.route.js';
 import { linkRouter } from '@routes/link.route.js';
 import { zipRouter } from '@routes/zip.route.js'
 import { noticeRouter } from '@routes/notice.route';
+import { searchRouter } from '@routes/search.route';
 
 import { addUserCnt, checkNicknameCnt, kakaoLoginCnt } from '@controllers/user.controller';
 
@@ -47,6 +48,7 @@ app.use('/link', linkRouter);
 app.use('/zips', zipRouter);
 app.use('/alert', alertRouter);
 app.use('/notice', noticeRouter);
+app.use('/search', searchRouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
