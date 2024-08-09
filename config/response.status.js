@@ -6,6 +6,7 @@ export const status = {
     CREATED: {status: StatusCodes.CREATED, "isSuccess": true, "code": 2000, "message": "create success!"},
     NICKNAME_VALID: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "환상적인 닉네임이에요!"},
     UPDATED: {status: StatusCodes.UPDATED, "isSuccess": true, "code": 2000, "message": "update success!"},
+    DELETED: {status: StatusCodes.DELETED, "isSuccess": true, "code": 2000, "message": "delete success!"},
 
     // error
     // common err
@@ -41,4 +42,12 @@ export const status = {
     SERVER_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN002", "message": "서버 토큰 발급에 실패했습니다." },
     TOKEN_INVALID: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN003", "message": "유효하지 않은 토큰입니다." },
     TOKEN_EXPIRED: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN004", "message": "토큰이 만료되었습니다." },
-};
+
+    // zip error
+    UPDATE_DEFAULT_ZIP: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "ZIP001", "message": "Default Zip은 수정이 불가합니다." },
+    DELETE_DEFAULT_ZIP: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "ZIP002", "message": "Default Zip은 삭제가 불가합니다." },
+
+    // search error
+    INVALID_KEYWORD: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "SEARCH001", "message": "잘못된 검색어 입니다." },
+    SEARCH_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "SEARCH002", "message": "검색결과가 없습니다." },
+  };

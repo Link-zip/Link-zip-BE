@@ -10,7 +10,7 @@ export const createZipReqDto = (userId, body) => {
 
 export const createZipResDto = (zip_id) => {
     return {
-        message : `${zip_id} zip이 생성되었습니다.`
+        message : `zip이 생성되었습니다.`
     };
 };
 
@@ -25,7 +25,7 @@ export const deleteZipReqDto = (userId, body) => {
 
 export const deleteZipResDto = (reqDto) => {
     return {
-        message : `${reqDto.user_id}의 ${reqDto.zip_id} zip이 삭제되었습니다.`
+        message : `${reqDto.zip_id} zip이 삭제되었습니다.`
     };
 };
 

@@ -8,7 +8,6 @@ import { createZipSql, deleteZipSql, testZipDeletableSql, getZipsSql, editZipSql
 export const createZipDao = async(dto) => {
     try{
         const conn = await pool.getConnection();
-        console.log("생성");
         const result = await conn.query(createZipSql,[
             dto.user_id,
             dto.title,

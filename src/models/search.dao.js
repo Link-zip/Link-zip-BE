@@ -15,6 +15,6 @@ export const searchLinkDao = async (user_id, keyword) => {
         conn.release();
         return result;
     } catch(err) {
-        throw new BaseError(status.BAD_REQUEST);
+        throw new BaseError(status.INTERNAL_SERVER_ERROR);
     }
 }
