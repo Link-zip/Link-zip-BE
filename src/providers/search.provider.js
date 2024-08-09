@@ -7,13 +7,11 @@ import { searchLinkDao } from "@models/search.dao";
 /** 링크 검색 Provider */
 export const searchLinkProvider = async(reqDto) => {
     if(!await reqDto.keyword.trim()){
-        throw new BaseError(status.BAD_REQUEST);
+        throw new BaseError(status.INVALID_KEYWORD);
     }
     const result = getLinksResDto(await searchLinkDao(reqDto.user_id, reqDto.keyword));
     if(!result.length){
-        return {
-            message : "검색어에 해당하는 링크가 없어요"
-        }
+        throw new BaseError(status.SEARCH_NOT_FOUND);
     }
     return result;
 }

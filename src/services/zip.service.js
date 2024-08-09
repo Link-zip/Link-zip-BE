@@ -15,7 +15,7 @@ export const deleteZipService = async (dto) => {
     // 해당 zip이 default zip인지 검증
     dto = await testZipDeletableDao(dto);
     if(dto.status == 'default'){
-        throw new BaseError(status.BAD_REQUEST);
+        throw new BaseError(status.DELETE_DEFAULT_ZIP);
     };
     return deleteZipResDto(await deleteZipDao(dto));
 };
@@ -26,7 +26,7 @@ export const editZipService = async (dto) => {
     // 해당 zip이 default zip인지 검증
     dto = await testZipDeletableDao(dto);
     if(dto.status === 'default'){
-        throw new BaseError(status.FAILED_TO_UPDATE);
+        throw new BaseError(status.UPDATE_DEFAULT_ZIP);
     };
     return editZipResDto(await editZipDao(dto));
 }

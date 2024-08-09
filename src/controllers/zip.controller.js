@@ -7,14 +7,14 @@ import { getZipsProvider } from '@providers/zip.provider.js';
 // POST Controller
 /** Zip 생성 controller */
 export const createZipController = async(req, res, next) => {
-    return res.send(response(status.SUCCESS, await createZipService(createZipReqDto(req.userId, req.body))));
+    return res.send(response(status.CREATED, await createZipService(createZipReqDto(req.userId, req.body))));
 };
 
 
 // DELETE Controller
 /** Zip 삭제 controller */
 export const deleteZipController = async(req, res, next) => {
-    return res.send(response(status.SUCCESS, await deleteZipService(deleteZipReqDto(req.userId, req.body))));
+    return res.send(response(status.DELETED, await deleteZipService(deleteZipReqDto(req.userId, req.body))));
 };
 
 // GET Controller
