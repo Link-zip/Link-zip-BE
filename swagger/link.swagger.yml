@@ -230,6 +230,158 @@ paths:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
 
+  /link/extract:
+    post:
+      tags:
+        - Link
+      summary: URL에서 썸네일 이미지와 제목 추출
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: URL 정보를 추출하기 위한 요청 양식
+          required: true
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                example: "https://www.example.com"
+      responses:
+        200:
+          description: URL의 썸네일 이미지와 제목을 성공적으로 추출했습니다.
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  thumb:
+                    type: string
+                    example: "https://www.example.com/thumbnail.jpg"
+                  title:
+                    type: string
+                    example: "Example Page Title"
+        400:
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다"
+              result:
+                type: object
+                additionalProperties: false
+        500:
+          description: 서버 에러 발생 시
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
+              result:
+                type: object
+                additionalProperties: false
+
+  /link/summary:
+    post:
+      tags:
+        - Link
+      summary: url의 정보 추출 및 AI 요약
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: url 정보를 AI에게 요약받기 위한 요청 양식
+          required: true
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                example: https://www.example.com
+
+      responses:
+        200:
+          description: AI의 응답을 성공적으로 받아왔습니다.
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  summary:
+                    type: string
+                    example: "This is a summary of the content at the given URL."
+        400:
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다"
+              result:
+                type: object
+                additionalProperties: false
+        500:
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
+              result:
+                type: object
+                additionalProperties: false
+
   /link/add:
     post:
       tags:
