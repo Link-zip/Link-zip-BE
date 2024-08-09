@@ -1,7 +1,7 @@
 import { response } from "@config/response";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { createNewLinkSer, deleteLinkByIdSer, generateUrlSummary, getLinkByIdSer, getLinksSer, updateLikeSer, updateVisitSer, updateZipIdSer } from "@services/link.service";
+import { createNewLinkSer, deleteLinkByIdSer, extractUrlSer, generateUrlSummary, getLinkByIdSer, getLinksSer, modifyLinkSer, updateLikeSer, updateVisitSer, updateZipIdSer } from "@services/link.service";
 
 
 export const getLinksCnt = async (req, res) => {
@@ -26,10 +26,10 @@ export const getLinkByIdCnt = async (req, res) => {
     }
 }
 
-export const getSummaryCnt = async (req,res) => {
+export const getSummaryCnt = async (req, res) => {
     const url = req.body.url;
 
-    if (!url) { // 에러 메시지 추후 수정
+    if (!url) {
         return BaseError(status.BAD_REQUEST);
     }
 
@@ -39,6 +39,22 @@ export const getSummaryCnt = async (req,res) => {
     } catch (err) {
         return BaseError(status.FETCH_FAIL);
     }
+}
+
+export const extractUrlCnt = async (req, res) => {
+    const url = req.body.url;
+
+    if (!url) {
+        return BaseError(status.BAD_REQUEST);
+    }
+
+    try {
+        const extractResponse = await extractUrlSer(url);
+        res.send(response(status.SUCCESS, extractResponse));
+    } catch (err){
+        return BaseError(status.FETCH_FAIL);
+    }
+
 }
 
 export const createNewLinkCnt = async (req, res) => {
@@ -76,6 +92,14 @@ export const updateZipIdCnt = async (req, res) => {
     }
 }
 
+export const modifyLinkCnt = async (req, res) => {
+    try {
+        const {link_id} = req.params;
+        res.send(response(status.SUCCESS, await modifyLinkSer(link_id, req.body)));
+    } catch (err) {
+        return BaseError(status.FAILED_TO_UPDATE);
+    }
+}
 
 export const deleteLinkByIdCnt = async (req, res) => {
     try {

@@ -38,7 +38,7 @@ app.post('/user', asyncHandler(addUserCnt)); // 회원가입
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // 모든 route에 대해 검증 미들웨어 적용
-app.use(tokenAuthMiddleware);
+// app.use(tokenAuthMiddleware);
 
 // router setting
 app.use('/list', listRouter);

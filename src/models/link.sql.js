@@ -34,5 +34,15 @@ export const updateZipIdSql = "UPDATE link SET zip_id = ? WHERE id = ?";
 
 export const selectUpdatedZipIdSql = "SELECT id, zip_id FROM link WHERE id = ?"
 
+/** UPDATE LINK */
+export const updateTextMemoLinkSql = "UPDATE link SET title = ?, text = ?, memo = ?, alert_date = ? WHERE id = ?;";
+
+export const updateTextLinkSql = "UPDATE link SET title = ?, text = ?, alert_date = ? WHERE id = ?;";
+
+export const updateMemoLinkSql = "UPDATE link SET title = ?, memo = ?, alert_date = ? WHERE id = ?;";
+
+export const updateLinkSql = "UPDATE link SET title = ?, alert_date = ? WHERE id = ?;";
+
+
 /** DELETE LINK BY ID */
 export const deleteLinkByIdSql = "DELETE FROM link WHERE id = ?";
