@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateMemoLinkSql, updateTextLinkSql, updateTextMemoLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
 /** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
@@ -97,7 +97,7 @@ export const updateVisitDao = async (linkId) => {
         if (updateResult.affectedRows === 1) {
             return selectResult[0];
         } else {
-            throw new BaseError(status.NOT_FOUND);
+            return "조회수 업데이트에 실패했습니다.";
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
@@ -135,6 +135,43 @@ export const updateZipIdDao = async (linkId, newZipId) => {
             throw new BaseError(status.NOT_FOUND);
         }
     } catch (err) {
+        throw new BaseError(status.BAD_REQUEST);
+    }
+}
+
+export const modifyLinkDao = async (linkId, body) => {
+    const {title, text, memo, alert_date} = body;
+    let sql;
+    let values = [title, alert_date];
+    
+    if(text != null && memo != null) {
+        sql = updateTextMemoLinkSql;
+        values.splice(1,0, text, memo);
+    } else if(text == null && memo != null) {
+        sql = updateTextLinkSql;
+        values.splice(1,0, memo);
+    } else if(text != null && memo == null) {
+        sql = updateMemoLinkSql;
+        values.splice(1,0, text);
+    } else if(text == null && memo == null) {
+        sql = updateLinkSql;
+    }
+
+    values.push(linkId);
+
+    try {
+        const conn = await pool.getConnection();
+        const [updateResult] = await conn.query(sql, values);
+        const [selectResult] = await conn.query(selectLinkByIdSql, [linkId]);
+        conn.release();
+
+        if (updateResult.affectedRows === 1) {
+            return selectResult[0];
+        } else {
+            return '수정된 링크 데이터가 없습니다.';
+        }
+    } catch (err) {
+        console.log(err);
         throw new BaseError(status.BAD_REQUEST);
     }
 }

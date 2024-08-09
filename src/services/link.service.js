@@ -1,9 +1,9 @@
-import { fetchUrlContent, getUrlThumb, getYoutubeSummary } from "@providers/link.provider";
+import { fetchUrlContent, getUrlThumb, getUrlTitle, getYoutubeSummary } from "@providers/link.provider";
 import { getGptResponse, getGptYoutubeSummary } from "@providers/link.provider";
 import { BaseError} from "@config/error";
 import { status } from "@config/response.status";
-import { addLinkDao, deleteLinkByIdDao, getLinkByIdDao, getLinksDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
-import { createLinkResDto, deleteZipIdResDto, getLinkByIdResDto, getLinksResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
+import { addLinkDao, deleteLinkByIdDao, getLinkByIdDao, getLinksDao, modifyLinkDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
+import { createLinkResDto, deleteZipIdResDto, extractUrlResDto, getLinkByIdResDto, getLinksResDto, modifyLinkResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
 
 /** 사이트 정보 요약 */
 export const summarizeContent = async (content, maxLength = 1000) => {
@@ -20,6 +20,13 @@ export const summarizeContent = async (content, maxLength = 1000) => {
 export const checkYoutube = (url) => {
     if (url.includes('youtube.com/watch?v=') || url.includes('youtu.be/'))
         return true;
+}
+
+export const extractUrlSer = async (url) => {
+    const thumb = await getUrlThumb(url);
+    const title = await getUrlTitle(url);
+
+    return extractUrlResDto(thumb, title);
 }
 
 /** url 요약 정보 생성 */
@@ -90,6 +97,8 @@ export const updateVisitSer = async (linkId) => {
 
     if(updateVisitResult == null){
         throw new BaseError(status.FAILED_TO_UPDATE);
+    } else if(typeof updateVisitResult === 'string') {
+        return updateVisitResult;
     } else {
         return updateVisitResDto(updateVisitResult);
     }
@@ -110,6 +119,17 @@ export const updateZipIdSer = async (linkId, newZipId) => {
         throw new BaseError(status.FAILED_TO_UPDATE);
     } else {
         return updateZipIdResDto(updateZipIdResult);
+    }
+}
+
+export const modifyLinkSer = async (linkId, body) => {
+    const modifyLinkResult = await modifyLinkDao(linkId, body);
+    if(modifyLinkResult == null) {
+        throw new BaseError(status.FAILED_TO_UPDATE);
+    } else if(typeof modifyLinkResult === 'string'){
+        return modifyLinkResult;
+    } else {
+        return modifyLinkResDto(modifyLinkResult);
     }
 }
 

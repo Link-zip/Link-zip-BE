@@ -5,6 +5,13 @@ export const createLinkResDto = (linkId) => {
     };
 }
 
+export const extractUrlResDto = (thumb, title) => {
+    return {
+        thumb,
+        title
+    }
+}
+
 export const getLinksResDto = (getResult) => {
     return getResult.map(({ id, zip_id, user_id, title, url, text, memo, tag, alert_date, thumb, like, visit, visit_date, created_at, updated_at }) => ({
         id,
@@ -26,10 +33,11 @@ export const getLinksResDto = (getResult) => {
 }
 
 
-export const getLinkByIdResDto = ({id, title, memo, text, alert_date, like, visit}) => {
+export const getLinkByIdResDto = ({id, title, memo, text,thumb, alert_date, like, visit}) => {
     return {
         id,
         title,
+        thumb,
         memo,
         text,
         alert_date,
@@ -61,6 +69,16 @@ export const updateZipIdResDto = (updateResult) => {
         link_id: updateResult.id ,
         new_zip_id: updateResult.zip_id,
         message: `zip이동을 완료하였습니다. 새로 이동한 zip id는 ${updateResult.zip_id}입니다.`
+    }
+}
+
+export const modifyLinkResDto = ({id, title, text, memo, alert_date}) => {
+    return {
+        title, 
+        text, 
+        memo, 
+        alert_date,
+        message: `${id}번 링크 내용을 성공적으로 수정하였습니다.`
     }
 }
 

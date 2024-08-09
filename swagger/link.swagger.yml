@@ -12,57 +12,71 @@ paths:
           in: path
           description: '링크가 속한 zip의 id값을 파라미터로 넘겨야 합니다.'
           required: true
-          type: integer
-          format: int32
-          example: 1
+          schema:
+            type: integer
+            format: int32
+            example: 1
         - name: tag
           in: query
           description: 'tag값이 link인 경우 link인 값들만 호출, text인 경우 text인 값들만 호출, 설정하지 않은 경우 모든 링크 데이터를 호출'
           required: false
-          type: string
-          example: 'link'
+          schema:
+            type: string
+            example: 'link'
       responses:
         200:
           description: 링크 데이터가 성공적으로 호출된 경우
           schema:
-            type: array
-            items:
-              type: object
-              properties:
-                id:
-                  type: integer
-                zip_id:
-                  type: integer
-                user_id:
-                  type: integer
-                title:
-                  type: string
-                url:
-                  type: string
-                text:
-                  type: string
-                memo:
-                  type: string
-                tag:
-                  type: string
-                alert_date:
-                  type: string
-                  format: date-time
-                thumb:
-                  type: string
-                like:
-                  type: integer
-                visit:
-                  type: integer
-                visit_date:
-                  type: string
-                  format: date-time
-                created_at:
-                  type: string
-                  format: date-time
-                updated_at:
-                  type: string
-                  format: date-time
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    zip_id:
+                      type: integer
+                    user_id:
+                      type: integer
+                    title:
+                      type: string
+                    url:
+                      type: string
+                    text:
+                      type: string
+                    memo:
+                      type: string
+                    tag:
+                      type: string
+                    alert_date:
+                      type: string
+                      format: date-time
+                    thumb:
+                      type: string
+                    like:
+                      type: integer
+                    visit:
+                      type: integer
+                    visit_date:
+                      type: string
+                      format: date-time
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
         400:
           description: 잘못된 요청
           schema:
@@ -97,6 +111,7 @@ paths:
               message:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
+              
   /link/get_link/{link_id}:
     get:
       tags:
@@ -110,49 +125,62 @@ paths:
           in: path
           description: '링크 ID 값을 경로 매개변수로 전달합니다.'
           required: true
-          type: integer
-          format: int32
-          example: 1
+          schema:
+            type: integer
+            format: int32
+            example: 1
       responses:
         200:
           description: 링크 데이터가 성공적으로 호출된 경우
           schema:
             type: object
             properties:
-              id:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
                 type: integer
-              zip_id:
-                type: integer
-              user_id:
-                type: integer
-              title:
+                example: 2000
+              message:
                 type: string
-              url:
-                type: string
-              text:
-                type: string
-              memo:
-                type: string
-              tag:
-                type: string
-              alert_date:
-                type: string
-                format: date-time
-              thumb:
-                type: string
-              like:
-                type: integer
-              visit:
-                type: integer
-              visit_date:
-                type: string
-                format: date-time
-              created_at:
-                type: string
-                format: date-time
-              updated_at:
-                type: string
-                format: date-time
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  zip_id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  title:
+                    type: string
+                  url:
+                    type: string
+                  text:
+                    type: string
+                  memo:
+                    type: string
+                  tag:
+                    type: string
+                  alert_date:
+                    type: string
+                    format: date-time
+                  thumb:
+                    type: string
+                  like:
+                    type: integer
+                  visit:
+                    type: integer
+                  visit_date:
+                    type: string
+                    format: date-time
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
         400:
           description: 잘못된 요청
           schema:
@@ -175,9 +203,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 404
               isSuccess:
                 type: boolean
                 example: false
@@ -204,86 +229,12 @@ paths:
               message:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
-  /link/summary:
-    post:
-      tags:
-        - Link
-      summary: url의 정보 추출 및 AI 요약
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          description: url 정보를 AI에게 요약받기 위한 요청 양식
-          required: true
-          schema:
-            type: object
-            properties:
-              url:
-                type: string
-                example: https://www.example.com
 
-      responses:
-        200:
-          description: AI의 응답을 성공적으로 받아왔습니다.
-          schema:
-            type: object
-            properties:
-              isSuccess:
-                type: boolean
-                example: true
-              code:
-                type: integer
-                example: 2000
-              message:
-                type: string
-                example: "success!"
-              result:
-                type: object
-                properties:
-                  summary:
-                    type: string
-                    example: "This is a summary of the content at the given URL."
-        400:
-          description: 잘못된 요청
-          schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 400
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON001
-              message:
-                type: string
-                example: 잘못된 요청입니다
-        500:
-          description: 서버 에러
-          schema:
-            type: object
-            properties:
-              status:
-                type: integer
-                example: 500
-              isSuccess:
-                type: boolean
-                example: false
-              code:
-                type: integer
-                example: COMMON000
-              message:
-                type: string
-                example: 서버 에러, 관리자에게 문의 바랍니다.
-  
   /link/add:
     post:
       tags:
         - Link
-      summary: link 데이터(text포함) 추가 생성
+      summary: link 데이터(text 포함) 추가 생성
       consumes:
         - application/json
       parameters:
@@ -329,8 +280,86 @@ paths:
                 type: string
                 example: "create success!"
               result:
+                type: object
+                properties:
+                  link_id:
+                    type: integer
+                    example: 123
+        400:
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
                 type: string
-                example: "생성된 링크 id: 123"
+                example: "잘못된 요청입니다"
+              result:
+                type: object
+                additionalProperties: false
+        500:
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
+              result:
+                type: object
+                additionalProperties: false
+
+
+  /link/visit/{link_id}:
+    patch:
+      tags:
+        - Link
+      summary: 링크 방문 수 및 방문 날짜 업데이트
+      parameters:
+        - name: link_id
+          in: path
+          description: '방문 수를 업데이트할 링크의 ID'
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+      responses:
+        200:
+          description: 방문 수 및 방문 날짜가 성공적으로 업데이트된 경우
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  link_id:
+                    type: integer
+                  visit:
+                    type: integer
+                  visit_date:
+                    type: string
+                    format: date-time
         400:
           description: 잘못된 요청
           schema:
@@ -365,36 +394,6 @@ paths:
               message:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
-  /link/visit/{link_id}:
-    patch:
-      tags:
-        - Link
-      summary: 링크 방문 수 및 방문 날짜 업데이트
-      parameters:
-        - name: link_id
-          in: path
-          description: '방문 수를 업데이트할 링크의 ID'
-          required: true
-          type: integer
-          format: int32
-          example: 1
-      responses:
-        200:
-          description: 방문 수 및 방문 날짜가 성공적으로 업데이트된 경우
-          schema:
-            type: object
-            properties:
-              link_id:
-                type: integer
-              visit:
-                type: integer
-              visit_date:
-                type: string
-                format: date-time
-        400:
-          description: 잘못된 요청
-        500:
-          description: 서버 에러
 
   /link/update_like/{link_id}:
     patch:
@@ -406,23 +405,66 @@ paths:
           in: path
           description: '좋아요 상태를 업데이트할 링크의 ID'
           required: true
-          type: integer
-          format: int32
-          example: 1
+          schema:
+            type: integer
+            format: int32
+            example: 1
       responses:
         200:
           description: 좋아요 상태가 성공적으로 업데이트된 경우
           schema:
             type: object
             properties:
-              link_id:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
                 type: integer
-              like:
-                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  link_id:
+                    type: integer
+                  like:
+                    type: integer
         400:
           description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다"
         500:
           description: 서버 에러
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
 
   /link/move/{link_id}/{new_zip_id}:
     patch:
@@ -434,30 +476,192 @@ paths:
           in: path
           description: 'Zip을 이동할 링크의 ID'
           required: true
-          type: integer
-          format: int32
-          example: 1
+          schema:
+            type: integer
+            format: int32
+            example: 1
         - name: new_zip_id
           in: path
           description: '이동할 Zip의 ID'
           required: true
-          type: integer
-          format: int32
-          example: 2
+          schema:
+            type: integer
+            format: int32
+            example: 2
       responses:
         200:
           description: Zip이 성공적으로 업데이트된 경우
           schema:
             type: object
             properties:
-              link_id:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
                 type: integer
-              new_zip_id:
-                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  link_id:
+                    type: integer
+                  new_zip_id:
+                    type: integer
         400:
           description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다"
         500:
           description: 서버 에러
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
+
+  /link/modify/{link_id}:
+    patch:
+      tags:
+        - Link
+      summary: 링크 지정하여 내용 수정
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: link_id
+          description: 수정할 링크의 ID
+          required: true
+          schema:
+            type: integer
+            example: 123
+        - in: body
+          name: body
+          description: 수정할 링크의 제목, 텍스트, 메모, 알림 날짜 등의 정보를 포함합니다.
+          required: true
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: "Updated Title"
+              text:
+                type: string
+                example: "Updated Text Content"
+              memo:
+                type: string
+                example: "Updated Memo"
+              alert_date:
+                type: string
+                format: date
+                example: "2024-08-15"
+      responses:
+        200:
+          description: 링크 정보를 성공적으로 수정했습니다.
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: "Updated Title"
+                  text:
+                    type: string
+                    example: "Updated Text Content"
+                  memo:
+                    type: string
+                    example: "Updated Memo"
+                  alert_date:
+                    type: string
+                    format: date
+                    example: "2024-08-15"
+                  message:
+                    type: string
+                    example: "123번 링크 내용을 성공적으로 수정하였습니다."
+        400:
+          description: 잘못된 요청입니다.
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다."
+        404:
+          description: 수정할 링크를 찾을 수 없습니다.
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: NOT_FOUND
+              message:
+                type: string
+                example: "수정된 링크 데이터가 없습니다."
+        500:
+          description: 서버 에러입니다.
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
 
   /link/delete/{link_id}:
     delete:
@@ -469,19 +673,62 @@ paths:
           in: path
           description: '삭제할 링크의 ID'
           required: true
-          type: integer
-          format: int32
-          example: 1
+          schema:
+            type: integer
+            format: int32
+            example: 1
       responses:
         200:
           description: 링크가 성공적으로 삭제된 경우
           schema:
-            type: string
-            example: "1개의 링크 데이터를 성공적으로 삭제하였습니다."
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: integer
+                example: 2000
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "1개의 링크 데이터를 성공적으로 삭제하였습니다."
         400:
           description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 400
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: "잘못된 요청입니다."
         500:
           description: 서버 에러
-
-
-        
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 500
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: "서버 에러, 관리자에게 문의 바랍니다."
