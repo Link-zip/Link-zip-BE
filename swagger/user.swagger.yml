@@ -5,19 +5,24 @@ paths:
         - User
       summary: 소셜 로그인
       description: | 
-        카카오 authCode를 받아 소셜 로그인을 진행합니다. 
+        카카오 access token을 받아 소셜 로그인을 진행합니다. 
         기존 유저라면 토큰을 반환하며, 신규 유저라면 회원가입을 위한 key를 반환합니다.
       parameters:
         - in: body
           name: body
-          description: 카카오 authCode
+          description: 카카오 access token
           required: true
           schema:
             type: object
             properties:
-              authCode: 
+              accessToken: 
                 type: string
-                example: q1ozxUC1vZ0HI40oV2w6r1pIb8B6e2AdvEcaQoyz2a_BFT3KS2HSsQAAAAQKKiVQAAABkStXddZUdd9ffL_GXA
+              accessTokenExpires:
+                type: string
+              refreshToken:
+                type: string
+              refreshTokenExpires:
+                type: string
       responses:
         "200":
           description: 소셜 로그인 성공

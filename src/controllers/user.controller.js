@@ -7,8 +7,27 @@ import { getKakaoUserInfo } from "@providers/user.provider.js";
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
-    const { authCode } = req.body;
-    const kakaoUserInfo = await getKakaoUserInfo(authCode); // authCode로 카카오 토큰 발급
+    // const { authCode } = req.body;
+    // const kakaoUserInfo = await getKakaoUserInfo(authCode); // authCode로 카카오 토큰 발급
+
+    const { accessToken, accessTokenExpires, refreshToken, refreshTokenExpires } = req.body;
+    const kakaoUserInfo = await getKakaoUserInfo(accessToken);
+    
+    /** TODO : 카카오 토큰 갱신 로직 */
+    // try {
+    //     kakaoUserInfo = await getKakaoUserInfo(accessToken); // 카카오 토큰으로 카카오 유저 정보 조회
+    //     console.log(kakaoUserInfo);
+    // } catch (error) {
+    //     if (error.response.status === 401) {
+    //         try {
+    //             const newTokens = await refreshKakaoToken(refreshToken);
+    //             kakaoUserInfo = await getKakaoUserInfo(newTokens.accessToken);
+    //         } catch (error) {
+    //             throw new BaseError(status.KAKAO_TOKEN_ERROR);
+    //         }
+    //     }
+    // }
+
     const result = await getUserByKakaoId(kakaoUserInfo.id); // 신규 유저일 시 여기서 throw
 
     const payload = {
