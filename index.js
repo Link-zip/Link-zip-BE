@@ -19,7 +19,7 @@ import { zipRouter } from '@routes/zip.route.js'
 import { noticeRouter } from '@routes/notice.route';
 import { searchRouter } from '@routes/search.route';
 
-import { addUserCnt, checkNicknameCnt, kakaoLoginCnt } from '@controllers/user.controller';
+import { addUserCnt, checkNicknameCnt, getTestTokenCnt, kakaoLoginCnt } from '@controllers/user.controller';
 
 dotenv.config();
 
@@ -36,6 +36,7 @@ app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태
 app.post('/user/login', asyncHandler(kakaoLoginCnt)); // 로그인
 app.get('/user', asyncHandler(checkNicknameCnt)); // 닉네임 중복 체크
 app.post('/user', asyncHandler(addUserCnt)); // 회원가입
+app.post('/user/token/test', asyncHandler(getTestTokenCnt)); // 테스트용 토큰 발급
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // 모든 route에 대해 검증 미들웨어 적용

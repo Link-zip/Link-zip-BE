@@ -4,7 +4,7 @@ import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
 
 /** 카카오 토큰 발급 */
-export const getKakaoUserInfo = async (authCode) => {
+export const getKakaoToken = async (authCode) => {
     try {
         const tokenResponse = await axios.post(
             `https://kauth.kakao.com/oauth/token`, null,
@@ -25,6 +25,24 @@ export const getKakaoUserInfo = async (authCode) => {
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+    
+        return userInfoResponse.data;
+    } catch (error) {
+        throw new BaseError(status.KAKAO_TOKEN_ERROR);
+    }
+}
+
+/** 카카오 토큰으로 유저 정보 추출 */
+export const getKakaoUserInfo = async (kakaoToken) => {
+    try {
+        const userInfoResponse = await axios.get(
+            `https://kapi.kakao.com/v2/user/me`,
+            {
+                headers: {
+                    Authorization: `Bearer ${kakaoToken}`,
                 },
             }
         );
