@@ -82,3 +82,21 @@ export const checkNicknameCnt = async (req, res, next) => {
 
     return res.send(response(status.NICKNAME_VALID, await checkNicknameSer(nickname)));
 }
+
+export const getTestTokenCnt = async (req, res, next) => {
+    const result = await getUserSer(99);
+
+    const payload = {
+        userId: result.userId,
+        nickname: result.nickname,
+        kakaoId: result.kakaoId,
+        connectedAt: result.createdAt,
+    };
+
+    try {
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.send(response(status.SUCCESS, {accessToken: token}));
+    } catch (error) {
+        throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
+    }
+}

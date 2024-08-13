@@ -8,8 +8,10 @@ export const tokenAuthMiddleware = (req, res, next) => {
     if (!header) {
         throw new BaseError(status.TOKEN_INVALID);
     }
-
-    const token = header.split('Bearer ')[1];
+    let token = header;
+    if (header.startsWith('Bearer ')) {
+        token = header.split('Bearer ')[1];
+    }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
