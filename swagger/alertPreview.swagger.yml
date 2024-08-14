@@ -6,44 +6,38 @@ paths:
       summary: 알림 조회
       responses:
         "200":
-          description: 알림 생성 성공!
+          description: 알림 조회 성공!
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 200
               isSuccess:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
-          data:
-            type: object
-            example:
-              {
-                "alert_id": 9,
-                "alert_status": 0,
-                "alert_date": "2025-05-25 15:30:00",
-                "alert_type": "original",
-                "link":{
-                    "id": 5,
-                    "title": "Link 2",
-                    "memo": "link 2 memo"
-                }
-              }
+              result:
+                type: object
+                example:
+                  {
+                    "alert_id": 9,
+                    "alert_status": 0,
+                    "alert_date": "2025-05-25 15:30:00",
+                    "alert_type": "original",
+                    "link":{
+                        "id": 5,
+                        "title": "Link 2",
+                        "memo": "link 2 memo"
+                    }
+                  }
         "400":
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -58,9 +52,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false

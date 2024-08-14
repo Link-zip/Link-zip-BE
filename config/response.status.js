@@ -2,11 +2,11 @@ import { StatusCodes } from "http-status-codes";
 
 export const status = {
     // success
-    SUCCESS: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "success!"},
-    CREATED: {status: StatusCodes.CREATED, "isSuccess": true, "code": 2000, "message": "create success!"},
-    NICKNAME_VALID: {status: StatusCodes.OK, "isSuccess": true, "code": 2000, "message": "환상적인 닉네임이에요!"},
-    UPDATED: {status: StatusCodes.UPDATED, "isSuccess": true, "code": 2000, "message": "update success!"},
-    DELETED: {status: StatusCodes.DELETED, "isSuccess": true, "code": 2000, "message": "delete success!"},
+    SUCCESS: {status: StatusCodes.OK, "isSuccess": true, "code": "2000", "message": "success!"},
+    CREATED: {status: StatusCodes.CREATED, "isSuccess": true, "code": "2000", "message": "create success!"},
+    NICKNAME_VALID: {status: StatusCodes.OK, "isSuccess": true, "code": "2000", "message": "환상적인 닉네임이에요!"},
+    UPDATED: {status: StatusCodes.UPDATED, "isSuccess": true, "code": "2000", "message": "update success!"},
+    DELETED: {status: StatusCodes.DELETED, "isSuccess": true, "code": "2000", "message": "delete success!"},
 
     // error
     // common err
