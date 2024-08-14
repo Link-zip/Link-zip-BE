@@ -17,19 +17,16 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 200
               isSuccess:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
-              data:
+              result:
                 type: object
                 example:
                   {
@@ -40,9 +37,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -57,9 +51,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
