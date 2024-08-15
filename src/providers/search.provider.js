@@ -1,6 +1,6 @@
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { getLinksResDto } from "@dtos/link.dto";
+import { searchLinkResDto } from "@dtos/search.dto";
 import { searchLinkDao } from "@models/search.dao";
 
 // GET API
@@ -9,11 +9,11 @@ export const searchLinkProvider = async (reqDto) => {
     if(!(await reqDto.keyword.trim())){
         throw new BaseError(status.INVALID_KEYWORD);
     }
-    const result = {
-        links: (getLinksResDto(await searchLinkDao(reqDto.user_id, reqDto.keyword)))
+    const searchResult = {
+        links : ((await searchLinkDao(reqDto.user_id, reqDto.keyword)).map((result) => searchLinkResDto(result)))
     };
-    if(!result.links.length){
+    if(!searchResult.links.length){
         throw new BaseError(status.SEARCH_NOT_FOUND);
     }
-    return result;
+    return searchResult;
 }
