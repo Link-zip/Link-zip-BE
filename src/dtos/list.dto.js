@@ -14,7 +14,7 @@ export const ListResponseDTO = (links) => {
       "tag": link.tag,
       "thumbnail": link.thumb,
       "like": link.like,
-      "createdAt": formatDate(link.created_at),
+      "createdAt": link.created_at,
       "zip": {
         "id": link.zip.id,
         "title": link.zip.title,
@@ -23,17 +23,4 @@ export const ListResponseDTO = (links) => {
     }));
   
     return { "links": Linklists};
-}
-
-
-const formatDate = (date) => {
-  // 날짜 값이 올바른 형식인지 확인
-  const validDate = new Date(date);
-  if (isNaN(validDate.getTime())) {
-      // 날짜 값이 유효하지 않은 경우 에러 처리
-      throw new Error('Invalid date format');
-  }
-
-  // 날짜 값이 유효한 경우 포맷팅
-  return new Intl.DateTimeFormat('kr').format(validDate).replaceAll(" ", "").slice(0, -1);
 }
