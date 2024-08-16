@@ -1,0 +1,221 @@
+paths:
+  /links/alert-count:
+    get:
+      tags:
+        - Home
+      summary: 알림 설정한 링크 갯수
+      description: 현재 날짜부터 한 달 이내의 알림 설정한 링크의 총 갯수를 반환합니다.
+      responses:
+        "200":
+          description: 알림 설정한 링크 갯수 반환 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                   "recent_alerts_count": 20
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+  /links/unread-count:
+    get:
+      tags:
+        - Home
+      summary: 미열람한 링크 갯수
+      description: 현재 날짜부터 한 달 이내에 알림 설정된 링크 중 읽지 않은 링크의 갯수를 반환합니다.
+      responses:
+        "200":
+          description: 미열람 링크 갯수 반환 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                   "unread_links_count": 20
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+  /links/old-count:
+    get:
+      tags:
+        - Home
+      summary: 오래된 링크 갯수
+      description: 알림 설정 후 한 달 이상 경과된 읽지 않은 링크의 갯수를 반환합니다.
+      responses:
+        "200":
+          description: 오래된 링크 갯수 반환 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                  "old_links_count": 20
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+  /links/total-count:
+    get:
+      tags:
+        - Home
+      summary: 전체 링크 갯수
+      description: 사용자의 총 저장된 링크 갯수 반환합니다.
+      responses:
+        "200":
+          description: 전체 링크 갯수 반환 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                   "total_links_count": 20
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.

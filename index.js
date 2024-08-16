@@ -18,6 +18,7 @@ import { linkRouter } from '@routes/link.route.js';
 import { zipRouter } from '@routes/zip.route.js'
 import { noticeRouter } from '@routes/notice.route';
 import { searchRouter } from '@routes/search.route';
+import { linkscountrouter } from '@routes/linkscount.route.js';
 
 import { addUserCnt, checkNicknameCnt, getTestTokenCnt, kakaoLoginCnt } from '@controllers/user.controller';
 
@@ -50,6 +51,7 @@ app.use('/zips', zipRouter);
 app.use('/alert', alertRouter);
 app.use('/notice', noticeRouter);
 app.use('/search', searchRouter);
+app.use('/links', linkscountrouter);
 
 /** DB 연결 테스트용 라우팅 */
 app.get('/', async (req, res)=>{
