@@ -3,7 +3,7 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { confirmAlert, insertAlert, getAlertById, getLinkById, getAlertByuserId, checkAlertByAlertId} from "./alert.sql.js";
+import { confirmAlert, insertAlert, getAlertById, getLinkById, getAlertByuserId, checkAlertByAlertId, CheckUnconfirmedAlert} from "./alert.sql.js";
 
 
 // 알림 생성하는 함수
@@ -92,6 +92,23 @@ export const AlertConfirm = async(alertId) => {
         }
         conn.release();
         return 0;
+    }
+    catch (err){
+        if (err.status === status.ALERT_NOT_FOUND) {
+            throw err; 
+        }
+        throw new BaseError(status.BAD_REQUEST);
+    }
+}
+
+//미확인 알림 여부 체크하기
+export const AlertUnconfirm = async(userId) => {
+    try{
+        const conn = await pool.getConnection();
+        const [result] = await pool.query(CheckUnconfirmedAlert, parseInt(userId));
+
+        conn.release();
+        return result;
     }
     catch (err){
         if (err.status === status.ALERT_NOT_FOUND) {
