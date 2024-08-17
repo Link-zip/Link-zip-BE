@@ -222,7 +222,7 @@ paths:
                 type: object
                 example:
                   {
-                     "uncomfirmed-alert": true
+                     "uncomfirmedAlert": true
                   }
         "400":
           description: 잘못된 요청
