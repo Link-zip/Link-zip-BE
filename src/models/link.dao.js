@@ -23,6 +23,8 @@ export const addLinkDao = async (userId, data) => {
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -38,6 +40,8 @@ export const updateThumbDao = async (linkId, thumb) => {
     } catch (err){
         console.log('thumb dao err:',err);
         throw new BaseError(status.BAD_REQUEST)
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -80,6 +84,8 @@ export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -93,6 +99,8 @@ export const getLinkByIdDao= async (linkId)=>{
         return result[0];
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST); 
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -111,6 +119,8 @@ export const updateVisitDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -128,6 +138,8 @@ export const updateLikeDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -146,6 +158,8 @@ export const updateZipIdDao = async (linkId, newZipId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -168,6 +182,8 @@ export const modifyLinkDao = async (linkId, body) => {
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -185,5 +201,7 @@ export const deleteLinkByIdDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
