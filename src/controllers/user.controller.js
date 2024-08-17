@@ -2,17 +2,15 @@ import jwt from 'jsonwebtoken';
 import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
-import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId } from '@services/user.service.js';
+import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken } from '@services/user.service.js';
 import { getKakaoUserInfo } from "@providers/user.provider.js";
+import { userLoginResponseDTO } from '@dtos/user.dto';
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
-    // const { authCode } = req.body;
-    // const kakaoUserInfo = await getKakaoUserInfo(authCode); // authCode로 카카오 토큰 발급
-
     const { accessToken, accessTokenExpires, refreshToken, refreshTokenExpires } = req.body;
     const kakaoUserInfo = await getKakaoUserInfo(accessToken);
-    
+
     /** TODO : 카카오 토큰 갱신 로직 */
     // try {
     //     kakaoUserInfo = await getKakaoUserInfo(accessToken); // 카카오 토큰으로 카카오 유저 정보 조회
@@ -28,18 +26,21 @@ export const kakaoLoginCnt = async (req, res, next) => {
     //     }
     // }
 
-    const result = await getUserByKakaoId(kakaoUserInfo.id); // 신규 유저일 시 여기서 throw
-
-    const payload = {
-        userId: result.userId,
-        nickname: result.nickname,
-        kakaoId: kakaoUserInfo.id,
-        connectedAt: kakaoUserInfo.connected_at,
-    };
-
     try {
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.send(response(status.SUCCESS, {accessToken: token}));
+        const result = await getUserByKakaoId(kakaoUserInfo.id);
+
+        if (result.isExists) { // 기존 유저임
+            const payload = {
+                userId: result.userId,
+                nickname: result.nickname,
+                kakaoId: kakaoUserInfo.id,
+                connectedAt: kakaoUserInfo.connected_at,
+            };
+            const tokenResponse = await generateToken(payload);
+            res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
+        } else {
+            res.send(response(status.SUCCESS, result));
+        }
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
@@ -57,13 +58,11 @@ export const addUserCnt = async (req, res, next) => {
     };
 
     try {
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.send(response(status.SUCCESS, {accessToken: token}));
+        const tokenResponse = await generateToken(payload); // 지금은 일단 accessToken만 발급
+        res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
-
-    
 }
 
 /** 사용자 조회 컨트롤러 (userId) */
@@ -80,9 +79,10 @@ export const checkNicknameCnt = async (req, res, next) => {
         throw new BaseError(status.BAD_REQUEST);
     }
 
-    return res.send(response(status.NICKNAME_VALID, await checkNicknameSer(nickname)));
+    return res.send(response(status.SUCCESS, await checkNicknameSer(nickname)));
 }
 
+/** 테스트 토큰 발급 */
 export const getTestTokenCnt = async (req, res, next) => {
     const result = await getUserSer(99);
 
@@ -94,8 +94,8 @@ export const getTestTokenCnt = async (req, res, next) => {
     };
 
     try {
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.send(response(status.SUCCESS, {accessToken: token}));
+        const tokenResponse = await generateToken(payload);
+        res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }

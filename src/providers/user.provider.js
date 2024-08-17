@@ -28,7 +28,7 @@ export const getKakaoToken = async (authCode) => {
                 },
             }
         );
-    
+
         return userInfoResponse.data;
     } catch (error) {
         throw new BaseError(status.KAKAO_TOKEN_ERROR);
@@ -46,7 +46,6 @@ export const getKakaoUserInfo = async (kakaoToken) => {
                 },
             }
         );
-    
         return userInfoResponse.data;
     } catch (error) {
         throw new BaseError(status.KAKAO_TOKEN_ERROR);
