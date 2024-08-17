@@ -7,3 +7,10 @@ export const userResponseDTO = (data) => {
         createdAt: data.created_at,
     }
 }
+
+export const userTokenResponseDTO = (token, expiresIn) => {
+    return {
+        accessToken: token,
+        accessTokenExpiresIn: expiresIn,
+    }
+}

@@ -1,6 +1,7 @@
+import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userResponseDTO } from '@dtos/user.dto.js';
+import { userTokenResponseDTO, userResponseDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao } from '@models/user.dao.js';
 import { generateKeyFromKakaoId } from "@providers/user.provider";
 
@@ -29,9 +30,9 @@ export const addUserSer = async (body) => {
 /** 닉네임 중복 여부: 서비스 단에서 분기 처리 */
 export const checkNicknameSer = async (nickname) => {
     const result = await checkNicknameDao(nickname);
-    // 닉네임 중복 시 throw
+
     if (result.count > 0) {
-        throw new BaseError(status.NICKNAME_DUPLICATED);
+        return false;
     }
     return true;
 }
@@ -40,13 +41,20 @@ export const checkNicknameSer = async (nickname) => {
 export const getUserByKakaoId = async (kakaoId) => {
     const result = await getUserByKakaoIdDao(kakaoId);
 
-    if (result === undefined) {
+    if (result === undefined) { // 신규 유저
         const key = generateKeyFromKakaoId(kakaoId);
         userKeyCache.set(key, kakaoId); // 카카오 id - key값 캐싱
-        throw new BaseError(status.USER_NOT_FOUND, key); // 404 에러
+        return {
+            "isExists": false,
+            "key": key,
+        };
     }
 
-    return userResponseDTO(result);
+    return {
+        "isExists": true,
+        "userId": result.id,
+        "nickname": result.nickname,
+    };
 }
 
 /** 사용자 정보 조회 서비스 */
@@ -58,4 +66,11 @@ export const getUserSer = async (userId) => {
     }
 
     return userResponseDTO(result);
+}
+
+/** 토큰 생성 */
+export const generateToken = async (payload) => {
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const expiresIn = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    return userTokenResponseDTO(token, expiresIn);
 }
