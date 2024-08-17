@@ -8,8 +8,9 @@ import { confirmAlert, insertAlert, getAlertById, getLinkById, getAlertByuserId,
 
 // 알림 생성하는 함수
 export const addAlert = async (data) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [confirm] = await pool.query(confirmAlert, [data.user_id, data.link_id, data.alert_date]);
         if(confirm[0].isExistAlert){// 같은 user, link ID에 같은 시간의 알림이 있으면 중복된 알림 처리
             conn.release();
@@ -24,13 +25,16 @@ export const addAlert = async (data) => {
     
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //alert 정보 얻기
 export const getAlert = async (alertId) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [alert] = await pool.query(getAlertById, alertId);
 
         if(alert.length == 0){
@@ -42,13 +46,16 @@ export const getAlert = async (alertId) => {
         
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //link 정보 얻기
 export const getLink = async (link_id) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [link] = await pool.query(getLinkById, link_id);
 
         if(link.length == 0){
@@ -60,13 +67,16 @@ export const getLink = async (link_id) => {
         
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //해당 유저의 알림 리스트 정보 얻기
 export const getUserAlert = async (userId) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [alert] = await pool.query(getAlertByuserId, parseInt(userId));
 
         if(alert.length == 0){
@@ -78,13 +88,16 @@ export const getUserAlert = async (userId) => {
         
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //알림 확인하기
 export const AlertConfirm = async(alertId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await pool.query(checkAlertByAlertId, parseInt(alertId));
         
         if (result.affectedRows === 0) {
@@ -98,13 +111,16 @@ export const AlertConfirm = async(alertId) => {
             throw err; 
         }
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //미확인 알림 여부 체크하기
 export const AlertUnconfirm = async(userId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await pool.query(CheckUnconfirmedAlert, parseInt(userId));
 
         conn.release();
@@ -115,5 +131,8 @@ export const AlertUnconfirm = async(userId) => {
             throw err; 
         }
         throw new BaseError(status.BAD_REQUEST);
+    }
+    finally{
+        if(conn) conn.release();
     }
 }

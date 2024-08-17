@@ -1,0 +1,257 @@
+paths:
+  /alert/add:
+    post:
+      tags:
+        - Alert
+      summary: 알림 생성 
+      parameters:
+        - name: alert
+          in: body
+          required: true
+          schema:
+            properties:
+              linkId:
+                type: integer
+                description: 링크 Id
+                example: 103
+              alert_date:
+                type: string
+                format: date-time
+                description: 알림 날짜 및 시간 (ISO 8601 형식)
+                example: '2024-03-20T15:50:20Z'
+              alert_type:
+                type: string
+                enum: [original, reminder]
+                description: 알림 타입
+      responses:
+        "200":
+          description: 알림 생성 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                  "message": "알림이 생성되었습니다."
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+
+  /alert:
+    get:
+      tags:
+        - Alert
+      summary: 알림 조회
+      responses:
+        "200":
+          description: 알림 조회 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                    "alert_id": 9,
+                    "alert_status": 0,
+                    "alert_date": "2025-05-25 15:30:00",
+                    "alert_type": "original",
+                    "link":{
+                        "id": 5,
+                        "title": "Link 2",
+                        "memo": "link 2 memo"
+                    }
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+
+  /alert/confirm/{alertId}:
+    put:
+      tags:
+        - Alert
+      summary: 알림 확인
+      parameters:
+        - in: path
+          name: alertId
+          required: true
+          schema:  
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: 알림 생성 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                  "message": "알림이 확인되었습니다."
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+
+  /alert/unconfirmed-exists:
+    get:
+      tags:
+        - Alert
+      summary: 미확인 알림 여부 
+      responses:
+        "200":
+          description: 미확인 알림 여부 API 성공!
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                type: string
+                example: "2000"
+              message:
+                type: string
+                example: "success!"
+              result:
+                type: object
+                example:
+                  {
+                     "uncomfirmedAlert": true
+                  }
+        "400":
+          description: 잘못된 요청
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON001
+              message:
+                type: string
+                example: 잘못된 요청입니다
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+
+
+

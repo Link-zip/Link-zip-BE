@@ -56,6 +56,6 @@ export const alertUncofirmedExistResponseDTO = (data) => {
   let result = false;
   if(data[0].isExist==1) result = true
   return {
-    "uncomfirmed-alert": result
+    "uncomfirmedAlert": result
   }
 }

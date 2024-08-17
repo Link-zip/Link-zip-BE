@@ -7,20 +7,24 @@ import { getUnviewListByUserId, getZipById, getLikeListByUserId, getRecentListBy
 
 //Zip의 정보를 가져오는 함수
 export const getZip = async (zipId) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [[zip]] = await conn.query(getZipById, parseInt(zipId));
         conn.release();
         return zip;
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 };
 
 //미열람 링크를 조회하는 함수 
 export const getPreviewUnviewList = async (userId, sort, filter) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
 
         let query = getUnviewListByUserId;
         
@@ -59,13 +63,16 @@ export const getPreviewUnviewList = async (userId, sort, filter) => {
     
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //좋아요 링크를 조회하는 함수
 export const getPreviewLikeList = async(userId, sort, filter)=>{
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         let query = getLikeListByUserId;
         
         // 필터 조건 추가
@@ -105,13 +112,16 @@ export const getPreviewLikeList = async(userId, sort, filter)=>{
     
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
 
 //최근 저장 링크를 조회하는 함수 
 export const getPreviewRecentList = async(userId, sort, filter)=>{
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
 
         let query = getRecentListByUserId;
         
@@ -151,5 +161,7 @@ export const getPreviewRecentList = async(userId, sort, filter)=>{
     
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    }finally{
+        if(conn) conn.release();
     }
 }
