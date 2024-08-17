@@ -28,44 +28,39 @@ paths:
                 type: string
                 example: "success!"
               result:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    zip_id:
-                      type: integer
-                    user_id:
-                      type: integer
-                    title:
-                      type: string
-                    url:
-                      type: string
-                    text:
-                      type: string
-                    memo:
-                      type: string
-                    tag:
-                      type: string
-                    alert_date:
-                      type: string
-                      format: date-time
-                    thumb:
-                      type: string
-                    like:
-                      type: integer
-                    visit:
-                      type: integer
-                    visit_date:
-                      type: string
-                      format: date-time
-                    created_at:
-                      type: string
-                      format: date-time
-                    updated_at:
-                      type: string
-                      format: date-time
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        link:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            url:
+                              type: string
+                            tag:
+                              type: string
+                            thumbnail:
+                              type: string
+                            like:
+                              type: integer
+                            createdAt:
+                              type: string
+                        zip:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            color:
+                              type: string
 
         400:
           description: 잘못된 검색어 입력(아무것도 입력하지 않았을때)
