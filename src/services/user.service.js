@@ -71,6 +71,6 @@ export const getUserSer = async (userId) => {
 /** 토큰 생성 */
 export const generateToken = async (payload) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const expiresIn = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    const expiresIn = new Date(Date.now() + 60 * 60 * 1000);
     return userTokenResponseDTO(token, expiresIn);
 }

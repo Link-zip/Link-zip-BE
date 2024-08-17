@@ -37,7 +37,7 @@ export const kakaoLoginCnt = async (req, res, next) => {
                 connectedAt: kakaoUserInfo.connected_at,
             };
             const tokenResponse = await generateToken(payload);
-            res.send(response(status.SUCCESS, tokenResponse));
+            res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
         } else {
             res.send(response(status.SUCCESS, result));
         }
@@ -94,8 +94,7 @@ export const getTestTokenCnt = async (req, res, next) => {
     };
 
     try {
-        const token = await generateToken(payload);
-
+        const tokenResponse = await generateToken(payload);
         res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
