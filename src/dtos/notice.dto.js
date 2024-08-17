@@ -1,11 +1,13 @@
 export const getAllNoticeResDto = (getResult) =>{
-    return getResult.map(({id, title, content, created_at, updated_at}) => ({
-        id,
-        title,
-        content,
-        created_at,
-        updated_at
-    }))
+    return {
+        notice_data: getResult.map(({id, title, content, created_at, updated_at}) => ({
+            id,
+            title,
+            content,
+            created_at,
+            updated_at
+        }))
+    }
 }
 
 export const getNoticeByIdResDto = (getResult) =>{
