@@ -26,15 +26,12 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 200
               isSuccess:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "create success!"
@@ -49,9 +46,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -66,9 +60,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 401
               isSuccess:
                 type: boolean
                 example: false
@@ -84,9 +75,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -120,8 +108,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -224,8 +212,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: update success!
@@ -307,8 +295,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: success!
