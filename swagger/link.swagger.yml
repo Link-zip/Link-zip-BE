@@ -33,58 +33,73 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
               result:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    zip_id:
-                      type: integer
-                    user_id:
-                      type: integer
-                    title:
-                      type: string
-                    url:
-                      type: string
-                    text:
-                      type: string
-                    memo:
-                      type: string
-                    tag:
-                      type: string
-                    alert_date:
-                      type: string
-                      format: date-time
-                    thumb:
-                      type: string
-                    like:
-                      type: integer
-                    visit:
-                      type: integer
-                    visit_date:
-                      type: string
-                      format: date-time
-                    created_at:
-                      type: string
-                      format: date-time
-                    updated_at:
-                      type: string
-                      format: date-time
+                type: object
+                properties:
+                  link_data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 99
+                        zip_id:
+                          type: integer
+                          example: 113
+                        user_id:
+                          type: integer
+                          example: 122
+                        title:
+                          type: string
+                          example: "example-title"
+                        url:
+                          type: string
+                          example: "example-url"
+                        text:
+                          type: string
+                          example: "example-text"
+                        memo:
+                          type: string
+                          example: "example-memo"
+                        tag:
+                          type: string
+                          example: "text"
+                        alert_date:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        thumb:
+                          type: string
+                          example: "example-thumb"
+                        like:
+                          type: integer
+                          example: 1
+                        visit:
+                          type: integer
+                          example: 1
+                        visit_date:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
         400:
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -99,9 +114,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -147,48 +159,47 @@ paths:
               result:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                  zip_id:
-                    type: integer
-                  user_id:
-                    type: integer
-                  title:
-                    type: string
-                  url:
-                    type: string
-                  text:
-                    type: string
-                  memo:
-                    type: string
-                  tag:
-                    type: string
-                  alert_date:
-                    type: string
-                    format: date-time
-                  thumb:
-                    type: string
-                  like:
-                    type: integer
-                  visit:
-                    type: integer
-                  visit_date:
-                    type: string
-                    format: date-time
-                  created_at:
-                    type: string
-                    format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
+                  link_data:
+                    properties:
+                      id:
+                        type: integer
+                      zip_id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      title:
+                        type: string
+                      url:
+                        type: string
+                      text:
+                        type: string
+                      memo:
+                        type: string
+                      tag:
+                        type: string
+                      alert_date:
+                        type: string
+                        format: date-time
+                      thumb:
+                        type: string
+                      like:
+                        type: integer
+                      visit:
+                        type: integer
+                      visit_date:
+                        type: string
+                        format: date-time
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
         400:
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -217,9 +228,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -517,9 +525,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -534,9 +539,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -588,9 +590,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -605,9 +604,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -667,9 +663,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -684,9 +677,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -771,9 +761,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -802,9 +789,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -855,9 +839,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -872,9 +853,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
