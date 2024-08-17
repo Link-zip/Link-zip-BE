@@ -6,8 +6,9 @@ import { createZipSql, deleteZipSql, testZipDeletableSql, getZipsSql, editZipSql
 // POST API
 /** Zip 생성 Dao */
 export const createZipDao = async(dto) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const result = await conn.query(createZipSql,[
             dto.user_id,
             dto.title,
@@ -18,14 +19,17 @@ export const createZipDao = async(dto) => {
         return result[0].insertId;
     } catch (err) {
         throw new BaseError(status.INTERNAL_SERVER_ERROR);
+    } finally{
+        if (conn) conn.release();
     }
 };
 
 //DELETE API
 /** Zip이 삭제 가능한지 검증하기 위한 Dao */
 export const testZipDeletableDao = async(dto) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
 
         const [result] = await conn.query(testZipDeletableSql, [
             dto.zip_id,
@@ -37,13 +41,16 @@ export const testZipDeletableDao = async(dto) => {
         return dto;
     } catch (err){
         throw new BaseError(status.INTERNAL_SERVER_ERROR);
+    } finally{
+      if (conn) conn.release();
     }
 }
 
 /** Zip 삭제 Dao */
 export const deleteZipDao = async(dto) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         await conn.query(deleteZipSql, [
             dto.zip_id,
             dto.user_id
@@ -53,14 +60,17 @@ export const deleteZipDao = async(dto) => {
         return dto;
     } catch(err) {
         throw new BaseError(status.INTERNAL_SERVER_ERROR);
+    } finally{
+      if (conn) conn.release();
     }
 }
 
 // GET API
 /** Zip 조회 Dao */
 export const getZipsDao = async(sort, user_id) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         let sql = getZipsSql;
         switch(sort) {
           case 'latest':
@@ -90,14 +100,17 @@ export const getZipsDao = async(sort, user_id) => {
         else{
             throw err;
         }
+    } finally{
+        if(conn) conn.release();
     }
 }
 
 //PATCH API
 /** Zip 수정 Dao */
 export const editZipDao = async(reqDto) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         await conn.query(editZipSql, [
             reqDto.title,
             reqDto.color,
@@ -108,5 +121,7 @@ export const editZipDao = async(reqDto) => {
         return reqDto.zip_id;
     } catch(err) {
         throw new BaseError(status.INTERNAL_SERVER_ERROR);
+    } finally{
+        if(conn) conn.release();
     }
 }
