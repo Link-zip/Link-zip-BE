@@ -7,10 +7,10 @@ import { createNewLinkSer, deleteLinkByIdSer, extractUrlSer, generateUrlSummary,
 export const getLinksCnt = async (req, res) => {
     const zip_id = req.params.zip_id;
     const user_id = req.userId;
-    const tag = req.query.tag;
+    const { tag, sortOrder } = req.query;
     
     try {
-        res.send(response(status.SUCCESS, await getLinksSer(zip_id, user_id, tag)));
+        res.send(response(status.SUCCESS, await getLinksSer(zip_id, user_id, tag, sortOrder)));
     } catch (err) {
         return BaseError(status.INTERNAL_SERVER_ERROR)
     }

@@ -41,16 +41,36 @@ export const updateThumbDao = async (linkId, thumb) => {
     }
 }
 
-export const getLinksDao = async (zipId, userId, tag) => {
+export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
     let sql;
-    let values = [zipId, userId, tag]; 
+    let values = [zipId, userId]; 
     try{
-        if (tag == 'link' || tag == 'text'){
+        /** tag 쿼리 여부에 따라 다른 sql문으로 쿼리 실행 */
+        if (tag){
             sql = selectLinksByTagSql;
+            values.push(tag);
         } else {
             sql = selectLinksByZipIdSql;
-            values.splice(2,1); // zipId, userId만 전달
         }
+        /** sortOrder 쿼리값이 있는 경우 해당 정렬 옵션으로 정렬하여 조회하는 SQL문 추가 */
+        switch (sortOrder) {
+            case'newest':
+                sql += ' ORDER BY link.created_at DESC'; // 최신순
+                break;
+            case'oldest':
+                sql += ' ORDER BY link.created_at ASC'; // 과거순
+                break;
+            case'alphabetical':
+                sql += ' ORDER BY link.title ASC'; // 가나다순
+                break;
+            case'most_visited':
+                sql += ' ORDER BY link.visit DESC'; // 방문빈도순
+                break;
+            default:
+                sql += ' ORDER BY link.created_at DESC'; // 기본값: 최신순
+                break;
+        }
+
         const conn = await pool.getConnection();
         const [result] = await conn.query(sql, values);
 
