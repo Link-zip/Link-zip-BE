@@ -8,6 +8,7 @@ import { deleteLinkByIdSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSq
 
 /** 링크 생성 DAO, 링크 id리턴 */
 export const addLinkDao = async (userId, data) => {
+    let conn;
     try {
         const {zip_id, title, text, url, memo, alert_date} = data;
 
@@ -16,7 +17,7 @@ export const addLinkDao = async (userId, data) => {
 
         let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
 
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
         conn.release();
         return result.insertId; // link_id
@@ -30,8 +31,9 @@ export const addLinkDao = async (userId, data) => {
 
 //링크id값 받아서 thumb값 갱신하는 dao
 export const updateThumbDao = async (linkId, thumb) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(updateThumbSql, [thumb, linkId]);
         
         conn.release();
@@ -48,6 +50,7 @@ export const updateThumbDao = async (linkId, thumb) => {
 export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
     let sql;
     let values = [zipId, userId]; 
+    let conn;
     try{
         /** tag 쿼리 여부에 따라 다른 sql문으로 쿼리 실행 */
         if (tag){
@@ -75,7 +78,7 @@ export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
                 break;
         }
 
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(sql, values);
 
         conn.release();
@@ -90,8 +93,9 @@ export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
 }
 
 export const getLinkByIdDao= async (linkId)=>{
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(selectLinkByIdSql, linkId);
 
         conn.release();
@@ -105,8 +109,9 @@ export const getLinkByIdDao= async (linkId)=>{
 }
 
 export const updateVisitDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateVisitSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedVisitSql, [linkId]);
 
@@ -125,8 +130,9 @@ export const updateVisitDao = async (linkId) => {
 }
 
 export const updateLikeDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateLikeSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedLikeSql, [linkId]);
 
@@ -144,8 +150,9 @@ export const updateLikeDao = async (linkId) => {
 }
 
 export const updateZipIdDao = async (linkId, newZipId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateZipIdSql, [newZipId, linkId]);
         const [selectResult] = await conn.query(selectUpdatedZipIdSql, [linkId]);
 
@@ -167,9 +174,9 @@ export const modifyLinkDao = async (linkId, body) => {
     const {title, text, memo, alert_date} = body;
     
     let values = [title, text, memo, alert_date, linkId];
-
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateLinkSql, values);
         const [selectResult] = await conn.query(selectLinkByIdSql, [linkId]);
         conn.release();
@@ -188,8 +195,9 @@ export const modifyLinkDao = async (linkId, body) => {
 }
 
 export const deleteLinkByIdDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(deleteLinkByIdSql, [linkId]);
 
         conn.release();
