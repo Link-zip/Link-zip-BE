@@ -5,24 +5,25 @@ paths:
         - Link
       summary: 링크 데이터 가져오기
       description: |
-          만약 조건(zip, user의 ID값)에 해당하는 값이 없더라도 오류 처리 하지 않고 빈 배열을 반환합니다.
-          응답 데이터 중 thumb값은 해당 사이트에서 따로 설정해둔 이미지가 없을 경우 null로 설정됩니다. 
+        만약 조건(zip, user의 ID값)에 해당하는 값이 없더라도 오류 처리 하지 않고 빈 배열을 반환합니다.
+        응답 데이터 중 thumb값은 해당 사이트에서 따로 설정해둔 이미지가 없을 경우 null로 설정됩니다. 
       parameters:
         - name: zip_id
           in: path
           description: '링크가 속한 zip의 id값을 파라미터로 넘겨야 합니다.'
           required: true
-          schema:
-            type: integer
-            format: int32
-            example: 1
+          type: integer
+          format: int32
         - name: tag
           in: query
           description: 'tag값이 link인 경우 link인 값들만 호출, text인 경우 text인 값들만 호출, 설정하지 않은 경우 모든 링크 데이터를 호출'
           required: false
-          schema:
-            type: string
-            example: 'link'
+          type: string
+        - name: sortOrder
+          in: query
+          description: '데이터를 정렬하는 기준을 설정합니다. 가능한 값: newest, oldest, alphabetical, most_visited'
+          required: false
+          type: string
       responses:
         200:
           description: 링크 데이터가 성공적으로 호출된 경우
@@ -33,58 +34,79 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
               result:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    zip_id:
-                      type: integer
-                    user_id:
-                      type: integer
-                    title:
-                      type: string
-                    url:
-                      type: string
-                    text:
-                      type: string
-                    memo:
-                      type: string
-                    tag:
-                      type: string
-                    alert_date:
-                      type: string
-                      format: date-time
-                    thumb:
-                      type: string
-                    like:
-                      type: integer
-                    visit:
-                      type: integer
-                    visit_date:
-                      type: string
-                      format: date-time
-                    created_at:
-                      type: string
-                      format: date-time
-                    updated_at:
-                      type: string
-                      format: date-time
+                type: object
+                properties:
+                  link_data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 99
+                        zip_id:
+                          type: integer
+                          example: 113
+                        user_id:
+                          type: integer
+                          example: 122
+                        title:
+                          type: string
+                          example: "example-title"
+                        url:
+                          type: string
+                          example: "example-url"
+                        text:
+                          type: string
+                          example: "example-text"
+                        memo:
+                          type: string
+                          example: "example-memo"
+                        tag:
+                          type: string
+                          example: "text"
+                        alert_date:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        thumb:
+                          type: string
+                          example: "example-thumb"
+                        like:
+                          type: integer
+                          example: 1
+                        visit:
+                          type: integer
+                          example: 1
+                        visit_date:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        updated_at:
+                          type: string
+                          format: date-time
+                          example: '2024-03-20T15:50:20Z'
+                        zip_color:
+                          type: string
+                          example: 'purple'
+                        zip_title:
+                          type: string
+                          example: 'example-zip_title'
         400:
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -99,9 +121,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -111,6 +130,7 @@ paths:
               message:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
+
               
   /link/get_link/{link_id}:
     get:
@@ -127,7 +147,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 1
       responses:
         200:
@@ -147,48 +166,51 @@ paths:
               result:
                 type: object
                 properties:
-                  id:
-                    type: integer
-                  zip_id:
-                    type: integer
-                  user_id:
-                    type: integer
-                  title:
-                    type: string
-                  url:
-                    type: string
-                  text:
-                    type: string
-                  memo:
-                    type: string
-                  tag:
-                    type: string
-                  alert_date:
-                    type: string
-                    format: date-time
-                  thumb:
-                    type: string
-                  like:
-                    type: integer
-                  visit:
-                    type: integer
-                  visit_date:
-                    type: string
-                    format: date-time
-                  created_at:
-                    type: string
-                    format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
+                  link_data:
+                    properties:
+                      id:
+                        type: integer
+                      zip_id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      title:
+                        type: string
+                      url:
+                        type: string
+                      text:
+                        type: string
+                      memo:
+                        type: string
+                      tag:
+                        type: string
+                      alert_date:
+                        type: string
+                        format: date-time
+                      thumb:
+                        type: string
+                      like:
+                        type: integer
+                      visit:
+                        type: integer
+                      visit_date:
+                        type: string
+                        format: date-time
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                      zip_color:
+                        type: string
+                      zip_title:
+                        type: string
         400:
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -217,9 +239,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -485,7 +504,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 1
       responses:
         200:
@@ -517,9 +535,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -534,9 +549,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -559,7 +571,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 1
       responses:
         200:
@@ -588,9 +599,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -605,9 +613,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -630,7 +635,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 1
         - name: new_zip_id
           in: path
@@ -638,7 +642,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 2
       responses:
         200:
@@ -667,9 +670,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -684,9 +684,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -771,9 +768,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -802,9 +796,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -827,7 +818,6 @@ paths:
           required: true
           schema:
             type: integer
-            format: int32
             example: 1
       responses:
         200:
@@ -855,9 +845,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -872,9 +859,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false

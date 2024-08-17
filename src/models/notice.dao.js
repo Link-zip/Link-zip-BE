@@ -15,6 +15,8 @@ export const addNoticeDao = async (data) => {
     }catch(err) {
         console.log('insertNoticeSql Error:',err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -28,6 +30,8 @@ export const getAllNoticeDao = async () => {
     } catch (err){
         console.log('selectAllNoticesSql Error:',err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -41,6 +45,8 @@ export const getNoticeByIdDao = async (noticeId) => {
     } catch (err){
         console.log('selectNoticeByIdSql Error:',err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -54,5 +60,7 @@ export const deleteNoticeDao = async (noticeId) => {
     } catch (err){
         console.log('selectNoticeByIdSql Error:',err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }

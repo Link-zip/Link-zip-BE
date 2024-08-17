@@ -51,8 +51,8 @@ export const generateUrlSummary = async (url) =>  {
     }
 }
 
-export const getLinksSer = async (zipId, userId, tag) => {
-    const getResult = await getLinksDao(zipId, userId, tag);
+export const getLinksSer = async (zipId, userId, tag, sortOrder) => {
+    const getResult = await getLinksDao(zipId, userId, tag, sortOrder);
     
     if(getResult == null) {
         throw BaseError(status.LINK_NOT_FOUND);

@@ -1,45 +1,39 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateMemoLinkSql, updateTextLinkSql, updateTextMemoLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
 /** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
 
 /** 링크 생성 DAO, 링크 id리턴 */
 export const addLinkDao = async (userId, data) => {
+    let conn;
     try {
         const {zip_id, title, text, url, memo, alert_date} = data;
-        let sql;
-        let values = [zip_id, userId, title, url, alert_date];
 
-        if(memo != null && text != null){
-            sql = insertMemoTextSql;
-            values.splice(5,0, memo,text,'text');
-        } else if(memo == null && text != null){
-            sql = insertTextSql;
-            values.splice(5,0, text, 'text');
-        } else if(memo != null && text == null) {
-            sql = insertMemoLinkSql;
-            values.splice(5,0, memo);
-        } else if(memo == null && text == null) {
-            sql = insertLinkSql;
-        }
+        /** text값 여부에 따라 태그값 결정 */
+        let tag = text != null ? 'text' : 'link';
 
-        const conn = await pool.getConnection();
-        const [result] = await conn.query(sql, values) // sql쿼리에 보낼 정보
+        let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
+
+        conn = await pool.getConnection();
+        const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
         conn.release();
         return result.insertId; // link_id
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 //링크id값 받아서 thumb값 갱신하는 dao
 export const updateThumbDao = async (linkId, thumb) => {
+    let conn;
     try {
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(updateThumbSql, [thumb, linkId]);
         
         conn.release();
@@ -48,20 +42,43 @@ export const updateThumbDao = async (linkId, thumb) => {
     } catch (err){
         console.log('thumb dao err:',err);
         throw new BaseError(status.BAD_REQUEST)
+    } finally {
+        if (conn) conn.release();
     }
 }
 
-export const getLinksDao = async (zipId, userId, tag) => {
+export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
     let sql;
-    let values = [zipId, userId, tag]; 
+    let values = [zipId, userId]; 
+    let conn;
     try{
-        if (tag == 'link' || tag == 'text'){
+        /** tag 쿼리 여부에 따라 다른 sql문으로 쿼리 실행 */
+        if (tag){
             sql = selectLinksByTagSql;
+            values.push(tag);
         } else {
             sql = selectLinksByZipIdSql;
-            values.splice(2,1); // zipId, userId만 전달
         }
-        const conn = await pool.getConnection();
+        /** sortOrder 쿼리값이 있는 경우 해당 정렬 옵션으로 정렬하여 조회하는 SQL문 추가 */
+        switch (sortOrder) {
+            case'newest':
+                sql += ' ORDER BY link.created_at DESC'; // 최신순
+                break;
+            case'oldest':
+                sql += ' ORDER BY link.created_at ASC'; // 과거순
+                break;
+            case'alphabetical':
+                sql += ' ORDER BY link.title ASC'; // 가나다순
+                break;
+            case'most_visited':
+                sql += ' ORDER BY link.visit DESC'; // 방문빈도순
+                break;
+            default:
+                sql += ' ORDER BY link.created_at DESC'; // 기본값: 최신순
+                break;
+        }
+
+        conn = await pool.getConnection();
         const [result] = await conn.query(sql, values);
 
         conn.release();
@@ -70,12 +87,15 @@ export const getLinksDao = async (zipId, userId, tag) => {
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const getLinkByIdDao= async (linkId)=>{
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(selectLinkByIdSql, linkId);
 
         conn.release();
@@ -83,12 +103,15 @@ export const getLinkByIdDao= async (linkId)=>{
         return result[0];
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST); 
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const updateVisitDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateVisitSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedVisitSql, [linkId]);
 
@@ -101,12 +124,15 @@ export const updateVisitDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const updateLikeDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateLikeSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedLikeSql, [linkId]);
 
@@ -118,12 +144,15 @@ export const updateLikeDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const updateZipIdDao = async (linkId, newZipId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateZipIdSql, [newZipId, linkId]);
         const [selectResult] = await conn.query(selectUpdatedZipIdSql, [linkId]);
 
@@ -136,32 +165,19 @@ export const updateZipIdDao = async (linkId, newZipId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const modifyLinkDao = async (linkId, body) => {
     const {title, text, memo, alert_date} = body;
-    let sql;
-    let values = [title, alert_date];
     
-    if(text != null && memo != null) {
-        sql = updateTextMemoLinkSql;
-        values.splice(1,0, text, memo);
-    } else if(text == null && memo != null) {
-        sql = updateTextLinkSql;
-        values.splice(1,0, memo);
-    } else if(text != null && memo == null) {
-        sql = updateMemoLinkSql;
-        values.splice(1,0, text);
-    } else if(text == null && memo == null) {
-        sql = updateLinkSql;
-    }
-
-    values.push(linkId);
-
+    let values = [title, text, memo, alert_date, linkId];
+    let conn;
     try {
-        const conn = await pool.getConnection();
-        const [updateResult] = await conn.query(sql, values);
+        conn = await pool.getConnection();
+        const [updateResult] = await conn.query(updateLinkSql, values);
         const [selectResult] = await conn.query(selectLinkByIdSql, [linkId]);
         conn.release();
 
@@ -173,12 +189,15 @@ export const modifyLinkDao = async (linkId, body) => {
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
 export const deleteLinkByIdDao = async (linkId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(deleteLinkByIdSql, [linkId]);
 
         conn.release();
@@ -190,5 +209,7 @@ export const deleteLinkByIdDao = async (linkId) => {
         }
     } catch (err) {
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
