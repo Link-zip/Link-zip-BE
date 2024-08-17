@@ -23,3 +23,4 @@ export const totalCountResponseDTO  = (data) => {
       "total_links_count": data[0].total_count
     };
 }
+
