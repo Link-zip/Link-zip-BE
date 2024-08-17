@@ -5,12 +5,14 @@ import { searchLinkDao } from "@models/search.dao";
 
 // GET API
 /** 링크 검색 Provider */
-export const searchLinkProvider = async(reqDto) => {
-    if(!await reqDto.keyword.trim()){
+export const searchLinkProvider = async (reqDto) => {
+    if(!(await reqDto.keyword.trim())){
         throw new BaseError(status.INVALID_KEYWORD);
     }
-    const result = getLinksResDto(await searchLinkDao(reqDto.user_id, reqDto.keyword));
-    if(!result.length){
+    const result = {
+        links: (getLinksResDto(await searchLinkDao(reqDto.user_id, reqDto.keyword)))
+    };
+    if(!result.links.length){
         throw new BaseError(status.SEARCH_NOT_FOUND);
     }
     return result;

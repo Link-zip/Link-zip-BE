@@ -116,9 +116,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 200
               isSuccess:
                 type: boolean
                 example: true
@@ -129,33 +126,33 @@ paths:
                 type: string
                 example: "success!"
               result:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    user_id:
-                      type: integer
-                      example: 99
-                    zip_id:
-                      type: integer
-                      example: 113
-                    title:
-                      type: string
-                      example: "example-title"
-                    color:
-                      type: string
-                      example: "example-color"
-                    link_count:
-                      type: integer
-                      example: 5
+                type: object
+                properties:
+                  zips:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: integer
+                          example: 99
+                        zip_id:
+                          type: integer
+                          example: 113
+                        title:
+                          type: string
+                          example: "example-title"
+                        color:
+                          type: string
+                          example: "example-color"
+                        link_count:
+                          type: integer
+                          example: 5
         400:
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -170,9 +167,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 401
               isSuccess:
                 type: boolean
                 example: false
@@ -188,9 +182,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -250,9 +241,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -268,9 +256,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 401
               isSuccess:
                 type: boolean
                 example: false
@@ -286,9 +271,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -341,9 +323,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -359,9 +338,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 401
               isSuccess:
                 type: boolean
                 example: false
@@ -377,9 +353,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
