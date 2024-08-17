@@ -34,7 +34,7 @@ export const getGptResponse = async (summary) => {
             { role: "system", content: "Your role is to summarize url's information" },
             { role: "user", content: `다음은 사용자가 입력한 url의 메타 정보 및 텍스트 정보를 추출한 정보입니다. 이 정보를 보고 사용자가 입력한 url이 어떤 링크인지 정리해서 설명해주세요: ${summary}` }
         ],
-        max_tokens: 300
+        max_tokens: 500
     });
 
     return completion.choices[0].message.content;

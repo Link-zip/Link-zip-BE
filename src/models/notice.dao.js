@@ -6,9 +6,9 @@ import { insertNoticeSql, selectAllNoticesSql, deleteNoticeByIdSql, selectNotice
 
 export const addNoticeDao = async (data) => {
     const {title, content} = data;
-
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(insertNoticeSql, [title, content]);
         conn.release();
         return result.insertId;
@@ -21,8 +21,9 @@ export const addNoticeDao = async (data) => {
 }
 
 export const getAllNoticeDao = async () => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(selectAllNoticesSql);
         conn.release();
 
@@ -36,8 +37,9 @@ export const getAllNoticeDao = async () => {
 }
 
 export const getNoticeByIdDao = async (noticeId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(selectNoticeByIdSql, [noticeId]);
         conn.release();
 
@@ -51,8 +53,9 @@ export const getNoticeByIdDao = async (noticeId) => {
 }
 
 export const deleteNoticeDao = async (noticeId) => {
+    let conn;
     try{
-        const conn = await pool.getConnection();
+        conn = await pool.getConnection();
         const [result] = await conn.query(deleteNoticeByIdSql, [noticeId]);
         conn.release();
 

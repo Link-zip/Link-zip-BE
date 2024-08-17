@@ -39,7 +39,7 @@ export const generateUrlSummary = async (url) =>  {
         }
         const summary = await summarizeContent(content.content, 300);
         const response = await getGptResponse(summary);
-        return response;
+        return { url_summary : response };
     } else { // 유튜브 URL인 경우
         const youtubeSummary = await getYoutubeSummary(url);
         if(!youtubeSummary) {
@@ -47,7 +47,7 @@ export const generateUrlSummary = async (url) =>  {
         }
         const gptResponse = await getGptYoutubeSummary(youtubeSummary);
         const formattedText = `요약을 요청하신 URL이 유튜브 플랫폼 동영상으로 확인되어 영상 내용을 AI로 요약한 결과입니다 : ${gptResponse}`
-        return formattedText;
+        return { url_summary: formattedText };
     }
 }
 

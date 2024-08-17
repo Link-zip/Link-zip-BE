@@ -158,8 +158,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -277,8 +277,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -355,15 +355,15 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
               result:
                 type: object
                 properties:
-                  summary:
+                  url_summary:
                     type: string
                     example: "This is a summary of the content at the given URL."
         400:
@@ -445,8 +445,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "create success!"
@@ -515,8 +515,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -582,8 +582,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -653,8 +653,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -739,8 +739,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
@@ -829,8 +829,8 @@ paths:
                 type: boolean
                 example: true
               code:
-                type: integer
-                example: 2000
+                type: string
+                example: "2000"
               message:
                 type: string
                 example: "success!"
