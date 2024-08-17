@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
 import asyncHandler from 'express-async-handler';
+import cookieParser from 'cookie-parser';
 
 import '@config/global.js';
 import { specs } from '@config/swagger.config.js';
@@ -31,6 +32,7 @@ app.use(cors());                            // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록
 app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태로 본문 데이터 해석
+app.use(cookieParser());                    // 쿠키 데이터 전송 전달 허용
 
 
 // 토큰 검증 예외 라우트

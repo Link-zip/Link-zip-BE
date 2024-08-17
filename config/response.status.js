@@ -50,4 +50,5 @@ export const status = {
     // search error
     INVALID_KEYWORD: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "SEARCH001", "message": "잘못된 검색어 입니다." },
     SEARCH_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "SEARCH002", "message": "검색결과가 없습니다." },
+    SEARCHLOG_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "SEARCH003", "message": "검색기록이 없습니다." },
   };
