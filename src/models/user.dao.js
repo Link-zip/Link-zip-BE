@@ -3,6 +3,7 @@ import { status } from '@config/response.status.js';
 import { pool } from '@config/db.config.js';
 
 import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql } from './user.sql.js';
+import { createDefaultZipSql } from './zip.sql.js';
 
 /** 회원가입 DAO, id 리턴 */
 export const addUserDao = async (data) => {
@@ -19,6 +20,7 @@ export const addUserDao = async (data) => {
             data.kakaoId,
             data.nickname
         ])
+        await conn.query(createDefaultZipSql, result.insertId);
         conn.release();
         return result.insertId;
     } catch (error) {
