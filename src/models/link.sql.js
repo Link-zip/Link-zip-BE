@@ -1,23 +1,31 @@
 /** CREATE LINK */
-// text정보가 있어서 text태그로 생성
-export const insertMemoTextSql = "INSERT INTO link (zip_id, user_id, title, url, alert_date, memo, text, tag, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW());";
-
-export const insertTextSql = "INSERT INTO link (zip_id, user_id, title, url, alert_date, text, tag, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW());";
-
-// text 가 없어서 link로 기본생성
-export const insertMemoLinkSql = "INSERT INTO link (zip_id, user_id, title, url, memo, alert_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW());"
-
-export const insertLinkSql = "INSERT INTO link (zip_id, user_id, title, url, alert_date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW());"
+export const insertLinkSql = "INSERT INTO link (zip_id, user_id, title, url, alert_date, memo, text, tag, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
 // id로 찾은 link에 thumb값 넣기
 export const updateThumbSql = "UPDATE link SET thumb = ? WHERE id = ?"
 
 /** GET LINKS */
-export const selectLinksByZipIdSql = "SELECT * FROM link WHERE zip_id = ? AND user_id = ?";
+export const selectLinksByZipIdSql = `
+    SELECT link.*, zip.color AS zip_color, zip.title AS zip_title
+    FROM link
+    JOIN zip ON link.zip_id = zip.id
+    WHERE link.zip_id = ? AND link.user_id = ?
+`;
 
-export const selectLinksByTagSql = "SELECT * FROM link WHERE zip_id = ? AND user_id = ? AND tag = ?";
+export const selectLinksByTagSql = `
+    SELECT link.*, zip.color AS zip_color, zip.title AS zip_title
+    FROM link
+    JOIN zip ON link.zip_id = zip.id
+    WHERE link.zip_id = ? AND link.user_id = ? AND link.tag = ?
+`;
 
-export const selectLinkByIdSql = "SELECT * FROM link WHERE id = ?"
+export const selectLinkByIdSql = `
+    SELECT link.*, zip.color AS zip_color, zip.title AS zip_title
+    FROM link
+    JOIN zip ON link.zip_id = zip.id
+    WHERE link.id = ?
+`;
+
 
 /** UPDATE VISIT */
 export const updateVisitSql = "UPDATE link SET visit = visit + 1, visit_date = NOW() WHERE id = ?";
@@ -35,13 +43,7 @@ export const updateZipIdSql = "UPDATE link SET zip_id = ? WHERE id = ?";
 export const selectUpdatedZipIdSql = "SELECT id, zip_id FROM link WHERE id = ?"
 
 /** UPDATE LINK */
-export const updateTextMemoLinkSql = "UPDATE link SET title = ?, text = ?, memo = ?, alert_date = ? WHERE id = ?;";
-
-export const updateTextLinkSql = "UPDATE link SET title = ?, text = ?, alert_date = ? WHERE id = ?;";
-
-export const updateMemoLinkSql = "UPDATE link SET title = ?, memo = ?, alert_date = ? WHERE id = ?;";
-
-export const updateLinkSql = "UPDATE link SET title = ?, alert_date = ? WHERE id = ?;";
+export const updateLinkSql = "UPDATE link SET title = ?, text = ?, memo = ?, alert_date = ? WHERE id = ?;";
 
 
 /** DELETE LINK BY ID */

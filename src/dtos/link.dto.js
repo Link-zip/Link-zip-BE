@@ -14,7 +14,7 @@ export const extractUrlResDto = (thumb, title) => {
 
 export const getLinksResDto = (getResult) => {
     return {
-        link_data: getResult.map(({ id, zip_id, user_id, title, url, text, memo, tag, alert_date, thumb, like, visit, visit_date, created_at, updated_at }) => ({
+        link_data: getResult.map(({ id, zip_id, user_id, title, url, text, memo, tag, alert_date, thumb, like, visit, visit_date, created_at, updated_at, zip_title, zip_color }) => ({
             id,
             zip_id,
             user_id,
@@ -30,22 +30,27 @@ export const getLinksResDto = (getResult) => {
             visit_date,
             created_at,
             updated_at,
+            zip_color,
+            zip_title
         }))
     };
 }
 
 
-export const getLinkByIdResDto = ({id, title, memo, text,thumb, alert_date, like, visit}) => {
+export const getLinkByIdResDto = ({id, title, memo, text, thumb, tag, alert_date, like, visit, zip_color, zip_title}) => {
     return {
         link_data:{
             id,
             title,
+            tag,
             thumb,
             memo,
             text,
             alert_date,
             like,
-            visit
+            visit,
+            zip_color,
+            zip_title
         },
         message: `${id} id를 가진 링크를 불러오는데 성공하였습니다.`
     }

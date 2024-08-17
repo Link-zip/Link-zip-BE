@@ -95,6 +95,12 @@ paths:
                           type: string
                           format: date-time
                           example: '2024-03-20T15:50:20Z'
+                        zip_color:
+                          type: string
+                          example: 'purple'
+                        zip_title:
+                          type: string
+                          example: 'example-zip_title'
         400:
           description: 잘못된 요청
           schema:
@@ -195,6 +201,10 @@ paths:
                       updated_at:
                         type: string
                         format: date-time
+                      zip_color:
+                        type: string
+                      zip_title:
+                        type: string
         400:
           description: 잘못된 요청
           schema:

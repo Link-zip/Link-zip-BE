@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql, insertTextSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateMemoLinkSql, updateTextLinkSql, updateTextMemoLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
 /** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
@@ -10,24 +10,14 @@ import { deleteLinkByIdSql, insertLinkSql, insertMemoLinkSql, insertMemoTextSql,
 export const addLinkDao = async (userId, data) => {
     try {
         const {zip_id, title, text, url, memo, alert_date} = data;
-        let sql;
-        let values = [zip_id, userId, title, url, alert_date];
 
-        if(memo != null && text != null){
-            sql = insertMemoTextSql;
-            values.splice(5,0, memo,text,'text');
-        } else if(memo == null && text != null){
-            sql = insertTextSql;
-            values.splice(5,0, text, 'text');
-        } else if(memo != null && text == null) {
-            sql = insertMemoLinkSql;
-            values.splice(5,0, memo);
-        } else if(memo == null && text == null) {
-            sql = insertLinkSql;
-        }
+        /** text값 여부에 따라 태그값 결정 */
+        let tag = text != null ? 'text' : 'link';
+
+        let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
 
         const conn = await pool.getConnection();
-        const [result] = await conn.query(sql, values) // sql쿼리에 보낼 정보
+        const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
         conn.release();
         return result.insertId; // link_id
     } catch (err) {
@@ -141,27 +131,12 @@ export const updateZipIdDao = async (linkId, newZipId) => {
 
 export const modifyLinkDao = async (linkId, body) => {
     const {title, text, memo, alert_date} = body;
-    let sql;
-    let values = [title, alert_date];
     
-    if(text != null && memo != null) {
-        sql = updateTextMemoLinkSql;
-        values.splice(1,0, text, memo);
-    } else if(text == null && memo != null) {
-        sql = updateTextLinkSql;
-        values.splice(1,0, memo);
-    } else if(text != null && memo == null) {
-        sql = updateMemoLinkSql;
-        values.splice(1,0, text);
-    } else if(text == null && memo == null) {
-        sql = updateLinkSql;
-    }
-
-    values.push(linkId);
+    let values = [title, text, memo, alert_date, linkId];
 
     try {
         const conn = await pool.getConnection();
-        const [updateResult] = await conn.query(sql, values);
+        const [updateResult] = await conn.query(updateLinkSql, values);
         const [selectResult] = await conn.query(selectLinkByIdSql, [linkId]);
         conn.release();
 
