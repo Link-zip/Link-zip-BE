@@ -11,12 +11,12 @@ export const transactionDao = async (callback) => {
         await conn.beginTransaction();
 
         const result = await callback(conn); // 서비스 로직에 필요한 작업 실행
-
+        console.log('트랜잭션 결과:', result);
         await conn.commit();
         return result;
     } catch (err) {
         await conn.rollback(); // 에러 발생 시 트랜잭션을 롤백
-        console.log(err);
+        console.log('트랜잭션 에러:',err);
         throw err;
     } finally {
         if (conn) conn.release();
@@ -28,16 +28,16 @@ export const addLinkDao = async (conn, userId, data) => {
     //트랜잭션에 사용하기 위해 외부에서 conn을 주입받아 사용
     try {
         const {zip_id, title, text, url, memo, alert_date} = data;
-        
+
         /** text값 여부에 따라 태그값 결정 */
         let tag = text != null ? 'text' : 'link';
         let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
 
         const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
+
         conn.release();
         return result.insertId; // link_id
     } catch (err) {
-        console.log(err);
         throw new BaseError(status.BAD_REQUEST);
     }
 }
@@ -65,6 +65,7 @@ export const updateThumbDao = async (conn, linkId, thumb) => {
         const [result] = await conn.query(updateThumbSql, [thumb, linkId]);
         return result.affectedRows;
     } catch (err){
+        console.log('섬네일 추출 에러:', err);
         throw new BaseError(status.BAD_REQUEST)
     }
 }

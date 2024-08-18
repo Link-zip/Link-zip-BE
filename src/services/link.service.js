@@ -79,7 +79,7 @@ export const createNewLinkSer = async (userId, body) => {
         const thumb = await getUrlThumb(body.url);
         /** 있으면 생성된 링크 데이터의 thumb필드에 저장 */
         if(thumb != null) {
-            const affectedRows = await updateThumbDao(createdLinkId, thumb); // thumb 값 갱신
+            const affectedRows = await updateThumbDao(conn, createdLinkId, thumb); // thumb 값 갱신
 
             if (affectedRows === 0) {
                 throw new BaseError(status.FAILED_TO_UPDATE);

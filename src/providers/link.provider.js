@@ -78,21 +78,40 @@ export const getGptYoutubeSummary = async (youtubeSummary) => {
 }
 
 export const getUrlThumb = async (url) => {
-    if(!url){
+    if (!url) {
         return null;
     }
 
+    // 프로토콜이 없는 경우 'https://'를 기본적으로 추가
+    if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+    }
+
     try {
+        // 먼저 https://로 요청 시도
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
         const ogImage = $('meta[property="og:image"]').attr('content');
 
-        return ogImage || null; //og:image가 없는 경우 null반환
+        return ogImage || null; // og:image가 없는 경우 null 반환
     } catch (err) {
-        console.log(err);
-        return null; //url이 실제로 접속 불가능한 url이어도 에러 처리하지 않도록
+        console.log(`HTTPS request failed for ${url}. Retrying with HTTP...`);
+
+        // https:// 요청 실패 시 http://로 재시도
+        try {
+            // https:// -> http://로 변경
+            const httpUrl = url.replace(/^https:\/\//i, 'http://');
+            const { data } = await axios.get(httpUrl);
+            const $ = cheerio.load(data);
+            const ogImage = $('meta[property="og:image"]').attr('content');
+
+            return ogImage || null; // og:image가 없는 경우 null 반환
+        } catch (httpErr) {
+            console.log(`HTTP request failed for ${url}.`, httpErr);
+            return null; // http:// 요청도 실패한 경우 null 반환
+        }
     }
-}
+};
 
 export const getUrlTitle = async (url) => {
     if (!url) {
