@@ -1,5 +1,6 @@
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
+import { checkYoutube, extractYouTubeVideoId } from "@services/link.service";
 import axios from "axios";
 import cheerio from "cheerio";
 import OpenAI from "openai";
@@ -86,6 +87,11 @@ export const getUrlThumb = async (url) => {
     if (!/^https?:\/\//i.test(url)) {
         url = `https://${url}`;
     }
+    /** 유튜브 링크인 경우 썸네일 추출 API 따로 사용 */
+    if (checkYoutube(url)) {
+        const videoId = extractYouTubeVideoId(url);
+        return await getYouTubeThumbnail(videoId);
+    }
 
     try {
         // 먼저 https://로 요청 시도
@@ -110,6 +116,20 @@ export const getUrlThumb = async (url) => {
             console.log(`HTTP request failed for ${url}.`, httpErr);
             return null; // http:// 요청도 실패한 경우 null 반환
         }
+    }
+};
+
+export const getYouTubeThumbnail = async (videoId) => {
+    const apiKey = process.env.YOUTUBE_DATA_API_KEY;
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`;
+
+    try {
+        const { data } = await axios.get(apiUrl);
+        const thumbnailUrl = data.items[0].snippet.thumbnails.high.url;
+        return thumbnailUrl;
+    } catch (err) {
+        console.log('YouTube API error:', err);
+        return null;
     }
 };
 
