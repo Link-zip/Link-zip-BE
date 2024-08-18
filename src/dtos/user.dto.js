@@ -8,6 +8,14 @@ export const userResponseDTO = (data) => {
     }
 }
 
+export const userUpdateDTO = (data) => {
+    return {
+        userId: data.id,
+        nickname: data.nickname,
+        updatedAt: data.updated_at,
+    }
+}
+
 export const userTokenResponseDTO = (token, expiresIn) => {
     return {
         accessToken: token,

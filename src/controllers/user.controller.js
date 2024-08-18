@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
-import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken } from '@services/user.service.js';
+import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer } from '@services/user.service.js';
 import { getKakaoUserInfo } from "@providers/user.provider.js";
 import { userLoginResponseDTO } from '@dtos/user.dto';
 
@@ -80,6 +80,25 @@ export const checkNicknameCnt = async (req, res, next) => {
     }
 
     return res.send(response(status.SUCCESS, await checkNicknameSer(nickname)));
+}
+
+/** 사용자 정보 수정 컨트롤러 (userId, nickname) */
+export const patchUserInfoCnt = async (req, res, next) => {
+    const userId = req.userId;
+    const nickname = req.body.nickname;
+
+    const userInfo = await getUserSer(userId);
+    const prevNickname = userInfo.nickname;
+
+    // 요청값(닉네임)이 없는 경우, 기존 닉네임과 동일한 경우 에러처리
+    if (nickname === undefined || nickname === "") {
+        throw new BaseError(status.BAD_REQUEST);
+    } else if (nickname === prevNickname) {
+        throw new BaseError(status.USER_NICKNAME_SAME);
+    }
+
+    const result = await patchUserInfoSer(userId, nickname);
+    res.send(response(status.SUCCESS, result));
 }
 
 /** 테스트 토큰 발급 */

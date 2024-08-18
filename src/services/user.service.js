@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userTokenResponseDTO, userResponseDTO } from '@dtos/user.dto.js';
-import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao } from '@models/user.dao.js';
+import { userTokenResponseDTO, userResponseDTO, userUpdateDTO } from '@dtos/user.dto.js';
+import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
 import { generateKeyFromKakaoId } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
@@ -35,6 +35,16 @@ export const checkNicknameSer = async (nickname) => {
         return false;
     }
     return true;
+}
+
+export const patchUserInfoSer = async (userId, nickname) => {
+    const result = await patchUserInfoDao(userId, nickname);
+
+    if (result === 1) {
+        return userUpdateDTO(await getUserDao(userId));
+    } else {
+        throw new BaseError(status.USER_NOT_FOUND);
+    }
 }
 
 /** 기존 유저 여부 검증: 서비스 단에서 분기 처리 */
