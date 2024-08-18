@@ -138,6 +138,11 @@ export const getUrlTitle = async (url) => {
         return null;
     }
 
+    if (checkYoutube(url)) {
+        const videoId = extractYouTubeVideoId(url);
+        return await getYouTubeVideoTitle(videoId);
+    }
+
     try {
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
@@ -147,5 +152,23 @@ export const getUrlTitle = async (url) => {
     } catch (err) {
         console.log(err);
         return null; // url이 실제로 접속 불가능한 url이어도 에러 처리하지 않도록
+    }
+};
+
+export const getYouTubeVideoTitle = async (videoId) => {
+    const apiKey = process.env.YOUTUBE_DATA_API_KEY; // YouTube Data API 키
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${apiKey}`;
+
+    try {
+        const { data } = await axios.get(apiUrl);
+        if (data.items && data.items.length > 0) {
+            const title = data.items[0].snippet.title; // 동영상 제목 가져오기
+            return title;
+        } else {
+            return null; // 비디오 정보가 없는 경우
+        }
+    } catch (err) {
+        console.log('YouTube API error:', err);
+        return null;
     }
 };
