@@ -1,6 +1,9 @@
 /** CREATE LINK */
 export const insertLinkSql = "INSERT INTO link (zip_id, user_id, title, url, alert_date, memo, text, tag, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
+export const insertLinkAlertSql = "INSERT INTO alert (user_id, link_id, created_at, alert_date, alert_type) VALUES (?,?,NOW(),?,?)";
+
+
 // id로 찾은 link에 thumb값 넣기
 export const updateThumbSql = "UPDATE link SET thumb = ? WHERE id = ?"
 
@@ -45,6 +48,11 @@ export const selectUpdatedZipIdSql = "SELECT id, zip_id FROM link WHERE id = ?"
 /** UPDATE LINK */
 export const updateLinkSql = "UPDATE link SET title = ?, text = ?, memo = ?, alert_date = ? WHERE id = ?;";
 
-
+/** UPDATE ALERT DATE */
+export const updateLinkAlertDateSql = `
+    UPDATE alert
+    SET alert_date = ?, updated_at = NOW() 
+    WHERE link_id = ?;
+`
 /** DELETE LINK BY ID */
 export const deleteLinkByIdSql = "DELETE FROM link WHERE id = ?";

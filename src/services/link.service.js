@@ -2,7 +2,7 @@ import { fetchUrlContent, getUrlThumb, getUrlTitle, getYoutubeSummary } from "@p
 import { getGptResponse, getGptYoutubeSummary } from "@providers/link.provider";
 import { BaseError} from "@config/error";
 import { status } from "@config/response.status";
-import { addLinkDao, deleteLinkByIdDao, getLinkByIdDao, getLinksDao, modifyLinkDao, updateLikeDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
+import { addLinkAlertDao, addLinkDao, deleteLinkByIdDao, getLinkByIdDao, getLinksDao, modifyLinkDao, transactionDao, updateLikeDao, updateLinkAlertDateDao, updateThumbDao, updateVisitDao, updateZipIdDao } from "@models/link.dao";
 import { createLinkResDto, deleteZipIdResDto, extractUrlResDto, getLinkByIdResDto, getLinksResDto, modifyLinkResDto, updateLikeResDto, updateVisitResDto, updateZipIdResDto } from "@dtos/link.dto";
 
 /** 사이트 정보 요약 */
@@ -72,24 +72,32 @@ export const getLinkByIdSer = async (linkId) => {
 }
 
 export const createNewLinkSer = async (userId, body) => {
-    const createdLinkId = await addLinkDao(userId, body); 
-    
-    // provider를 통해 body.url의 thumb 주소값 가져옴
-    const thumb = await getUrlThumb(body.url);   
-    
-    if(thumb != null) {
-        const affectedRows = await updateThumbDao(createdLinkId, thumb);
+    return await transactionDao(async (conn) => {
+        const createdLinkId = await addLinkDao(conn, userId, body); //링크 생성
+        
+        /** provider를 통해 body.url의 thumb 주소값 가져옴 */
+        const thumb = await getUrlThumb(body.url);
+        /** 있으면 생성된 링크 데이터의 thumb필드에 저장 */
+        if(thumb != null) {
+            const affectedRows = await updateThumbDao(createdLinkId, thumb); // thumb 값 갱신
 
-        if (affectedRows === 0) {
-            throw new BaseError(status.FAILED_TO_UPDATE);
+            if (affectedRows === 0) {
+                throw new BaseError(status.FAILED_TO_UPDATE);
+            }
         }
-    }
 
-    if(createdLinkId == -1) {
-        throw new BaseError(status.PARAMETER_IS_WRONG);
-    } else {
+        /** 링크 생성 후, alert_date가 존재하면 alert 테이블에 데이터 생성 */
+        if (body.alert_date) {
+            await addLinkAlertDao(conn, userId, createdLinkId, body.alert_date); // 링크가 성공적으로 생성된 경우 alert 데이터 생성
+        }
+
+        /** 생성된 링크가 있는 경우 */
+        if(createdLinkId == -1) {
+            throw new BaseError(status.PARAMETER_IS_WRONG);
+        }
+
         return createLinkResDto(createdLinkId);
-    }
+    })
 }
 
 export const updateVisitSer = async (linkId) => {
@@ -124,9 +132,20 @@ export const updateZipIdSer = async (linkId, newZipId) => {
 
 export const modifyLinkSer = async (linkId, body) => {
     const modifyLinkResult = await modifyLinkDao(linkId, body);
+    
     if(modifyLinkResult == null) {
         throw new BaseError(status.FAILED_TO_UPDATE);
-    } else if(typeof modifyLinkResult === 'string'){
+    }
+    // alert_date 값을 입력 받은 경우 alert의 날짜 수정
+    if (body.alert_date) {
+        const updateLinkAlertResult = await updateLinkAlertDateDao(linkId, body.alert_date);
+
+        if (updateLinkAlertResult.affectedRows === 0) {
+            throw new BaseError(status.FAILED_TO_UPDATE);
+        }
+    }
+    
+    if(typeof modifyLinkResult === 'string'){ // 수정된 링크 데이터가 없음
         return modifyLinkResult;
     } else {
         return modifyLinkResDto(modifyLinkResult);
