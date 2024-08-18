@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userTokenResponseDTO, userResponseDTO, userUpdateDTO } from '@dtos/user.dto.js';
+import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
 import { generateKeyFromKakaoId } from "@providers/user.provider";
 
@@ -32,9 +32,9 @@ export const checkNicknameSer = async (nickname) => {
     const result = await checkNicknameDao(nickname);
 
     if (result.count > 0) {
-        return false;
+        return checkNicknameDTO(false);
     }
-    return true;
+    return checkNicknameDTO(true);
 }
 
 export const patchUserInfoSer = async (userId, nickname) => {

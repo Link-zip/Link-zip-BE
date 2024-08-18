@@ -37,9 +37,9 @@ export const kakaoLoginCnt = async (req, res, next) => {
                 connectedAt: kakaoUserInfo.connected_at,
             };
             const tokenResponse = await generateToken(payload);
-            res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
+            return res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
         } else {
-            res.send(response(status.SUCCESS, result));
+            return res.send(response(status.SUCCESS, result));
         }
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
@@ -59,7 +59,7 @@ export const addUserCnt = async (req, res, next) => {
 
     try {
         const tokenResponse = await generateToken(payload); // 지금은 일단 accessToken만 발급
-        res.send(response(status.SUCCESS, tokenResponse));
+        return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
@@ -67,7 +67,7 @@ export const addUserCnt = async (req, res, next) => {
 
 /** 사용자 조회 컨트롤러 (userId) */
 export const getUserCnt = async (req, res, next) => {
-    res.send(response(status.SUCCESS, await getUserSer(req.userId)));
+    return res.send(response(status.SUCCESS, await getUserSer(req.userId)));
 }
 
 /** 닉네임 중복 체크 컨트롤러 (query: nickname) */
@@ -98,7 +98,7 @@ export const patchUserInfoCnt = async (req, res, next) => {
     }
 
     const result = await patchUserInfoSer(userId, nickname);
-    res.send(response(status.SUCCESS, result));
+    return res.send(response(status.SUCCESS, result));
 }
 
 /** 테스트 토큰 발급 */
@@ -114,7 +114,7 @@ export const getTestTokenCnt = async (req, res, next) => {
 
     try {
         const tokenResponse = await generateToken(payload);
-        res.send(response(status.SUCCESS, tokenResponse));
+        return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }

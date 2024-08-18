@@ -22,3 +22,9 @@ export const userTokenResponseDTO = (token, expiresIn) => {
         accessTokenExpiresIn: expiresIn,
     }
 }
+
+export const checkNicknameDTO = (isValid) => {
+    return {
+        isValid: isValid,
+    }
+}
