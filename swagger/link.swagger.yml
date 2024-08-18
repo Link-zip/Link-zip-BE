@@ -166,46 +166,44 @@ paths:
               result:
                 type: object
                 properties:
-                  link_data:
-                    properties:
-                      id:
-                        type: integer
-                      zip_id:
-                        type: integer
-                      user_id:
-                        type: integer
-                      title:
-                        type: string
-                      url:
-                        type: string
-                      text:
-                        type: string
-                      memo:
-                        type: string
-                      tag:
-                        type: string
-                      alert_date:
-                        type: string
-                        format: date-time
-                      thumb:
-                        type: string
-                      like:
-                        type: integer
-                      visit:
-                        type: integer
-                      visit_date:
-                        type: string
-                        format: date-time
-                      created_at:
-                        type: string
-                        format: date-time
-                      updated_at:
-                        type: string
-                        format: date-time
-                      zip_color:
-                        type: string
-                      zip_title:
-                        type: string
+                  id:
+                    type: integer
+                  zip_id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  title:
+                    type: string
+                  url:
+                    type: string
+                  text:
+                    type: string
+                  memo:
+                    type: string
+                  tag:
+                    type: string
+                  alert_date:
+                    type: string
+                    format: date-time
+                  thumb:
+                    type: string
+                  like:
+                    type: integer
+                  visit:
+                    type: integer
+                  visit_date:
+                    type: string
+                    format: date-time
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                  zip_color:
+                    type: string
+                  zip_title:
+                    type: string
         400:
           description: 잘못된 요청
           schema:

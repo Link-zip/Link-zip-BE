@@ -39,26 +39,23 @@ export const getLinksResDto = (getResult) => {
 
 export const getLinkByIdResDto = ({id, url, zip_id, user_id, title, memo, text, thumb, tag, alert_date,created_at, updated_at, like, visit, visit_date, zip_color, zip_title}) => {
     return {
-        link_data:{
-            id,
-            zip_id,
-            user_id,
-            url,
-            title,
-            tag,
-            thumb,
-            memo,
-            text,
-            alert_date,
-            visit_date,
-            created_at,
-            updated_at,
-            like,
-            visit,
-            zip_color,
-            zip_title
-        },
-        message: `${id} id를 가진 링크를 불러오는데 성공하였습니다.`
+        id,
+        zip_id,
+        user_id,
+        url,
+        title,
+        tag,
+        thumb,
+        memo,
+        text,
+        alert_date,
+        visit_date,
+        created_at,
+        updated_at,
+        like,
+        visit,
+        zip_color,
+        zip_title
     }
 }
 
