@@ -4,8 +4,8 @@ paths:
       tags:
         - User
       summary: 소셜 로그인
-      description: | 
-        카카오 access token을 받아 소셜 로그인을 진행합니다. 
+      description: |
+        카카오 access token을 받아 소셜 로그인을 진행합니다.
         기존 유저라면 토큰을 반환하며, 신규 유저라면 회원가입을 위한 key를 반환합니다.
       parameters:
         - in: body
@@ -15,7 +15,7 @@ paths:
           schema:
             type: object
             properties:
-              accessToken: 
+              accessToken:
                 type: string
               accessTokenExpires:
                 type: string
@@ -25,7 +25,7 @@ paths:
                 type: string
       responses:
         "200":
-          description: 소셜 로그인 성공
+          description: 소셜 로그인 성공 또는 신규 유저
           schema:
             type: object
             properties:
@@ -40,11 +40,34 @@ paths:
               result:
                 type: object
                 properties:
+                  isExist:
+                    type: boolean
+                    example: true
                   accessToken:
                     type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMiwibmlja25hbWUiOiJzdHJpbmciLCJrYWthb0lkIjozNjQ2Mzk1ODU5LCJjb25uZWN0ZWRBdCI6IjIwMjQtMDgtMDFUMDQ6MzI6MjJaIiwiaWF0IjoxNzIzMDA5MDQ2LCJleHAiOjE3MjMwMTI2NDZ9.bCGW7EZH6fEcLS_KZD5UOVBfuVlbK2vWmLuRoriUn3o
-        "404":
-          description: 소셜 로그인 실패
+                    example: eyJ...
+                  accessTokenExpires:
+                    type: string
+                    example: 2024-08-01T04:32:22Z
+          examples:
+            application/json:
+              기존 유저:
+                isSuccess: true
+                code: 2000
+                message: success!
+                result:
+                  isExist: true
+                  accessToken: eyJ...
+                  accessTokenExpires: 2024-08-01T04:32:22Z
+              신규 유저:
+                isSuccess: true
+                code: 2000
+                message: success!
+                result:
+                  isExist: false
+                  key: 4ea...
+        "400":
+          description: 서버 JWT 발급 실패
           schema:
             type: object
             properties:
@@ -53,18 +76,29 @@ paths:
                 example: false
               code:
                 type: integer
-                example: USER001
+                example: TOKEN002
               message:
                 type: string
-                example: 4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e
+                example: 서버 토큰 발급에 실패했습니다.
+        "401":
+          description: 카카오 토큰 인증 실패
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: TOKEN001
+              message:
+                type: string
+                example: 카카오 토큰 인증에 실패했습니다.
         "500":
           description: 서버 에러
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -90,7 +124,7 @@ paths:
           description: 사용자 닉네임
       responses:
         "200":
-          description: 닉네임 중복 없음
+          description: 닉네임 중복 확인 성공
           schema:
             type: object
             properties:
@@ -102,12 +136,15 @@ paths:
                 example: 2000
               message:
                 type: string
-                example: 환상적인 닉네임이에요!
+                example: success!
               result:
-                type: boolean
-                example: true
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                    example: true
         "400":
-          description: 닉네임 중복
+          description: 비어있는 닉네임 / 잘못된 요청
           schema:
             type: object
             properties:
@@ -116,18 +153,15 @@ paths:
                 example: false
               code:
                 type: integer
-                example: USER002
+                example: COMMON001
               message:
                 type: string
-                example: 이미 사용 중인 닉네임이에요!
+                example: 잘못된 요청입니다.
         "500":
           description: 서버 에러
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -155,7 +189,7 @@ paths:
                 type: string
               key:
                 type: string
-                example: 4ea5c508a6566e76240543f8feb06fd457777be39549c4016436afda65d2330e
+                example: 4ea...
       responses:
         "200":
           description: 사용자 회원가입 성공
@@ -175,7 +209,10 @@ paths:
                 properties:
                   accessToken:
                     type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMiwibmlja25hbWUiOiJzdHJpbmciLCJrYWthb0lkIjozNjQ2Mzk1ODU5LCJjb25uZWN0ZWRBdCI6IjIwMjQtMDgtMDFUMDQ6MzI6MjJaIiwiaWF0IjoxNzIzMDA5MDQ2LCJleHAiOjE3MjMwMTI2NDZ9.bCGW7EZH6fEcLS_KZD5UOVBfuVlbK2vWmLuRoriUn3o
+                    example: eyJ...
+                  accessTokenExpires:
+                    type: string
+                    example: 2024-08-01T04:32:22Z
         "400":
           description: 잘못된 요청
           schema:
@@ -195,9 +232,86 @@ paths:
           schema:
             type: object
             properties:
-              status:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
                 type: integer
-                example: 500
+                example: COMMON000
+              message:
+                type: string
+                example: 서버 에러, 관리자에게 문의 바랍니다.
+    patch:
+      tags:
+        - User
+      summary: 사용자 정보 수정
+      description: 사용자 정보(닉네임) 수정을 진행합니다. 헤더에 토큰을 담아 요청해주세요.
+      parameters:
+        - in: body
+          name: body
+          description: 사용자 닉네임
+          required: true
+          schema:
+            type: object
+            properties:
+              nickname:
+                type: string
+      responses:
+        "200":
+          description: 사용자 정보 수정 성공
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                example: 2000
+              message:
+                type: string
+                example: success!
+              result:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  nickname:
+                    type: string
+                  updatedAt:
+                    type: string
+        "400":
+          description: 기존 닉네임과 동일 / 비어있는 닉네임
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: USER004
+              message:
+                type: string
+                example: 기존 닉네임과 동일합니다.
+        "401":
+          description: accessToken 인증 실패
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: false
+              code:
+                type: integer
+                example: COMMON002
+              message:
+                type: string
+                example: 권한이 잘못되었습니다.
+        "500":
+          description: 서버 에러
+          schema:
+            type: object
+            properties:
               isSuccess:
                 type: boolean
                 example: false
@@ -212,29 +326,37 @@ paths:
       tags:
         - User
       summary: 사용자 정보 조회
-      description: 사용자 정보 조회를 위한 임시 API 입니다.
+      description: 사용자 정보 조회를 위한 임시 API 입니다. 헤더에 토큰을 담아 요청해주세요.
       responses:
         "200":
           description: 사용자 정보 조회 성공
           schema:
             type: object
             properties:
-              userId:
-                type: integer
-              nickname:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                example: 2000
+              message:
                 type: string
-              kakaoId:
-                type: integer
-              createdAt:
-                type: string
+                example: success!
+              result:
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                  nickname:
+                    type: string
+                  kakaoId:
+                    type: integer
+                  createdAt:
+                    type: string
         "400":
           description: 잘못된 요청
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 400
               isSuccess:
                 type: boolean
                 example: false
@@ -249,9 +371,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
@@ -286,7 +405,7 @@ paths:
                 properties:
                   accessToken:
                     type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMiwibmlja25hbWUiOiJzdHJpbmciLCJrYWthb0lkIjozNjQ2Mzk1ODU5LCJjb25uZWN0ZWRBdCI6IjIwMjQtMDgtMDFUMDQ6MzI6MjJaIiwiaWF0IjoxNzIzMDA5MDQ2LCJleHAiOjE3MjMwMTI2NDZ9.bCGW7EZH6fEcLS_KZD5UOVBfuVlbK2vWmLuRoriUn3o
+                    example: eyJ...
         "400":
           description: 토큰 발급 실패
           schema:
@@ -306,9 +425,6 @@ paths:
           schema:
             type: object
             properties:
-              status:
-                type: integer
-                example: 500
               isSuccess:
                 type: boolean
                 example: false
