@@ -1,49 +1,71 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
-/** 링크 호출 DAO - 모든 링크, 링크태그, 텍스트태그 */
+/** 트랜잭션 DAO */
+export const transactionDao = async (callback) => {
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+
+        const result = await callback(conn); // 서비스 로직에 필요한 작업 실행
+
+        await conn.commit();
+        return result;
+    } catch (err) {
+        await conn.rollback(); // 에러 발생 시 트랜잭션을 롤백
+        console.log(err);
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+}
 
 /** 링크 생성 DAO, 링크 id리턴 */
-export const addLinkDao = async (userId, data) => {
-    let conn;
+export const addLinkDao = async (conn, userId, data) => {
+    //트랜잭션에 사용하기 위해 외부에서 conn을 주입받아 사용
     try {
         const {zip_id, title, text, url, memo, alert_date} = data;
-
+        
         /** text값 여부에 따라 태그값 결정 */
         let tag = text != null ? 'text' : 'link';
-
         let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
 
-        conn = await pool.getConnection();
         const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
         conn.release();
         return result.insertId; // link_id
     } catch (err) {
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
-    } finally {
-        if (conn) conn.release();
+    }
+}
+
+export const addLinkAlertDao = async (conn, userId, linkId, alertDate) => {
+    try {
+        const alertValues = [userId, linkId, alertDate, 'original'];
+        const [result] = await conn.query(insertLinkAlertSql, alertValues);
+
+        if (result.affectedRows === 0) {
+            throw new BaseError(status.FAILED_TO_CREATE);
+        }
+
+        return result;
+    } catch (err){
+        console.log(err);
+        throw new BaseError(status.BAD_REQUEST);
     }
 }
 
 //링크id값 받아서 thumb값 갱신하는 dao
-export const updateThumbDao = async (linkId, thumb) => {
-    let conn;
+export const updateThumbDao = async (conn, linkId, thumb) => {
+    //트랜잭션에 사용하기 위해 외부에서 conn을 주입받아 사용
     try {
-        conn = await pool.getConnection();
         const [result] = await conn.query(updateThumbSql, [thumb, linkId]);
-        
-        conn.release();
-        
         return result.affectedRows;
     } catch (err){
-        console.log('thumb dao err:',err);
         throw new BaseError(status.BAD_REQUEST)
-    } finally {
-        if (conn) conn.release();
     }
 }
 
@@ -188,6 +210,21 @@ export const modifyLinkDao = async (linkId, body) => {
         }
     } catch (err) {
         console.log(err);
+        throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export const updateLinkAlertDateDao = async (linkId, alertDate) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [result] = await conn.query(updateLinkAlertDateSql, [alertDate, linkId]);
+        conn.release();
+        return result;
+    } catch (err) {
+        console.log('Alert update error:', err);
         throw new BaseError(status.BAD_REQUEST);
     } finally {
         if (conn) conn.release();
