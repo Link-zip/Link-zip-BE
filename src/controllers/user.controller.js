@@ -4,7 +4,6 @@ import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
 import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer } from '@services/user.service.js';
 import { getKakaoUserInfo } from "@providers/user.provider.js";
-import { userLoginResponseDTO } from '@dtos/user.dto';
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
@@ -54,7 +53,7 @@ export const addUserCnt = async (req, res, next) => {
         userId: result.userId,
         nickname: result.nickname,
         kakaoId: result.kakaoId,
-        connectedAt: result.createdAt,
+        connectedAt: result.createdAt, // TODO: 카카오 연결일자 redis 저장해서 꺼내쓰기
     };
 
     try {
@@ -88,7 +87,7 @@ export const patchUserInfoCnt = async (req, res, next) => {
     const nickname = req.body.nickname;
 
     const userInfo = await getUserSer(userId);
-    const prevNickname = userInfo.nickname;
+    const prevNickname = userInfo.nickname; // 기존 닉네임
 
     // 요청값(닉네임)이 없는 경우, 기존 닉네임과 동일한 경우 에러처리
     if (nickname === undefined || nickname === "") {

@@ -47,6 +47,7 @@ export const getUserDao = async (userId) => {
     }
 }
 
+/** 카카오 id로 사용자 조회 DAO */
 export const getUserByKakaoIdDao = async (kakaoId) => {
     let conn;
     try {
@@ -62,7 +63,7 @@ export const getUserByKakaoIdDao = async (kakaoId) => {
     }
 }
 
-/** 닉네임 중복 체크 DAO */
+/** 닉네임 중복 체크 DAO, count 리턴 */
 export const checkNicknameDao = async (nickname) => {
     let conn;
     try {
@@ -78,6 +79,7 @@ export const checkNicknameDao = async (nickname) => {
     }
 }
 
+/** 사용자 정보 수정 DAO, 수정된 row 갯수 리턴 */
 export const patchUserInfoDao = async (userId, nickname) => {
     let conn;
     try {
