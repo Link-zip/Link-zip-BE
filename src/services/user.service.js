@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userTokenResponseDTO, userResponseDTO } from '@dtos/user.dto.js';
-import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao } from '@models/user.dao.js';
+import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO } from '@dtos/user.dto.js';
+import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
 import { generateKeyFromKakaoId } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
@@ -27,17 +27,28 @@ export const addUserSer = async (body) => {
     return userResponseDTO(await getUserDao(joinUserId));
 };
 
-/** 닉네임 중복 여부: 서비스 단에서 분기 처리 */
+/** 닉네임 중복 여부: 서비스 레이어에서 분기 처리 */
 export const checkNicknameSer = async (nickname) => {
     const result = await checkNicknameDao(nickname);
 
     if (result.count > 0) {
-        return false;
+        return checkNicknameDTO(false); // 중복 O
     }
-    return true;
+    return checkNicknameDTO(true); // 중복 X
 }
 
-/** 기존 유저 여부 검증: 서비스 단에서 분기 처리 */
+/** 사용자 정보 수정 */
+export const patchUserInfoSer = async (userId, nickname) => {
+    const result = await patchUserInfoDao(userId, nickname);
+
+    if (result === 1) {
+        return userUpdateDTO(await getUserDao(userId)); // 수정된 사용자 정보 반환
+    } else {
+        throw new BaseError(status.USER_NOT_FOUND);
+    }
+}
+
+/** 기존 유저 여부 검증: 서비스 레이어에서 분기 처리 */
 export const getUserByKakaoId = async (kakaoId) => {
     const result = await getUserByKakaoIdDao(kakaoId);
 
