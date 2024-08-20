@@ -36,9 +36,10 @@ export const status = {
     USER_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "USER001", "message": "해당 유저를 찾을 수 없습니다." },
     NICKNAME_DUPLICATED: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER002", "message": "이미 사용중인 유저가 있어요!" },
     INVALID_KEY: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER003", "message": "유효하지 않은 키입니다." },
+    USER_NICKNAME_SAME: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "USER004", "message": "기존 닉네임과 동일합니다." },
 
     // token error
-    KAKAO_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN001", "message": "카카오 토큰 발급에 실패했습니다." },
+    KAKAO_TOKEN_ERROR: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN001", "message": "카카오 토큰 인증에 실패했습니다." },
     SERVER_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN002", "message": "서버 토큰 발급에 실패했습니다." },
     TOKEN_INVALID: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN003", "message": "유효하지 않은 토큰입니다." },
     TOKEN_EXPIRED: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN004", "message": "토큰이 만료되었습니다." },

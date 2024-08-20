@@ -2,7 +2,7 @@ import { BaseError } from '@config/error.js';
 import { status } from '@config/response.status.js';
 import { pool } from '@config/db.config.js';
 
-import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql } from './user.sql.js';
+import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql, updateUserSql } from './user.sql.js';
 import { createDefaultZipSql } from './zip.sql.js';
 
 /** 회원가입 DAO, id 리턴 */
@@ -47,6 +47,7 @@ export const getUserDao = async (userId) => {
     }
 }
 
+/** 카카오 id로 사용자 조회 DAO */
 export const getUserByKakaoIdDao = async (kakaoId) => {
     let conn;
     try {
@@ -62,7 +63,7 @@ export const getUserByKakaoIdDao = async (kakaoId) => {
     }
 }
 
-/** 닉네임 중복 체크 DAO */
+/** 닉네임 중복 체크 DAO, count 리턴 */
 export const checkNicknameDao = async (nickname) => {
     let conn;
     try {
@@ -70,6 +71,22 @@ export const checkNicknameDao = async (nickname) => {
         const [[result]] = await conn.query(checkNicknameSql, nickname);
         conn.release();
         return result; // count 반환
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+/** 사용자 정보 수정 DAO, 수정된 row 갯수 리턴 */
+export const patchUserInfoDao = async (userId, nickname) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [result] = await conn.query(updateUserSql, [nickname, userId]);
+        conn.release();
+        return result.affectedRows;
     } catch (error) {
         console.error(error);
         throw new BaseError(status.BAD_REQUEST);

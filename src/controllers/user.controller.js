@@ -2,9 +2,8 @@ import jwt from 'jsonwebtoken';
 import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
-import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken } from '@services/user.service.js';
+import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer } from '@services/user.service.js';
 import { getKakaoUserInfo } from "@providers/user.provider.js";
-import { userLoginResponseDTO } from '@dtos/user.dto';
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
@@ -37,9 +36,9 @@ export const kakaoLoginCnt = async (req, res, next) => {
                 connectedAt: kakaoUserInfo.connected_at,
             };
             const tokenResponse = await generateToken(payload);
-            res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
+            return res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
         } else {
-            res.send(response(status.SUCCESS, result));
+            return res.send(response(status.SUCCESS, result));
         }
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
@@ -54,12 +53,12 @@ export const addUserCnt = async (req, res, next) => {
         userId: result.userId,
         nickname: result.nickname,
         kakaoId: result.kakaoId,
-        connectedAt: result.createdAt,
+        connectedAt: result.createdAt, // TODO: 카카오 연결일자 redis 저장해서 꺼내쓰기
     };
 
     try {
         const tokenResponse = await generateToken(payload); // 지금은 일단 accessToken만 발급
-        res.send(response(status.SUCCESS, tokenResponse));
+        return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
@@ -67,7 +66,7 @@ export const addUserCnt = async (req, res, next) => {
 
 /** 사용자 조회 컨트롤러 (userId) */
 export const getUserCnt = async (req, res, next) => {
-    res.send(response(status.SUCCESS, await getUserSer(req.userId)));
+    return res.send(response(status.SUCCESS, await getUserSer(req.userId)));
 }
 
 /** 닉네임 중복 체크 컨트롤러 (query: nickname) */
@@ -80,6 +79,25 @@ export const checkNicknameCnt = async (req, res, next) => {
     }
 
     return res.send(response(status.SUCCESS, await checkNicknameSer(nickname)));
+}
+
+/** 사용자 정보 수정 컨트롤러 (userId, nickname) */
+export const patchUserInfoCnt = async (req, res, next) => {
+    const userId = req.userId;
+    const nickname = req.body.nickname;
+
+    const userInfo = await getUserSer(userId);
+    const prevNickname = userInfo.nickname; // 기존 닉네임
+
+    // 요청값(닉네임)이 없는 경우, 기존 닉네임과 동일한 경우 에러처리
+    if (nickname === undefined || nickname === "") {
+        throw new BaseError(status.BAD_REQUEST);
+    } else if (nickname === prevNickname) {
+        throw new BaseError(status.USER_NICKNAME_SAME);
+    }
+
+    const result = await patchUserInfoSer(userId, nickname);
+    return res.send(response(status.SUCCESS, result));
 }
 
 /** 테스트 토큰 발급 */
@@ -95,7 +113,7 @@ export const getTestTokenCnt = async (req, res, next) => {
 
     try {
         const tokenResponse = await generateToken(payload);
-        res.send(response(status.SUCCESS, tokenResponse));
+        return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
