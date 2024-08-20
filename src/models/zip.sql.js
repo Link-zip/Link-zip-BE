@@ -20,7 +20,7 @@ export const testZipDeletableSql =
     "SELECT status FROM zip WHERE id = ? AND user_id = ?";
 
 export const deleteZipSql = 
-    "DELETE FROM zip WHERE id = ? AND user_id = ? AND status != 'default'";
+    "DELETE FROM zip WHERE id = ? AND user_id = ?";
 
 // PATCH SQL
 export const editZipSql =

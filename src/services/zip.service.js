@@ -13,8 +13,8 @@ export const createZipService = async (dto) => {
 /** Zip 삭제 service */
 export const deleteZipService = async (dto) => {
     // 해당 zip이 default zip인지 검증
-    dto = await testZipDeletableDao(dto);
-    if(dto.status == 'default'){
+    const zip_status = await testZipDeletableDao(dto);
+    if(zip_status === 'default'){
         throw new BaseError(status.DELETE_DEFAULT_ZIP);
     };
     return deleteZipResDto(await deleteZipDao(dto));
@@ -24,8 +24,8 @@ export const deleteZipService = async (dto) => {
 /** Zip 수정 service */
 export const editZipService = async (dto) => {
     // 해당 zip이 default zip인지 검증
-    dto = await testZipDeletableDao(dto);
-    if(dto.status === 'default'){
+    const zip_status = await testZipDeletableDao(dto);
+    if(zip_status === 'default'){
         throw new BaseError(status.UPDATE_DEFAULT_ZIP);
     };
     return editZipResDto(await editZipDao(dto));
