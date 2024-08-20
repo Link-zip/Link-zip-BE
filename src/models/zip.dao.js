@@ -37,8 +37,7 @@ export const testZipDeletableDao = async(dto) => {
         ]);
 
         conn.release();
-        dto.status = result[0].status;
-        return dto;
+        return result[0].status;
     } catch (err){
         throw new BaseError(status.INTERNAL_SERVER_ERROR);
     } finally{

@@ -14,7 +14,7 @@ export const createZipController = async(req, res, next) => {
 // DELETE Controller
 /** Zip 삭제 controller */
 export const deleteZipController = async(req, res, next) => {
-    return res.send(response(status.DELETED, await deleteZipService(deleteZipReqDto(req.userId, req.params, req.query))));
+    return res.send(response(status.DELETED, await deleteZipService(deleteZipReqDto(req.userId, req.params.zip_id))));
 };
 
 // GET Controller

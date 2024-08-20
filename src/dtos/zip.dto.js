@@ -15,11 +15,10 @@ export const createZipResDto = (zip_id) => {
 };
 
 // DELETE API DTO
-export const deleteZipReqDto = (userId, params, query) => {
+export const deleteZipReqDto = (userId, zip_id) => {
     return {
         user_id : userId,
-        zip_id : params.zip_id,
-        status : query.status
+        zip_id : zip_id,
     };
 };
 
