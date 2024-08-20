@@ -17,7 +17,8 @@ export const alertPreviewResponseDTO = (alerts) => {
       "alert_type": alert.alert_type,
       "link": {
           "id": alert.link[0].id,
-          "title": alert.link[0].title
+          "title": alert.link[0].title,
+          "memo": alert.link[0].memo
       },
   }));
   
@@ -38,7 +39,7 @@ const formatDate = (dateTimeString) => {
     const validDateTime = new Date(dateTimeString);
     if (isNaN(validDateTime.getTime())) {
       // 날짜 및 시간 값이 유효하지 않은 경우 에러 처리
-      throw new Error('Invalid date and time format');
+      return null;
     }
   
     // 날짜 및 시간 값이 유효한 경우 포맷팅
