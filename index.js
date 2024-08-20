@@ -11,6 +11,8 @@ import { status } from '@config/response.status.js';
 import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
 import { tokenAuthMiddleware } from '@config/authMiddleware';
+import { sessionMiddleware } from '@config/session';
+import { redisClient } from '@config/redis';
 
 import { alertRouter } from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
@@ -33,6 +35,14 @@ app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록
 app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태로 본문 데이터 해석
 app.use(cookieParser());                    // 쿠키 데이터 전송 전달 허용
+
+redisClient
+    .connect()
+    .then(() => console.log('✅ Redis 연결 성공'))
+    .catch((err) => console.error('❌ Redis 연결 실패', err));
+
+app.use(cookieParser('session'));
+app.use(sessionMiddleware);
 
 
 // 토큰 검증 예외 라우트
