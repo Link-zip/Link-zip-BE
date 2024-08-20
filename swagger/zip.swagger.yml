@@ -268,6 +268,7 @@ paths:
               message:
                 type: string
                 example: "서버 에러, 관리자에게 문의 바랍니다."
+  /zips/{zip_id}:  
     delete:
       tags:
           - Zip
@@ -275,8 +276,8 @@ paths:
       description: |
         사용자의 Zip 삭제
       parameters:
-        - in: body
-          name: body
+        - in: path
+          name: zip_id
           description: Zip id
           required: true
           schema:

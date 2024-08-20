@@ -14,7 +14,7 @@ export const zipRouter = express.Router();
 zipRouter.post("/", asyncHandler(createZipController));
 
 /** DELETE API */
-zipRouter.delete("/", asyncHandler(deleteZipController));
+zipRouter.delete("/:zip_id", asyncHandler(deleteZipController));
 
 /** GET API */
 zipRouter.get("/", asyncHandler(getZipsController));
