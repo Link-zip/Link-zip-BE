@@ -15,7 +15,11 @@ export const tokenAuthMiddleware = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            throw new BaseError(status.UNAUTHORIZED);
+            if (err.name === 'TokenExpiredError') {
+                throw new BaseError(status.TOKEN_EXPIRED);
+            } else {
+                throw new BaseError(status.UNAUTHORIZED);
+            }
         }
         req.userId = decoded.userId;
         next();

@@ -11,6 +11,8 @@ import { status } from '@config/response.status.js';
 import { response } from '@config/response.js';
 import { pool } from '@config/db.config.js';
 import { tokenAuthMiddleware } from '@config/authMiddleware';
+import { sessionMiddleware } from '@config/session';
+import { redisClient } from '@config/redis';
 
 import { alertRouter } from '@routes/alert.route.js';
 import { userRouter } from '@routes/user.route.js';
@@ -21,7 +23,7 @@ import { noticeRouter } from '@routes/notice.route';
 import { searchRouter } from '@routes/search.route';
 import { linkscountrouter } from '@routes/linkscount.route.js';
 
-import { addUserCnt, checkNicknameCnt, getTestTokenCnt, kakaoLoginCnt } from '@controllers/user.controller';
+import { addUserCnt, checkNicknameCnt, getTestTokenCnt, kakaoLoginCnt, refreshTokenCnt } from '@controllers/user.controller';
 
 dotenv.config();
 
@@ -34,12 +36,21 @@ app.use(express.json());                    // request의 본문을 json으로 �
 app.use(express.urlencoded({extended: true})); // 단순 객체 문자열 형태로 본문 데이터 해석
 app.use(cookieParser());                    // 쿠키 데이터 전송 전달 허용
 
+redisClient
+    .connect()
+    .then(() => console.log('✅ Redis 연결 성공'))
+    .catch((err) => console.error('❌ Redis 연결 실패', err));
+
+app.use(cookieParser('session'));
+app.use(sessionMiddleware);
+
 
 // 토큰 검증 예외 라우트
 app.post('/user/login', asyncHandler(kakaoLoginCnt)); // 로그인
 app.get('/user', asyncHandler(checkNicknameCnt)); // 닉네임 중복 체크
 app.post('/user', asyncHandler(addUserCnt)); // 회원가입
 app.post('/user/token/test', asyncHandler(getTestTokenCnt)); // 테스트용 토큰 발급
+app.post('/user/refresh', asyncHandler(refreshTokenCnt)); // 토큰 재발급
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // 모든 route에 대해 검증 미들웨어 적용

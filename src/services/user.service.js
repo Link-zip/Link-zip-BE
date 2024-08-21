@@ -1,22 +1,20 @@
 import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO } from '@dtos/user.dto.js';
+import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO, userAccessTokenResponseDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
-import { generateKeyFromKakaoId } from "@providers/user.provider";
+import { deleteUserKeyCache, generateKeyFromKakaoId, getUserKeyCache, setUserKeyCache } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
 export const addUserSer = async (body) => {
-    let kakaoId;
+    let kakaoId = await getUserKeyCache(body.key);
     let joinUserId;
-
-    if (userKeyCache.has(body.key)) {
-        kakaoId = userKeyCache.get(body.key);
-        userKeyCache.delete(body.key); // 캐싱된 key 삭제
+    console.log('kakaoId: ', kakaoId);
+    if (kakaoId) {
+        await deleteUserKeyCache(body.key);
 
         // id 리턴
         joinUserId = await addUserDao({
-            "key": body.key,
             "kakaoId": kakaoId,
             "nickname": body.nickname,
         });
@@ -53,8 +51,8 @@ export const getUserByKakaoId = async (kakaoId) => {
     const result = await getUserByKakaoIdDao(kakaoId);
 
     if (result === undefined) { // 신규 유저
-        const key = generateKeyFromKakaoId(kakaoId);
-        userKeyCache.set(key, kakaoId); // 카카오 id - key값 캐싱
+        const key = await generateKeyFromKakaoId(kakaoId);
+        await setUserKeyCache(key, kakaoId);
         return {
             "isExists": false,
             "key": key,
@@ -81,7 +79,15 @@ export const getUserSer = async (userId) => {
 
 /** 토큰 생성 */
 export const generateToken = async (payload) => {
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const expiresIn = new Date(Date.now() + 60 * 60 * 1000);
-    return userTokenResponseDTO(token, expiresIn);
+    const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
+    const refresh = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const refreshExpiresIn = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    return userTokenResponseDTO(access, accessExpiresIn, refresh, refreshExpiresIn);
+}
+
+export const generateAccessToken = async (payload) => {
+    const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
+    return userAccessTokenResponseDTO(access, accessExpiresIn);
 }
