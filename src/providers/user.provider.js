@@ -2,6 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
+import { redisClient } from "@config/redis";
 
 /** 카카오 토큰 발급 */
 export const getKakaoToken = async (authCode) => {
@@ -52,7 +53,25 @@ export const getKakaoUserInfo = async (kakaoToken) => {
     }
 }
 
-export const generateKeyFromKakaoId = (kakaoId) => {
+/** 카카오id로 회원가입 key 생성 */
+export const generateKeyFromKakaoId = async (kakaoId) => {
     const hash = CryptoJS.SHA256(kakaoId).toString();
     return hash;
+}
+
+/** redis 회원가입 key 저장 */
+export const setUserKeyCache = async (key, kakaoId) => {
+    await redisClient.set(key, kakaoId, 'EX', 60 * 60 * 24); // 24시간 캐싱
+}
+
+/** redis 회원가입 key 조회 */
+export const getUserKeyCache = async (key) => {
+    const kakaoId = await redisClient.get(key);
+    console.log('kakaoId: ', kakaoId);
+    return kakaoId;
+}
+
+/** redis 회원가입 key 삭제 */
+export const deleteUserKeyCache = async (key) => {
+    await redisClient.del(key);
 }

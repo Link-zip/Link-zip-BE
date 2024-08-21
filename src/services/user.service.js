@@ -7,16 +7,14 @@ import { generateKeyFromKakaoId } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
 export const addUserSer = async (body) => {
-    let kakaoId;
+    let kakaoId = await getUserKeyCache(body.key);
     let joinUserId;
-
-    if (userKeyCache.has(body.key)) {
-        kakaoId = userKeyCache.get(body.key);
-        userKeyCache.delete(body.key); // 캐싱된 key 삭제
+    console.log('kakaoId: ', kakaoId);
+    if (kakaoId) {
+        await deleteUserKeyCache(body.key);
 
         // id 리턴
         joinUserId = await addUserDao({
-            "key": body.key,
             "kakaoId": kakaoId,
             "nickname": body.nickname,
         });
@@ -53,8 +51,8 @@ export const getUserByKakaoId = async (kakaoId) => {
     const result = await getUserByKakaoIdDao(kakaoId);
 
     if (result === undefined) { // 신규 유저
-        const key = generateKeyFromKakaoId(kakaoId);
-        userKeyCache.set(key, kakaoId); // 카카오 id - key값 캐싱
+        const key = await generateKeyFromKakaoId(kakaoId);
+        await setUserKeyCache(key, kakaoId);
         return {
             "isExists": false,
             "key": key,
