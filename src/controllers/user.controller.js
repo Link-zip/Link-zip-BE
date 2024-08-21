@@ -124,6 +124,7 @@ export const getTestTokenCnt = async (req, res, next) => {
 
     try {
         const tokenResponse = await generateToken(payload);
+        await setRefreshTokenCache(result.userId, tokenResponse.refreshToken); // redis 저장
         return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시

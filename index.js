@@ -50,7 +50,7 @@ app.post('/user/login', asyncHandler(kakaoLoginCnt)); // 로그인
 app.get('/user', asyncHandler(checkNicknameCnt)); // 닉네임 중복 체크
 app.post('/user', asyncHandler(addUserCnt)); // 회원가입
 app.post('/user/token/test', asyncHandler(getTestTokenCnt)); // 테스트용 토큰 발급
-app.post("/user/refresh", asyncHandler(refreshTokenCnt)); // 토큰 재발급
+app.post('/user/refresh', asyncHandler(refreshTokenCnt)); // 토큰 재발급
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 // 모든 route에 대해 검증 미들웨어 적용

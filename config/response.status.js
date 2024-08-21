@@ -40,7 +40,7 @@ export const status = {
 
     // token error
     KAKAO_TOKEN_ERROR: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN001", "message": "카카오 토큰 인증에 실패했습니다." },
-    SERVER_TOKEN_ERROR: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "TOKEN002", "message": "서버 토큰 발급에 실패했습니다." },
+    SERVER_TOKEN_ERROR: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN002", "message": "서버 토큰 발급에 실패했습니다." },
     TOKEN_INVALID: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN003", "message": "유효하지 않은 토큰입니다." },
     TOKEN_EXPIRED: {status: StatusCodes.UNAUTHORIZED, "isSuccess": false, "code": "TOKEN004", "message": "토큰이 만료되었습니다." },
 
