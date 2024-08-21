@@ -27,8 +27,9 @@ export const transactionDao = async (callback) => {
 export const addLinkDao = async (conn, userId, data) => {
     //트랜잭션에 사용하기 위해 외부에서 conn을 주입받아 사용
     try {
-        const {zip_id, title, text, url, memo, alert_date} = data;
-
+        console.log(data);
+        const {zip_id, title, text=null, url, memo, alert_date} = data;
+        
         /** text값 여부에 따라 태그값 결정 */
         let tag = text != null ? 'text' : 'link';
         let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
@@ -38,6 +39,7 @@ export const addLinkDao = async (conn, userId, data) => {
         conn.release();
         return result.insertId; // link_id
     } catch (err) {
+        console.log(err);
         throw new BaseError(status.BAD_REQUEST);
     }
 }
