@@ -419,12 +419,6 @@ paths:
                   accessTokenExpires:
                     type: string
                     example: 2024-08-21T08:35:03.183Z
-                  refreshToken:
-                    type: string
-                    example: eyJ...
-                  refreshTokenExpires:
-                    type: string
-                    example: 2024-08-28T07:35:03.183Z
   /user/token/test:
     post:
       tags:

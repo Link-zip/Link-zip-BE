@@ -1,7 +1,7 @@
 import { BaseError } from '@config/error';
 import { status } from '@config/response.status';
 import { deleteRefreshTokenCache, getRefreshTokenCache, setRefreshTokenCache } from '@providers/user.provider';
-import { generateToken } from '@services/user.service';
+import { generateAccessToken, generateToken } from '@services/user.service';
 import jwt from 'jsonwebtoken';
 
 export const refresh = async (refreshToken) => {
@@ -13,15 +13,12 @@ export const refresh = async (refreshToken) => {
             throw new BaseError(status.TOKEN_INVALID)
         }
 
-        await deleteRefreshTokenCache(decoded.userId);
-
         const payload = {
             userId: decoded.userId,
             nickname: decoded.nickname,
             kakaoId: decoded.kakaoId,
         };
-        const tokenResponse = await generateToken(payload);
-        await setRefreshTokenCache(decoded.userId, tokenResponse.refreshToken);
+        const tokenResponse = await generateAccessToken(payload);
         return tokenResponse;
     } catch (error) {
         throw new BaseError(status.UNAUTHORIZED);

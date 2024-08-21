@@ -27,6 +27,13 @@ export const userTokenResponseDTO = (access, accessExpiresIn, refresh, refreshEx
     }
 }
 
+export const userAccessTokenResponseDTO = (access, accessExpiresIn) => {
+    return {
+        accessToken: access,
+        accessTokenExpiresIn: accessExpiresIn,
+    }
+}
+
 /** 닉네임 중복 여부 반환 DTO */
 export const checkNicknameDTO = (isValid) => {
     return {

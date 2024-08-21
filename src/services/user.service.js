@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
-import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO } from '@dtos/user.dto.js';
+import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO, userAccessTokenResponseDTO } from '@dtos/user.dto.js';
 import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
 import { deleteUserKeyCache, generateKeyFromKakaoId, getUserKeyCache, setUserKeyCache } from "@providers/user.provider";
 
@@ -84,4 +84,10 @@ export const generateToken = async (payload) => {
     const refresh = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
     const refreshExpiresIn = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     return userTokenResponseDTO(access, accessExpiresIn, refresh, refreshExpiresIn);
+}
+
+export const generateAccessToken = async (payload) => {
+    const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
+    return userAccessTokenResponseDTO(access, accessExpiresIn);
 }
