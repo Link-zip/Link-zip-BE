@@ -18,7 +18,7 @@ export const userUpdateDTO = (data) => {
 }
 
 /** 토큰 반환 DTO */
-export const userTokenResponseDTO = (token, expiresIn) => {
+export const userTokenResponseDTO = (access, accessExpiresIn, refresh, refreshExpiresIn) => {
     return {
         accessToken: access,
         accessTokenExpiresIn: accessExpiresIn,
