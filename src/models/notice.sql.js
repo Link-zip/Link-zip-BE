@@ -1,4 +1,4 @@
-export const selectAllNoticesSql = 'SELECT * FROM notice';
+export const selectAllNoticesSql = 'SELECT * FROM notice ORDER BY created_at DESC';
 
 export const selectNoticeByIdSql = 'SELECT * FROM notice WHERE id = ?';
 
