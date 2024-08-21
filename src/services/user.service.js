@@ -9,7 +9,7 @@ import { generateKeyFromKakaoId } from "@providers/user.provider";
 export const addUserSer = async (body) => {
     let kakaoId = await getUserKeyCache(body.key);
     let joinUserId;
-    console.log('kakaoId: ', kakaoId);
+
     if (kakaoId) {
         await deleteUserKeyCache(body.key);
 
@@ -79,7 +79,10 @@ export const getUserSer = async (userId) => {
 
 /** 토큰 생성 */
 export const generateToken = async (payload) => {
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const expiresIn = new Date(Date.now() + 60 * 60 * 1000);
-    return userTokenResponseDTO(token, expiresIn);
+    const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const refresh = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
+    const refreshExpiresIn = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    
+    return userTokenResponseDTO(access, accessExpiresIn, refresh, refreshExpiresIn);
 }

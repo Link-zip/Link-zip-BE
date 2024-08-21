@@ -20,8 +20,10 @@ export const userUpdateDTO = (data) => {
 /** 토큰 반환 DTO */
 export const userTokenResponseDTO = (token, expiresIn) => {
     return {
-        accessToken: token,
-        accessTokenExpiresIn: expiresIn,
+        accessToken: access,
+        accessTokenExpiresIn: accessExpiresIn,
+        refreshToken: refresh,
+        refreshTokenExpiresIn: refreshExpiresIn,
     }
 }
 

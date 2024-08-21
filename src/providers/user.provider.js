@@ -67,11 +67,29 @@ export const setUserKeyCache = async (key, kakaoId) => {
 /** redis 회원가입 key 조회 */
 export const getUserKeyCache = async (key) => {
     const kakaoId = await redisClient.get(key);
-    console.log('kakaoId: ', kakaoId);
     return kakaoId;
 }
 
 /** redis 회원가입 key 삭제 */
 export const deleteUserKeyCache = async (key) => {
+    await redisClient.del(key);
+}
+
+/** redis refreshToken 저장 */
+export const setRefreshTokenCache = async (userId, refreshToken) => {
+    const key = String(userId);
+    await redisClient.set(key, refreshToken, 'EX', 60 * 60 * 24 * 7); // 7일
+}
+
+/** redis refreshToken 조회 */
+export const getRefreshTokenCache = async (userId) => {
+    const key = String(userId);
+    const refreshToken = await redisClient.get(key);
+    return refreshToken;
+}
+
+/** redis refreshToken 삭제 */
+export const deleteRefreshTokenCache = async (userId) => {
+    const key = String(userId);
     await redisClient.del(key);
 }

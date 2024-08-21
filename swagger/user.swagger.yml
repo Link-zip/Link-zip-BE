@@ -48,26 +48,15 @@ paths:
                     example: eyJ...
                   accessTokenExpires:
                     type: string
-                    example: 2024-08-01T04:32:22Z
-          examples:
-            application/json:
-              기존 유저:
-                isSuccess: true
-                code: 2000
-                message: success!
-                result:
-                  isExist: true
-                  accessToken: eyJ...
-                  accessTokenExpires: 2024-08-01T04:32:22Z
-              신규 유저:
-                isSuccess: true
-                code: 2000
-                message: success!
-                result:
-                  isExist: false
-                  key: 4ea...
-        "400":
-          description: 서버 JWT 발급 실패
+                    example: 2024-08-21T08:35:03.183Z
+                  refreshToken:
+                    type: string
+                    example: eyJ...
+                  refreshTokenExpires:
+                    type: string
+                    example: 2024-08-28T07:35:03.183Z
+        "404":
+          description: 소셜 로그인 실패
           schema:
             type: object
             properties:
@@ -212,7 +201,13 @@ paths:
                     example: eyJ...
                   accessTokenExpires:
                     type: string
-                    example: 2024-08-01T04:32:22Z
+                    example: 2024-08-21T08:35:03.183Z
+                  refreshToken:
+                    type: string
+                    example: eyJ...
+                  refreshTokenExpires:
+                    type: string
+                    example: 2024-08-28T07:35:03.183Z
         "400":
           description: 잘못된 요청
           schema:
@@ -380,6 +375,51 @@ paths:
               message:
                 type: string
                 example: 서버 에러, 관리자에게 문의 바랍니다.
+  /user/refresh:
+    post:
+      tags:
+        - User
+      summary: 토큰 재발급
+      description: 사용자 토큰 재발급을 위한 API 입니다. body에 refreshToken을 보내주세요.
+      parameters:
+        - in: body
+          name: body
+          description: refreshToken
+          required: true
+          schema:
+            type: object
+            properties:
+              refreshToken:
+                type: string
+      responses:
+        "200":
+          description: 토큰 재발급 성공
+          schema:
+            type: object
+            properties:
+              isSuccess:
+                type: boolean
+                example: true
+              code:
+                example: 2000
+              message:
+                type: string
+                example: success!
+              result:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJ...
+                  accessTokenExpires:
+                    type: string
+                    example: 2024-08-21T08:35:03.183Z
+                  refreshToken:
+                    type: string
+                    example: eyJ...
+                  refreshTokenExpires:
+                    type: string
+                    example: 2024-08-28T07:35:03.183Z
   /user/token/test:
     post:
       tags:
@@ -406,6 +446,15 @@ paths:
                   accessToken:
                     type: string
                     example: eyJ...
+                  accessTokenExpires:
+                    type: string
+                    example: 2024-08-21T08:35:03.183Z
+                  refreshToken:
+                    type: string
+                    example: eyJ...
+                  refreshTokenExpires:
+                    type: string
+                    example: 2024-08-28T07:35:03.183Z
         "400":
           description: 토큰 발급 실패
           schema:
