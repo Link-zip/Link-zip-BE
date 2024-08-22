@@ -80,18 +80,20 @@ export const getUserSer = async (userId) => {
 /** 토큰 생성 */
 export const generateToken = async (payload) => {
     const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
+    const accessExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
     const refresh = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-    const refreshExpiresIn = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    return userTokenResponseDTO(access, accessExpiresIn, refresh, refreshExpiresIn);
+    const refreshExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    return userTokenResponseDTO(access, accessExpiresAt, refresh, refreshExpiresAt);
 }
 
+/** (재발급 시) 액세스토큰만 생성 */
 export const generateAccessToken = async (payload) => {
     const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
-    return userAccessTokenResponseDTO(access, accessExpiresIn);
+    const accessExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    return userAccessTokenResponseDTO(access, accessExpiresAt);
 }
 
+/** 회원 탈퇴 */
 export const deleteUserSer = async (userId) => {
     const result = await deleteUserDao(userId);
 

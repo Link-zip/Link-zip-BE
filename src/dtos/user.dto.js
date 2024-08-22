@@ -18,19 +18,20 @@ export const userUpdateDTO = (data) => {
 }
 
 /** 토큰 반환 DTO */
-export const userTokenResponseDTO = (access, accessExpiresIn, refresh, refreshExpiresIn) => {
+export const userTokenResponseDTO = (access, accessExpiresAt, refresh, refreshExpiresAt) => {
     return {
         accessToken: access,
-        accessTokenExpiresIn: accessExpiresIn,
+        accessTokenExpiresAt: accessExpiresAt,
         refreshToken: refresh,
-        refreshTokenExpiresIn: refreshExpiresIn,
+        refreshTokenExpiresAt: refreshExpiresAt,
     }
 }
 
-export const userAccessTokenResponseDTO = (access, accessExpiresIn) => {
+/** 액세스토큰 반환 DTO */
+export const userAccessTokenResponseDTO = (access, accessExpiresAt) => {
     return {
         accessToken: access,
-        accessTokenExpiresIn: accessExpiresIn,
+        accessTokenExpiresAt: accessExpiresAt,
     }
 }
 

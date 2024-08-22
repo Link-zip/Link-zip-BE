@@ -2,12 +2,12 @@ import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
 import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer, deleteUserSer } from '@services/user.service.js';
-import { getKakaoUserInfo, setRefreshTokenCache } from "@providers/user.provider.js";
+import { getKakaoUserInfo, setRefreshTokenCache, refreshKakaoToken } from "@providers/user.provider.js";
 import { refresh } from "src/utils/jwt.util";
 
 /** 카카오 로그인 및 jwt 생성 */
 export const kakaoLoginCnt = async (req, res, next) => {
-    const { accessToken, accessTokenExpires, refreshToken, refreshTokenExpires } = req.body;
+    const { accessToken, accessTokenExpiresAt, refreshToken, refreshTokenExpiresAt } = req.body;
     const kakaoUserInfo = await getKakaoUserInfo(accessToken);
 
     /** TODO : 카카오 토큰 갱신 로직 */
@@ -17,8 +17,8 @@ export const kakaoLoginCnt = async (req, res, next) => {
     // } catch (error) {
     //     if (error.response.status === 401) {
     //         try {
-    //             const newTokens = await refreshKakaoToken(refreshToken);
-    //             kakaoUserInfo = await getKakaoUserInfo(newTokens.accessToken);
+    //             const kakaoTokenResponse = await refreshKakaoToken(refreshToken);
+    //             kakaoUserInfo = await getKakaoUserInfo(kakaoTokenResponse.access_token);
     //         } catch (error) {
     //             throw new BaseError(status.KAKAO_TOKEN_ERROR);
     //         }

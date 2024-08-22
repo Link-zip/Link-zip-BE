@@ -36,6 +36,25 @@ export const getKakaoToken = async (authCode) => {
     }
 }
 
+export const refreshKakaoToken = async (refreshToken) => {
+    try {
+        const tokenResponse = await axios.post(
+            `https://kauth.kakao.com/oauth/token`, null,
+            {
+                params: {
+                    grant_type: "refresh_token",
+                    client_id: process.env.KAKAO_CLIENT_ID,
+                    refresh_token: refreshToken,
+                },
+            }
+        );
+
+        return tokenResponse.data;
+    } catch (error) {
+        throw new BaseError(status.KAKAO_TOKEN_ERROR);
+    }
+}
+
 /** 카카오 토큰으로 유저 정보 추출 */
 export const getKakaoUserInfo = async (kakaoToken) => {
     try {
