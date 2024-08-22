@@ -1,7 +1,7 @@
 import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
-import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer } from '@services/user.service.js';
+import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer, deleteUserSer } from '@services/user.service.js';
 import { getKakaoUserInfo, setRefreshTokenCache } from "@providers/user.provider.js";
 import { refresh } from "src/utils/jwt.util";
 
@@ -129,4 +129,9 @@ export const getTestTokenCnt = async (req, res, next) => {
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
     }
+}
+
+export const deleteUserCnt = async (req, res, next) => {
+    const result = await deleteUserSer(req.userId);
+    return res.send(response(status.SUCCESS, result));
 }

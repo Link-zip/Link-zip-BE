@@ -2,7 +2,7 @@ import { BaseError } from '@config/error.js';
 import { status } from '@config/response.status.js';
 import { pool } from '@config/db.config.js';
 
-import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql, updateUserSql } from './user.sql.js';
+import { checkNicknameSql, insertUserSql, selectUserSql, selectUserByKakaoIdSql, updateUserSql, deleteAllLinksOfUserSql, deleteUserSql } from './user.sql.js';
 import { createDefaultZipSql } from './zip.sql.js';
 
 /** 회원가입 DAO, id 리턴 */
@@ -89,6 +89,31 @@ export const patchUserInfoDao = async (userId, nickname) => {
         return result.affectedRows;
     } catch (error) {
         console.error(error);
+        throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+/** 유저의 링크 삭제, 유저 삭제 DAO */
+export const deleteUserDao = async (userId) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        await conn.beginTransaction();
+        await conn.query(deleteAllLinksOfUserSql, userId);
+        const [result] = await conn.query(deleteUserSql, userId);
+        await conn.commit();
+
+        conn.release();
+        return result.affectedRows;
+    } catch (error) {
+        if (conn) await conn.rollback();
+        console.error(error);
+        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+            throw new BaseError(status.FAILED_TO_DELETE);
+        }
         throw new BaseError(status.BAD_REQUEST);
     } finally {
         if (conn) conn.release();
