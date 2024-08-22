@@ -101,10 +101,12 @@ paths:
                     "alert_status": 0,
                     "alert_date": "2025-05-25 15:30:00",
                     "alert_type": "original",
+                    "relative_time": "5분 전",
                     "link":{
                         "id": 5,
                         "title": "Link 2",
-                        "memo": "link 2 memo"
+                        "memo": "link 2 memo",
+                        "tag": "text"
                     }
                   }
         "400":

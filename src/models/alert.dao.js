@@ -76,6 +76,7 @@ export const getUserAlert = async (userId) => {
     let conn;
     try {
         conn = await pool.getConnection();
+        const [result] = await conn.query("SET time_zone = 'Asia/Seoul';");
         const [alert] = await conn.query(getAlertByuserId, parseInt(userId));
         if(alert.length == 0){
             return -1;

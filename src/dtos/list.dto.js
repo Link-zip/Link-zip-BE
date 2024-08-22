@@ -14,7 +14,7 @@ export const ListResponseDTO = (links) => {
       "tag": link.tag,
       "thumbnail": link.thumb,
       "like": link.like,
-      "createdAt": formatDate(link.created_at),
+      "createdAt": link.created_at,
       "zip": {
         "id": link.zip.id,
         "title": link.zip.title,

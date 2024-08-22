@@ -149,7 +149,7 @@ export const getPreviewRecentList = async(userId, sort, filter)=>{
         else query += " ORDER BY created_at DESC"; //쿼리가 없으면 기본값, 최신순으로 
 
         const [links] = await pool.query(query, parseInt(userId));
-        
+
         // links에 대해 zip 정보 추가
         const linksWithZip = await Promise.all(links.map(async (link) => {
             const zip = await getZip(link.zip_id);
