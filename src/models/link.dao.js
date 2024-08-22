@@ -143,7 +143,7 @@ export const updateVisitDao = async (linkId) => {
         conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateVisitSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedVisitSql, [linkId]);
-        const [delectReminderAlert] = await conn.query(deleteReminderAlertSql, [linkId]);
+        const [deleteReminderAlert] = await conn.query(deleteReminderAlertSql, [linkId]);
 
         conn.release();
         
