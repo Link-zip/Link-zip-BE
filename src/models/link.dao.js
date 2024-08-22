@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkReminderAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, deleteReminderAlertSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkReminderAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, deleteReminderAlertSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql, existingAlertSql } from "./link.sql";
 
 
 /** 트랜잭션 DAO */
@@ -28,7 +28,7 @@ export const addLinkDao = async (conn, userId, data) => {
     //트랜잭션에 사용하기 위해 외부에서 conn을 주입받아 사용
     try {
         console.log(data);
-        const {zip_id, title, text=null, url, memo, alert_date} = data;
+        const {zip_id, title, text=null, url, memo=null, alert_date=null} = data;
         
         /** text값 여부에 따라 태그값 결정 */
         let tag = text != null ? 'text' : 'link';
@@ -61,6 +61,8 @@ export const addLinkAlertDao = async (conn, userId, linkId, alertDate) => {
     } catch (err){
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
+    } finally {
+        if (conn) conn.release();
     }
 }
 
@@ -224,11 +226,31 @@ export const modifyLinkDao = async (linkId, body) => {
     }
 }
 
-export const updateLinkAlertDateDao = async (linkId, alertDate) => {
+export const updateLinkAlertDateDao = async (userId, linkId, alertDate) => {
     let conn;
     try {
         conn = await pool.getConnection();
-        const [result] = await conn.query(updateLinkAlertDateSql, [alertDate, linkId]);
+
+        const [existingAlert] = await conn.query(existingAlertSql, [linkId]);
+
+
+        let result;
+        if (existingAlert.length === 0) {
+            //존재하지 않으면 insert
+            const alertValues = [userId, linkId, alertDate];
+            const [resultOriginal] = await conn.query(insertLinkAlertSql, alertValues);
+            const [resultReminder] = await conn.query(insertLinkReminderAlertSql, alertValues);
+
+            if (resultOriginal.affectedRows === 0 || resultReminder.affectedRows === 0) {
+                throw new BaseError(status.FAILED_TO_CREATE);
+            }
+    
+            return resultOriginal;
+        }else {
+            // 존재하면 update
+            [result] = await conn.query(updateLinkAlertDateSql, [alertDate, linkId]);
+        }
+
         conn.release();
         return result;
     } catch (err) {

@@ -30,6 +30,7 @@ export const selectLinkByIdSql = `
     WHERE link.id = ?
 `;
 
+export const existingAlertSql = 'SELECT * FROM alert WHERE link_id = ?';
 
 /** UPDATE VISIT */
 export const updateVisitSql = "UPDATE link SET visit = visit + 1, visit_date = NOW() WHERE id = ?";

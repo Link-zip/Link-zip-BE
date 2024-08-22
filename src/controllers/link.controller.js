@@ -95,7 +95,7 @@ export const updateZipIdCnt = async (req, res) => {
 export const modifyLinkCnt = async (req, res) => {
     try {
         const {link_id} = req.params;
-        res.send(response(status.SUCCESS, await modifyLinkSer(link_id, req.body)));
+        res.send(response(status.SUCCESS, await modifyLinkSer(req.userId, link_id, req.body)));
     } catch (err) {
         return BaseError(status.FAILED_TO_UPDATE);
     }

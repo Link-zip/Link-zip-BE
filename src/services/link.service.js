@@ -136,7 +136,7 @@ export const updateZipIdSer = async (linkId, newZipId) => {
     }
 }
 
-export const modifyLinkSer = async (linkId, body) => {
+export const modifyLinkSer = async (userId, linkId, body) => {
     const modifyLinkResult = await modifyLinkDao(linkId, body);
     
     if(modifyLinkResult == null) {
@@ -144,7 +144,7 @@ export const modifyLinkSer = async (linkId, body) => {
     }
     // alert_date 값을 입력 받은 경우 alert의 날짜 수정
     if (body.alert_date) {
-        const updateLinkAlertResult = await updateLinkAlertDateDao(linkId, body.alert_date);
+        const updateLinkAlertResult = await updateLinkAlertDateDao(userId, linkId, body.alert_date);
 
         if (updateLinkAlertResult.affectedRows === 0) {
             throw new BaseError(status.FAILED_TO_UPDATE);
