@@ -17,11 +17,11 @@ paths:
             properties:
               accessToken:
                 type: string
-              accessTokenExpires:
+              accessTokenExpiresAt:
                 type: string
               refreshToken:
                 type: string
-              refreshTokenExpires:
+              refreshTokenExpiresAt:
                 type: string
       responses:
         "200":
@@ -44,18 +44,21 @@ paths:
                   isExist:
                     type: boolean
                     example: true
-                  accessToken:
-                    type: string
-                    example: eyJ...
-                  accessTokenExpires:
-                    type: string
-                    example: 2024-08-21T08:35:03.183Z
-                  refreshToken:
-                    type: string
-                    example: eyJ...
-                  refreshTokenExpires:
-                    type: string
-                    example: 2024-08-28T07:35:03.183Z
+                  tokenResponse:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        example: eyJ...
+                      accessTokenExpiresAt:
+                        type: string
+                        example: 2024-08-21T08:35:03.183Z
+                      refreshToken:
+                        type: string
+                        example: eyJ...
+                      refreshTokenExpiresAt:
+                        type: string
+                        example: 2024-08-28T07:35:03.183Z
         "404":
           description: 소셜 로그인 실패
           schema:
@@ -201,13 +204,13 @@ paths:
                   accessToken:
                     type: string
                     example: eyJ...
-                  accessTokenExpires:
+                  accessTokenExpiresAt:
                     type: string
                     example: 2024-08-21T08:35:03.183Z
                   refreshToken:
                     type: string
                     example: eyJ...
-                  refreshTokenExpires:
+                  refreshTokenExpiresAt:
                     type: string
                     example: 2024-08-28T07:35:03.183Z
         "400":
@@ -416,7 +419,7 @@ paths:
                   accessToken:
                     type: string
                     example: eyJ...
-                  accessTokenExpires:
+                  accessTokenExpiresAt:
                     type: string
                     example: 2024-08-21T08:35:03.183Z
   /user/token/test:
@@ -446,13 +449,13 @@ paths:
                   accessToken:
                     type: string
                     example: eyJ...
-                  accessTokenExpires:
+                  accessTokenExpiresAt:
                     type: string
                     example: 2024-08-21T08:35:03.183Z
                   refreshToken:
                     type: string
                     example: eyJ...
-                  refreshTokenExpires:
+                  refreshTokenExpiresAt:
                     type: string
                     example: 2024-08-28T07:35:03.183Z
         "400":

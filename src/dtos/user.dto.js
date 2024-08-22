@@ -21,16 +21,16 @@ export const userUpdateDTO = (data) => {
 export const userTokenResponseDTO = (access, accessExpiresIn, refresh, refreshExpiresIn) => {
     return {
         accessToken: access,
-        accessTokenExpiresIn: accessExpiresIn,
+        accessTokenExpiresAt: accessExpiresIn,
         refreshToken: refresh,
-        refreshTokenExpiresIn: refreshExpiresIn,
+        refreshTokenExpiresAt: refreshExpiresIn,
     }
 }
 
 export const userAccessTokenResponseDTO = (access, accessExpiresIn) => {
     return {
         accessToken: access,
-        accessTokenExpiresIn: accessExpiresIn,
+        accessTokenExpiresAt: accessExpiresIn,
     }
 }
 
