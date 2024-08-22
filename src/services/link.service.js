@@ -91,7 +91,7 @@ export const createNewLinkSer = async (userId, body) => {
                 throw new BaseError(status.FAILED_TO_UPDATE);
             }
         }
-
+        console.log(body.alert_date);
         /** 링크 생성 후, alert_date가 존재하면 alert 테이블에 데이터 생성 */
         if (body.alert_date) {
             await addLinkAlertDao(conn, userId, createdLinkId, body.alert_date); // 링크가 성공적으로 생성된 경우 alert 데이터 생성
