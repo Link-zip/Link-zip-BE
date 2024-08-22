@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { status } from "@config/response.status";
 import { BaseError } from "@config/error";
 import { userTokenResponseDTO, userResponseDTO, userUpdateDTO, checkNicknameDTO, userAccessTokenResponseDTO } from '@dtos/user.dto.js';
-import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao } from '@models/user.dao.js';
-import { deleteUserKeyCache, generateKeyFromKakaoId, getUserKeyCache, setUserKeyCache } from "@providers/user.provider";
+import { addUserDao, getUserDao, checkNicknameDao, getUserByKakaoIdDao, patchUserInfoDao, deleteUserDao } from '@models/user.dao.js';
+import { deleteRefreshTokenCache, deleteUserKeyCache, generateKeyFromKakaoId, getUserKeyCache, setUserKeyCache } from "@providers/user.provider";
 
 /** 사용자 회원가입 서비스 */
 export const addUserSer = async (body) => {
@@ -90,4 +90,15 @@ export const generateAccessToken = async (payload) => {
     const access = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
     const accessExpiresIn = new Date(Date.now() + 60 * 60 * 1000);
     return userAccessTokenResponseDTO(access, accessExpiresIn);
+}
+
+export const deleteUserSer = async (userId) => {
+    const result = await deleteUserDao(userId);
+
+    if (result === 1) {
+        await deleteRefreshTokenCache(userId);
+        return { "isDeleted": true };
+    } else {
+        throw new BaseError(status.USER_NOT_FOUND);
+    }
 }
