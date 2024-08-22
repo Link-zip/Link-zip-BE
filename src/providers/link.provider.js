@@ -11,7 +11,13 @@ const openai = new OpenAI({
 
 /** url정보 가져오기 */
 export const fetchUrlContent = async (url) => {
+    // 프로토콜이 없는 경우 'https://'를 기본적으로 추가
+    if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+    }
+
     try {
+        // 먼저 https://로 요청 시도
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
         const title = $('title').text();
@@ -23,10 +29,28 @@ export const fetchUrlContent = async (url) => {
         console.log('content 추출 내용:', content);
         return { title, metaDescription, mainHeading, firstParagraph, content };
     } catch (error) {
-        console.error('Error fetching URL content:', error);
-        return null;
+        console.log(`HTTPS request failed for ${url}. Retrying with HTTP...`);
+
+        // https:// 요청 실패 시 http://로 재시도
+        try {
+            const httpUrl = url.replace(/^https:\/\//i, 'http://');
+            const { data } = await axios.get(httpUrl);
+            const $ = cheerio.load(data);
+            const title = $('title').text();
+            const metaDescription = $('meta[name="description"]').attr('content');
+            const mainHeading = $('h1').first().text();
+            const firstParagraph = $('p').first().text();
+            const content = `${title} ${metaDescription} ${mainHeading} ${firstParagraph}`.trim();
+
+            console.log('content 추출 내용:', content);
+            return { title, metaDescription, mainHeading, firstParagraph, content };
+        } catch (httpErr) {
+            console.error('Error fetching URL content:', httpErr);
+            return null;
+        }
     }
-}
+};
+
 /** 요약 정보를 통해 gpt로 사이트 추측 */
 export const getGptResponse = async (summary) => {
     const completion = await openai.chat.completions.create({
@@ -42,6 +66,11 @@ export const getGptResponse = async (summary) => {
 }
 //응답 형태, summary, videoTitle, videoAuthor
 export const getYoutubeSummary = async (url) => {
+    // 프로토콜이 없는 경우 'https://'를 기본적으로 추가
+    if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+    }
+
     const options = {
         method: 'GET',
         url: 'https://youtube-video-summarizer1.p.rapidapi.com/v1/youtube/summarizeVideoFromCache',
@@ -53,16 +82,25 @@ export const getYoutubeSummary = async (url) => {
             'x-rapidapi-host': process.env.RAPIDAPI_HOST,
         }
     };
-    try{
-        const response = await axios.request(options);
-        
-        return response.data;
-    } catch (err){
-        console.log('getYoutubeSummary error: ',err);
-        throw err;
-    }
-}
 
+    try {
+        const response = await axios.request(options);
+        return response.data;
+    } catch (err) {
+        console.log(`HTTPS request failed for ${url}. Retrying with HTTP...`);
+
+        // https:// 요청 실패 시 http://로 재시도
+        try {
+            const httpUrl = url.replace(/^https:\/\//i, 'http://');
+            options.params.videoURL = httpUrl;
+            const response = await axios.request(options);
+            return response.data;
+        } catch (httpErr) {
+            console.log(`HTTP request failed for ${url}.`, httpErr);
+            throw httpErr;
+        }
+    }
+};
 export const getGptYoutubeSummary = async (youtubeSummary) => {
     const {summary, videoTitle, videoAuthor } = youtubeSummary;
     const completion = await openai.chat.completions.create({
@@ -138,20 +176,38 @@ export const getUrlTitle = async (url) => {
         return null;
     }
 
+    // 프로토콜이 없는 경우 'https://'를 기본적으로 추가
+    if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+    }
+
     if (checkYoutube(url)) {
         const videoId = extractYouTubeVideoId(url);
         return await getYouTubeVideoTitle(videoId);
     }
 
     try {
+        // 먼저 https://로 요청 시도
         const { data } = await axios.get(url);
         const $ = cheerio.load(data);
         const title = $('title').text();
 
         return title || null; // 제목이 없는 경우 null 반환
     } catch (err) {
-        console.log(err);
-        return null; // url이 실제로 접속 불가능한 url이어도 에러 처리하지 않도록
+        console.log(`HTTPS request failed for ${url}. Retrying with HTTP...`);
+
+        // https:// 요청 실패 시 http://로 재시도
+        try {
+            const httpUrl = url.replace(/^https:\/\//i, 'http://');
+            const { data } = await axios.get(httpUrl);
+            const $ = cheerio.load(data);
+            const title = $('title').text();
+
+            return title || null;
+        } catch (httpErr) {
+            console.log(`HTTP request failed for ${url}.`, httpErr);
+            return null;
+        }
     }
 };
 
