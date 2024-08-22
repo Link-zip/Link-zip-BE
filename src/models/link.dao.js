@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkReminderAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, deleteReminderAlertSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql } from "./link.sql";
 
 
 /** 트랜잭션 DAO */
@@ -46,14 +46,18 @@ export const addLinkDao = async (conn, userId, data) => {
 
 export const addLinkAlertDao = async (conn, userId, linkId, alertDate) => {
     try {
-        const alertValues = [userId, linkId, alertDate, 'original'];
-        const [result] = await conn.query(insertLinkAlertSql, alertValues);
-
-        if (result.affectedRows === 0) {
+        const alertValues = [userId, linkId, alertDate];
+        const [resultOriginal] = await conn.query(insertLinkAlertSql, alertValues);
+        const [resultReminder] = await conn.query(insertLinkReminderAlertSql, alertValues);
+        
+        if (resultOriginal.affectedRows === 0 || resultReminder.affectedRows === 0) {
             throw new BaseError(status.FAILED_TO_CREATE);
         }
 
-        return result;
+        return {
+            original: resultOriginal,
+            reminder: resultReminder
+        };
     } catch (err){
         console.log(err);
         throw new BaseError(status.BAD_REQUEST);
@@ -139,6 +143,7 @@ export const updateVisitDao = async (linkId) => {
         conn = await pool.getConnection();
         const [updateResult] = await conn.query(updateVisitSql, [linkId]);
         const [selectResult] = await conn.query(selectUpdatedVisitSql, [linkId]);
+        const [deleteReminderAlert] = await conn.query(deleteReminderAlertSql, [linkId]);
 
         conn.release();
         
