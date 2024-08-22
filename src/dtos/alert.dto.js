@@ -13,12 +13,14 @@ export const alertPreviewResponseDTO = (alerts) => {
   const newAlerts = alerts.map(alert => ({
       "alert_id": alert.id,
       "alert_status": alert.alert_status,
-      "alert_date": formatDate(alert.alert_date),
+      "alert_date": alert.alert_date,
       "alert_type": alert.alert_type,
+      "relative_time": getRelativeTime(alert.alert_date), // ~몇분전
       "link": {
           "id": alert.link[0].id,
           "title": alert.link[0].title,
-          "memo": alert.link[0].memo
+          "memo": alert.link[0].memo,
+          "tag": alert.link[0].tag
       },
   }));
   
@@ -31,27 +33,6 @@ export const alertConfirmResponseDTO = () => {
     message: "알림이 확인되었습니다."
   };
 }
-
-
-
-const formatDate = (dateTimeString) => {
-    // 날짜 및 시간 값이 올바른 형식인지 확인
-    const validDateTime = new Date(dateTimeString);
-    if (isNaN(validDateTime.getTime())) {
-      // 날짜 및 시간 값이 유효하지 않은 경우 에러 처리
-      return null;
-    }
-  
-    // 날짜 및 시간 값이 유효한 경우 포맷팅
-    return new Intl.DateTimeFormat('kr', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    }).format(validDateTime);
-  };
   
 export const alertUncofirmedExistResponseDTO = (data) => {
   let result = false;
@@ -60,3 +41,17 @@ export const alertUncofirmedExistResponseDTO = (data) => {
     "uncomfirmedAlert": result
   }
 }
+
+const getRelativeTime = (date) => {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
+
+  const minutes = Math.floor(diffInSeconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days}일 전`;
+  if (hours > 0) return `${hours}시간 전`;
+  if (minutes > 0) return `${minutes}분 전`;
+  return `${diffInSeconds}초 전`;
+};
