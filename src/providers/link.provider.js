@@ -66,11 +66,6 @@ export const getGptResponse = async (summary) => {
 }
 //응답 형태, summary, videoTitle, videoAuthor
 export const getYoutubeSummary = async (url) => {
-    // 프로토콜이 없는 경우 'https://'를 기본적으로 추가
-    if (!/^https?:\/\//i.test(url)) {
-        url = `https://${url}`;
-    }
-
     const options = {
         method: 'GET',
         url: 'https://youtube-video-summarizer1.p.rapidapi.com/v1/youtube/summarizeVideoFromCache',
@@ -82,25 +77,15 @@ export const getYoutubeSummary = async (url) => {
             'x-rapidapi-host': process.env.RAPIDAPI_HOST,
         }
     };
-
-    try {
+    try{
         const response = await axios.request(options);
+        
         return response.data;
-    } catch (err) {
-        console.log(`HTTPS request failed for ${url}. Retrying with HTTP...`);
-
-        // https:// 요청 실패 시 http://로 재시도
-        try {
-            const httpUrl = url.replace(/^https:\/\//i, 'http://');
-            options.params.videoURL = httpUrl;
-            const response = await axios.request(options);
-            return response.data;
-        } catch (httpErr) {
-            console.log(`HTTP request failed for ${url}.`, httpErr);
-            throw httpErr;
-        }
+    } catch (err){
+        console.log('getYoutubeSummary error: ',err);
+        throw err;
     }
-};
+}
 export const getGptYoutubeSummary = async (youtubeSummary) => {
     const {summary, videoTitle, videoAuthor } = youtubeSummary;
     const completion = await openai.chat.completions.create({
@@ -108,7 +93,7 @@ export const getGptYoutubeSummary = async (youtubeSummary) => {
         messages: [
             { role: "system", content: "Your role is to summarize youtube video content" },
             { role: "user", content: `다음은 사용자가 입력한 유튜브 url의 요약 내용입니다. 제목, 채널명, 비디오 내용 요약 등을 읽고 어떤 내용을 다루는 동영상인지 간략하게 정리해주세요.
-                제목: ${videoTitle}, 채널명: ${videoAuthor}, 동영상 내용:${summary}` }
+                제목: ${videoTitle}, 채널명: ${videoAuthor}, 동영상 내용:${summary} 한글로 번역해서 요약해주시기 바랍니다.` }
         ],
         max_tokens: 1000
     });
