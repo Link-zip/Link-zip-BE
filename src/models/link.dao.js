@@ -127,6 +127,7 @@ export const getLinkByIdDao= async (linkId)=>{
     let conn;
     try{
         conn = await pool.getConnection();
+        const [timeResult] = await conn.query("SET time_zone = 'Asia/Seoul';");
         const [result] = await conn.query(selectLinkByIdSql, linkId);
 
         conn.release();
