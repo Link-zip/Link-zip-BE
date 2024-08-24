@@ -33,8 +33,7 @@ export const addLinkDao = async (conn, userId, data) => {
         /** text값 여부에 따라 태그값 결정 */
         let tag = text != null ? 'text' : 'link';
         let values = [zip_id, userId, title, url, alert_date, memo, text, tag];
-        await conn.query("SET time_zone = 'Asia/Seoul';");
-        console.log(await conn.query(`SELECT @@global.time_zone, @@session.time_zone;`));
+
         const [result] = await conn.query(insertLinkSql, values) // sql쿼리에 보낼 정보
 
         conn.release();
@@ -111,8 +110,7 @@ export const getLinksDao = async (zipId, userId, tag, sortOrder) => {
         }
 
         conn = await pool.getConnection();
-        await conn.query("SET time_zone = 'Asia/Seoul';");
-        console.log(await conn.query(`SELECT @@global.time_zone, @@session.time_zone;`));
+
         const [result] = await conn.query(sql, values);
 
         conn.release();
@@ -130,8 +128,7 @@ export const getLinkByIdDao= async (linkId)=>{
     let conn;
     try{
         conn = await pool.getConnection();
-        await conn.query("SET time_zone = 'Asia/Seoul';");
-        console.log(await conn.query(`SELECT @@global.time_zone, @@session.time_zone;`));
+
         const [result] = await conn.query(selectLinkByIdSql, linkId);
 
         conn.release();
