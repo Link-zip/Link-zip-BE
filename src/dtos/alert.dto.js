@@ -44,7 +44,9 @@ export const alertUncofirmedExistResponseDTO = (data) => {
 
 const getRelativeTime = (date) => {
   const now = new Date();
-  const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
+  const kstDate = new Date(now.getTime() + 9 * 60 * 60 * 1000); 
+  const diffInSeconds = Math.floor((kstDate - new Date(date)) / 1000);
+
 
   const minutes = Math.floor(diffInSeconds / 60);
   const hours = Math.floor(minutes / 60);
