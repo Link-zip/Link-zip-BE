@@ -57,7 +57,13 @@ export const updateLinkSql = "UPDATE link SET title = ?, text = ?, memo = ?, ale
 export const updateLinkAlertDateSql = `
     UPDATE alert
     SET alert_date = ?, updated_at = NOW() 
-    WHERE link_id = ?;
+    WHERE link_id = ? AND alert_type = ?;
+`
+
+export const updateLinkRemindAlertDateSql = `
+    UPDATE alert
+    SET alert_date = DATE_ADD(?, INTERVAL 1 DAY), updated_at = NOW() 
+    WHERE link_id = ? AND alert_type = ?;
 `
 /** DELETE LINK BY ID */
 export const deleteLinkByIdSql = "DELETE FROM link WHERE id = ?";

@@ -1,7 +1,7 @@
 import { pool } from "@config/db.config";
 import { BaseError } from "@config/error";
 import { status } from "@config/response.status";
-import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkReminderAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, deleteReminderAlertSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql, existingAlertSql } from "./link.sql";
+import { deleteLinkByIdSql, insertLinkAlertSql, insertLinkReminderAlertSql, insertLinkSql, selectLinkByIdSql, selectLinksByTagSql, selectLinksByZipIdSql, selectUpdatedLikeSql, selectUpdatedVisitSql, deleteReminderAlertSql, selectUpdatedZipIdSql, updateLikeSql, updateLinkAlertDateSql, updateLinkRemindAlertDateSql, updateLinkSql, updateThumbSql, updateVisitSql, updateZipIdSql, existingAlertSql } from "./link.sql";
 
 
 /** 트랜잭션 DAO */
@@ -250,7 +250,8 @@ export const updateLinkAlertDateDao = async (userId, linkId, alertDate) => {
             return resultOriginal;
         }else {
             // 존재하면 update
-            [result] = await conn.query(updateLinkAlertDateSql, [alertDate, linkId]);
+            [result] = await conn.query(updateLinkAlertDateSql, [alertDate, linkId, 'original']);
+            await conn.query(updateLinkRemindAlertDateSql, [alertDate, linkId, 'reminder']);
         }
 
         conn.release();
