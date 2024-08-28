@@ -2,7 +2,7 @@ import { BaseError } from "@config/error";
 import { response } from "@config/response.js";
 import { status } from '@config/response.status.js';
 import { addUserSer, getUserSer, checkNicknameSer, getUserByKakaoId, generateToken, patchUserInfoSer, deleteUserSer } from '@services/user.service.js';
-import { getKakaoUserInfo, setRefreshTokenCache, refreshKakaoToken } from "@providers/user.provider.js";
+import { getKakaoUserInfo, setRefreshTokenCache, refreshKakaoToken, deleteRefreshTokenCache, getRefreshTokenCache } from "@providers/user.provider.js";
 import { refresh } from "src/utils/jwt.util";
 
 /** 카카오 로그인 및 jwt 생성 */
@@ -35,7 +35,12 @@ export const kakaoLoginCnt = async (req, res, next) => {
                 kakaoId: kakaoUserInfo.id,
             };
             const tokenResponse = await generateToken(payload);
-            await setRefreshTokenCache(result.userId, tokenResponse.refreshToken); // redis 저장
+
+            // 기존 refreshToken이 존재하면 삭제
+            if (await getRefreshTokenCache(result.userId)) {
+                await deleteRefreshTokenCache(result.userId);
+            }
+            await setRefreshTokenCache(result.userId, tokenResponse.refreshToken);
 
             return res.send(response(status.SUCCESS, {isExists: true, tokenResponse: tokenResponse}));
         } else {
@@ -124,7 +129,13 @@ export const getTestTokenCnt = async (req, res, next) => {
 
     try {
         const tokenResponse = await generateToken(payload);
-        await setRefreshTokenCache(result.userId, tokenResponse.refreshToken); // redis 저장
+        
+        // 기존 refreshToken이 존재하면 삭제
+        if (await getRefreshTokenCache(result.userId)) {
+            await deleteRefreshTokenCache(result.userId);
+        }
+        await setRefreshTokenCache(result.userId, tokenResponse.refreshToken);
+        
         return res.send(response(status.SUCCESS, tokenResponse));
     } catch (error) {
         throw new BaseError(status.SERVER_TOKEN_ERROR); // jwt 발급 실패시
