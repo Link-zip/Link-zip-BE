@@ -85,6 +85,8 @@ $ npm start
 
 
 ## 아키텍처
+<img width="1051" height="572" alt="linkzip drawio" src="https://github.com/user-attachments/assets/a1df121a-bc34-4a1c-a149-cd10348df92a" />
+
 ### 디텍터리 구조
 ```bash
 ├── README.md
